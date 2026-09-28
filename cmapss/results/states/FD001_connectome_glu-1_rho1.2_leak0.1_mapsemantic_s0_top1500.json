@@ -1,0 +1,30 @@
+{
+ "key": "FD001_connectome_glu-1_rho1.2_leak0.1_mapsemantic_s0_top1500",
+ "args": {
+  "fd": "FD001",
+  "variant": "connectome",
+  "glu": -1.0,
+  "rho": 1.2,
+  "leak": 0.1,
+  "mapping": "semantic",
+  "seed": 0,
+  "ablate": [],
+  "top": 1500,
+  "workers": 12
+ },
+ "matrix": {
+  "variant": "connectome",
+  "norm": "input_fraction",
+  "glu_sign": -1.0,
+  "rho": 1.2,
+  "seed": 0,
+  "ablate": [],
+  "subset": 1500,
+  "n": 165122,
+  "nnz": 90143,
+  "raw_spectral_radius": 0.8582188664473318,
+  "path": "/Users/hyeokju1313/Desktop/2026-2/AI+X/data/derived/matrices/W_connectome_input_fraction_glu-1_rho1.2_s0_ablnone_sub1500_94362.npz"
+ },
+ "readout_neurons": 1500,
+ "seconds": 7.4
+}

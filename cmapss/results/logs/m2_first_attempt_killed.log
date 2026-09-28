@@ -1,0 +1,5 @@
+=== 23:43:58 M2 connectome
+[FD001_m2_connectome_rho1.2_s0] trainable params 40,296 (types 14,356, input weights 9,453, readout 2129) on mps
+[FD001_m2_connectome_rho1.2_s0] train windows 1750, val windows 449, test engines 100
+  ep 1 batch 10/28 loss 1696.3 (262s, ETA this epoch 472s)
+  ep 1 batch 20/28 loss 836.1 (526s, ETA this epoch 211s)

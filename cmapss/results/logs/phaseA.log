@@ -1,0 +1,454 @@
+=== 23:15:55 FD001_connectome_glu-1_rho0.9_leak0.1_mapsemantic_s0
+[FD001_connectome_glu-1_rho0.9_leak0.1_mapsemantic_s0] matrix nnz=24539704 raw_sr=0.915, readout=2129, input neurons=9453 (10s)
+[FD001_connectome_glu-1_rho0.9_leak0.1_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 104s elapsed, ETA 1142s
+  chunk 2/12 done, 104s elapsed, ETA 519s
+  chunk 3/12 done, 104s elapsed, ETA 312s
+  chunk 4/12 done, 104s elapsed, ETA 208s
+  chunk 5/12 done, 104s elapsed, ETA 145s
+  chunk 6/12 done, 104s elapsed, ETA 104s
+  chunk 7/12 done, 104s elapsed, ETA 74s
+  chunk 8/12 done, 104s elapsed, ETA 52s
+  chunk 9/12 done, 104s elapsed, ETA 35s
+  chunk 10/12 done, 104s elapsed, ETA 21s
+  chunk 11/12 done, 104s elapsed, ETA 9s
+  chunk 12/12 done, 104s elapsed, ETA 0s
+[FD001_connectome_glu-1_rho0.9_leak0.1_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 72s elapsed, ETA 796s
+  chunk 2/12 done, 72s elapsed, ETA 362s
+  chunk 3/12 done, 72s elapsed, ETA 217s
+  chunk 4/12 done, 72s elapsed, ETA 145s
+  chunk 5/12 done, 72s elapsed, ETA 101s
+  chunk 6/12 done, 72s elapsed, ETA 72s
+  chunk 7/12 done, 72s elapsed, ETA 52s
+  chunk 8/12 done, 72s elapsed, ETA 36s
+  chunk 9/12 done, 72s elapsed, ETA 24s
+  chunk 10/12 done, 72s elapsed, ETA 14s
+  chunk 11/12 done, 72s elapsed, ETA 7s
+  chunk 12/12 done, 72s elapsed, ETA 0s
+[FD001_connectome_glu-1_rho0.9_leak0.1_mapsemantic_s0] saved FD001_connectome_glu-1_rho0.9_leak0.1_mapsemantic_s0.npz in 192s
+FD001_connectome_glu-1_rho0.9_leak0.1_mapsemantic_s0: alpha=0.1 cv=14.60 train=11.52 TEST rmse=17.09 nasa=479 || n=10: val 24.12 gap 14.44 | n=25: val 18.78 gap 7.33 | n=50: val 16.08 gap 4.49 | n=80: val 14.73 gap 3.67
+=== 23:20:33 FD001_connectome_glu-1_rho0.9_leak0.5_mapsemantic_s0
+[FD001_connectome_glu-1_rho0.9_leak0.5_mapsemantic_s0] matrix nnz=24539704 raw_sr=0.915, readout=2129, input neurons=9453 (0s)
+[FD001_connectome_glu-1_rho0.9_leak0.5_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 92s elapsed, ETA 1009s
+  chunk 2/12 done, 92s elapsed, ETA 458s
+  chunk 3/12 done, 92s elapsed, ETA 275s
+  chunk 4/12 done, 92s elapsed, ETA 183s
+  chunk 5/12 done, 92s elapsed, ETA 128s
+  chunk 6/12 done, 92s elapsed, ETA 92s
+  chunk 7/12 done, 92s elapsed, ETA 65s
+  chunk 8/12 done, 92s elapsed, ETA 46s
+  chunk 9/12 done, 92s elapsed, ETA 31s
+  chunk 10/12 done, 92s elapsed, ETA 18s
+  chunk 11/12 done, 92s elapsed, ETA 8s
+  chunk 12/12 done, 92s elapsed, ETA 0s
+[FD001_connectome_glu-1_rho0.9_leak0.5_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 71s elapsed, ETA 780s
+  chunk 2/12 done, 71s elapsed, ETA 354s
+  chunk 3/12 done, 71s elapsed, ETA 213s
+  chunk 4/12 done, 71s elapsed, ETA 142s
+  chunk 5/12 done, 71s elapsed, ETA 99s
+  chunk 6/12 done, 71s elapsed, ETA 71s
+  chunk 7/12 done, 71s elapsed, ETA 51s
+  chunk 8/12 done, 71s elapsed, ETA 35s
+  chunk 9/12 done, 71s elapsed, ETA 24s
+  chunk 10/12 done, 71s elapsed, ETA 14s
+  chunk 11/12 done, 71s elapsed, ETA 6s
+  chunk 12/12 done, 71s elapsed, ETA 0s
+[FD001_connectome_glu-1_rho0.9_leak0.5_mapsemantic_s0] saved FD001_connectome_glu-1_rho0.9_leak0.5_mapsemantic_s0.npz in 169s
+FD001_connectome_glu-1_rho0.9_leak0.5_mapsemantic_s0: alpha=0.001 cv=17.59 train=14.84 TEST rmse=15.84 nasa=522 || n=10: val 21.60 gap 6.23 | n=25: val 20.49 gap 5.36 | n=50: val 18.64 gap 3.36 | n=80: val 17.76 gap 2.50
+=== 23:24:51 FD001_connectome_glu-1_rho1.2_leak0.1_mapsemantic_s0
+[skip] FD001_connectome_glu-1_rho1.2_leak0.1_mapsemantic_s0.npz exists
+FD001_connectome_glu-1_rho1.2_leak0.1_mapsemantic_s0: alpha=0.01 cv=14.39 train=9.10 TEST rmse=16.78 nasa=470 || n=10: val 27.01 gap 18.07 | n=25: val 20.06 gap 8.23 | n=50: val 16.55 gap 6.22 | n=80: val 14.40 gap 4.17
+=== 23:26:20 FD001_connectome_glu-1_rho1.2_leak0.5_mapsemantic_s0
+[FD001_connectome_glu-1_rho1.2_leak0.5_mapsemantic_s0] matrix nnz=24539704 raw_sr=0.915, readout=2129, input neurons=9453 (0s)
+[FD001_connectome_glu-1_rho1.2_leak0.5_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 96s elapsed, ETA 1055s
+  chunk 2/12 done, 96s elapsed, ETA 480s
+  chunk 3/12 done, 96s elapsed, ETA 288s
+  chunk 4/12 done, 96s elapsed, ETA 192s
+  chunk 5/12 done, 96s elapsed, ETA 134s
+  chunk 6/12 done, 96s elapsed, ETA 96s
+  chunk 7/12 done, 96s elapsed, ETA 69s
+  chunk 8/12 done, 96s elapsed, ETA 48s
+  chunk 9/12 done, 96s elapsed, ETA 32s
+  chunk 10/12 done, 96s elapsed, ETA 19s
+  chunk 11/12 done, 96s elapsed, ETA 9s
+  chunk 12/12 done, 96s elapsed, ETA 0s
+[FD001_connectome_glu-1_rho1.2_leak0.5_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 73s elapsed, ETA 805s
+  chunk 2/12 done, 73s elapsed, ETA 366s
+  chunk 3/12 done, 73s elapsed, ETA 220s
+  chunk 4/12 done, 73s elapsed, ETA 146s
+  chunk 5/12 done, 73s elapsed, ETA 102s
+  chunk 6/12 done, 73s elapsed, ETA 73s
+  chunk 7/12 done, 73s elapsed, ETA 52s
+  chunk 8/12 done, 73s elapsed, ETA 37s
+  chunk 9/12 done, 73s elapsed, ETA 24s
+  chunk 10/12 done, 73s elapsed, ETA 15s
+  chunk 11/12 done, 73s elapsed, ETA 7s
+  chunk 12/12 done, 73s elapsed, ETA 0s
+[FD001_connectome_glu-1_rho1.2_leak0.5_mapsemantic_s0] saved FD001_connectome_glu-1_rho1.2_leak0.5_mapsemantic_s0.npz in 176s
+FD001_connectome_glu-1_rho1.2_leak0.5_mapsemantic_s0: alpha=0.01 cv=17.01 train=14.09 TEST rmse=15.71 nasa=395 || n=10: val 23.42 gap 11.14 | n=25: val 20.77 gap 6.24 | n=50: val 18.66 gap 4.04 | n=80: val 17.40 gap 2.92
+=== 23:30:51 FD001_random_glu-1_rho0.9_leak0.1_mapsemantic_s0
+[FD001_random_glu-1_rho0.9_leak0.1_mapsemantic_s0] matrix nnz=24912077 raw_sr=0.289, readout=2129, input neurons=9453 (12s)
+[FD001_random_glu-1_rho0.9_leak0.1_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 355s elapsed, ETA 3900s
+  chunk 2/12 done, 355s elapsed, ETA 1773s
+  chunk 3/12 done, 355s elapsed, ETA 1064s
+  chunk 4/12 done, 355s elapsed, ETA 709s
+  chunk 5/12 done, 355s elapsed, ETA 496s
+  chunk 6/12 done, 355s elapsed, ETA 355s
+  chunk 7/12 done, 355s elapsed, ETA 253s
+  chunk 8/12 done, 355s elapsed, ETA 177s
+  chunk 9/12 done, 355s elapsed, ETA 118s
+  chunk 10/12 done, 355s elapsed, ETA 71s
+  chunk 11/12 done, 355s elapsed, ETA 32s
+  chunk 12/12 done, 355s elapsed, ETA 0s
+[FD001_random_glu-1_rho0.9_leak0.1_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 360s elapsed, ETA 3961s
+  chunk 2/12 done, 360s elapsed, ETA 1801s
+  chunk 3/12 done, 360s elapsed, ETA 1080s
+  chunk 4/12 done, 360s elapsed, ETA 720s
+  chunk 5/12 done, 360s elapsed, ETA 504s
+  chunk 6/12 done, 360s elapsed, ETA 360s
+  chunk 7/12 done, 360s elapsed, ETA 257s
+  chunk 8/12 done, 360s elapsed, ETA 180s
+  chunk 9/12 done, 360s elapsed, ETA 120s
+  chunk 10/12 done, 360s elapsed, ETA 72s
+  chunk 11/12 done, 360s elapsed, ETA 33s
+  chunk 12/12 done, 360s elapsed, ETA 0s
+[FD001_random_glu-1_rho0.9_leak0.1_mapsemantic_s0] saved FD001_random_glu-1_rho0.9_leak0.1_mapsemantic_s0.npz in 738s
+FD001_random_glu-1_rho0.9_leak0.1_mapsemantic_s0: alpha=0.1 cv=14.97 train=9.87 TEST rmse=16.92 nasa=421 || n=10: val 26.57 gap 17.37 | n=25: val 21.19 gap 9.84 | n=50: val 17.44 gap 7.28 | n=80: val 16.18 gap 4.72
+=== 23:50:19 FD001_random_glu-1_rho0.9_leak0.5_mapsemantic_s0
+[FD001_random_glu-1_rho0.9_leak0.5_mapsemantic_s0] matrix nnz=24912077 raw_sr=0.289, readout=2129, input neurons=9453 (2s)
+[FD001_random_glu-1_rho0.9_leak0.5_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 489s elapsed, ETA 5374s
+  chunk 2/12 done, 489s elapsed, ETA 2443s
+  chunk 3/12 done, 489s elapsed, ETA 1466s
+  chunk 4/12 done, 489s elapsed, ETA 977s
+  chunk 5/12 done, 489s elapsed, ETA 684s
+  chunk 6/12 done, 489s elapsed, ETA 489s
+  chunk 7/12 done, 489s elapsed, ETA 349s
+  chunk 8/12 done, 489s elapsed, ETA 244s
+  chunk 9/12 done, 489s elapsed, ETA 163s
+  chunk 10/12 done, 489s elapsed, ETA 98s
+  chunk 11/12 done, 489s elapsed, ETA 44s
+  chunk 12/12 done, 489s elapsed, ETA 0s
+[FD001_random_glu-1_rho0.9_leak0.5_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 199s elapsed, ETA 2192s
+  chunk 2/12 done, 199s elapsed, ETA 996s
+  chunk 3/12 done, 199s elapsed, ETA 598s
+  chunk 4/12 done, 199s elapsed, ETA 399s
+  chunk 5/12 done, 199s elapsed, ETA 279s
+  chunk 6/12 done, 199s elapsed, ETA 199s
+  chunk 7/12 done, 199s elapsed, ETA 142s
+  chunk 8/12 done, 199s elapsed, ETA 100s
+  chunk 9/12 done, 199s elapsed, ETA 66s
+  chunk 10/12 done, 199s elapsed, ETA 40s
+  chunk 11/12 done, 199s elapsed, ETA 18s
+  chunk 12/12 done, 199s elapsed, ETA 0s
+[FD001_random_glu-1_rho0.9_leak0.5_mapsemantic_s0] saved FD001_random_glu-1_rho0.9_leak0.5_mapsemantic_s0.npz in 700s
+FD001_random_glu-1_rho0.9_leak0.5_mapsemantic_s0: alpha=0.01 cv=17.41 train=13.37 TEST rmse=16.42 nasa=601 || n=10: val 22.45 gap 6.77 | n=25: val 20.16 gap 5.97 | n=50: val 18.22 gap 4.50 | n=80: val 17.55 gap 2.96
+=== 00:04:45 FD001_random_glu-1_rho1.2_leak0.1_mapsemantic_s0
+[FD001_random_glu-1_rho1.2_leak0.1_mapsemantic_s0] matrix nnz=24912077 raw_sr=0.289, readout=2129, input neurons=9453 (0s)
+[FD001_random_glu-1_rho1.2_leak0.1_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 171s elapsed, ETA 1881s
+  chunk 2/12 done, 171s elapsed, ETA 855s
+  chunk 3/12 done, 171s elapsed, ETA 513s
+  chunk 4/12 done, 171s elapsed, ETA 342s
+  chunk 5/12 done, 171s elapsed, ETA 239s
+  chunk 6/12 done, 171s elapsed, ETA 171s
+  chunk 7/12 done, 171s elapsed, ETA 122s
+  chunk 8/12 done, 171s elapsed, ETA 85s
+  chunk 9/12 done, 171s elapsed, ETA 57s
+  chunk 10/12 done, 171s elapsed, ETA 34s
+  chunk 11/12 done, 171s elapsed, ETA 16s
+  chunk 12/12 done, 171s elapsed, ETA 0s
+[FD001_random_glu-1_rho1.2_leak0.1_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 89s elapsed, ETA 980s
+  chunk 2/12 done, 89s elapsed, ETA 446s
+  chunk 3/12 done, 89s elapsed, ETA 267s
+  chunk 4/12 done, 89s elapsed, ETA 178s
+  chunk 5/12 done, 89s elapsed, ETA 125s
+  chunk 6/12 done, 89s elapsed, ETA 89s
+  chunk 7/12 done, 89s elapsed, ETA 64s
+  chunk 8/12 done, 89s elapsed, ETA 45s
+  chunk 9/12 done, 89s elapsed, ETA 30s
+  chunk 10/12 done, 89s elapsed, ETA 18s
+  chunk 11/12 done, 89s elapsed, ETA 8s
+  chunk 12/12 done, 89s elapsed, ETA 0s
+[FD001_random_glu-1_rho1.2_leak0.1_mapsemantic_s0] saved FD001_random_glu-1_rho1.2_leak0.1_mapsemantic_s0.npz in 267s
+FD001_random_glu-1_rho1.2_leak0.1_mapsemantic_s0: alpha=1 cv=15.57 train=11.28 TEST rmse=15.99 nasa=390 || n=10: val 28.35 gap 18.34 | n=25: val 24.69 gap 12.25 | n=50: val 19.66 gap 8.32 | n=80: val 16.89 gap 6.40
+=== 00:10:33 FD001_random_glu-1_rho1.2_leak0.5_mapsemantic_s0
+[FD001_random_glu-1_rho1.2_leak0.5_mapsemantic_s0] matrix nnz=24912077 raw_sr=0.289, readout=2129, input neurons=9453 (0s)
+[FD001_random_glu-1_rho1.2_leak0.5_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 122s elapsed, ETA 1342s
+  chunk 2/12 done, 122s elapsed, ETA 610s
+  chunk 3/12 done, 122s elapsed, ETA 366s
+  chunk 4/12 done, 122s elapsed, ETA 244s
+  chunk 5/12 done, 122s elapsed, ETA 171s
+  chunk 6/12 done, 122s elapsed, ETA 122s
+  chunk 7/12 done, 122s elapsed, ETA 87s
+  chunk 8/12 done, 122s elapsed, ETA 61s
+  chunk 9/12 done, 122s elapsed, ETA 41s
+  chunk 10/12 done, 122s elapsed, ETA 24s
+  chunk 11/12 done, 122s elapsed, ETA 11s
+  chunk 12/12 done, 122s elapsed, ETA 0s
+[FD001_random_glu-1_rho1.2_leak0.5_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 88s elapsed, ETA 967s
+  chunk 2/12 done, 88s elapsed, ETA 440s
+  chunk 3/12 done, 88s elapsed, ETA 264s
+  chunk 4/12 done, 88s elapsed, ETA 176s
+  chunk 5/12 done, 88s elapsed, ETA 123s
+  chunk 6/12 done, 88s elapsed, ETA 88s
+  chunk 7/12 done, 88s elapsed, ETA 63s
+  chunk 8/12 done, 88s elapsed, ETA 44s
+  chunk 9/12 done, 88s elapsed, ETA 29s
+  chunk 10/12 done, 88s elapsed, ETA 18s
+  chunk 11/12 done, 88s elapsed, ETA 8s
+  chunk 12/12 done, 88s elapsed, ETA 0s
+[FD001_random_glu-1_rho1.2_leak0.5_mapsemantic_s0] saved FD001_random_glu-1_rho1.2_leak0.5_mapsemantic_s0.npz in 217s
+FD001_random_glu-1_rho1.2_leak0.5_mapsemantic_s0: alpha=0.01 cv=16.25 train=12.49 TEST rmse=16.52 nasa=548 || n=10: val 22.85 gap 9.11 | n=25: val 19.92 gap 7.31 | n=50: val 17.43 gap 5.17 | n=80: val 16.82 gap 4.93
+=== 00:15:31 FD001_degree_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0
+[FD001_degree_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0] matrix nnz=24467455 raw_sr=0.222, readout=2129, input neurons=9453 (10s)
+[FD001_degree_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 105s elapsed, ETA 1150s
+  chunk 2/12 done, 105s elapsed, ETA 523s
+  chunk 3/12 done, 105s elapsed, ETA 314s
+  chunk 4/12 done, 105s elapsed, ETA 209s
+  chunk 5/12 done, 105s elapsed, ETA 146s
+  chunk 6/12 done, 105s elapsed, ETA 105s
+  chunk 7/12 done, 105s elapsed, ETA 75s
+  chunk 8/12 done, 105s elapsed, ETA 52s
+  chunk 9/12 done, 105s elapsed, ETA 35s
+  chunk 10/12 done, 105s elapsed, ETA 21s
+  chunk 11/12 done, 105s elapsed, ETA 10s
+  chunk 12/12 done, 105s elapsed, ETA 0s
+[FD001_degree_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 76s elapsed, ETA 841s
+  chunk 2/12 done, 76s elapsed, ETA 382s
+  chunk 3/12 done, 76s elapsed, ETA 229s
+  chunk 4/12 done, 76s elapsed, ETA 153s
+  chunk 5/12 done, 76s elapsed, ETA 107s
+  chunk 6/12 done, 76s elapsed, ETA 76s
+  chunk 7/12 done, 76s elapsed, ETA 55s
+  chunk 8/12 done, 76s elapsed, ETA 38s
+  chunk 9/12 done, 76s elapsed, ETA 25s
+  chunk 10/12 done, 76s elapsed, ETA 15s
+  chunk 11/12 done, 76s elapsed, ETA 7s
+  chunk 12/12 done, 76s elapsed, ETA 0s
+[FD001_degree_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0] saved FD001_degree_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0.npz in 198s
+FD001_degree_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0: alpha=1 cv=14.30 train=9.50 TEST rmse=16.20 nasa=401 || n=10: val 26.22 gap 17.84 | n=25: val 20.85 gap 9.32 | n=50: val 17.09 gap 7.28 | n=80: val 14.25 gap 5.19
+=== 00:20:11 FD001_degree_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0
+[FD001_degree_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0] matrix nnz=24467455 raw_sr=0.222, readout=2129, input neurons=9453 (0s)
+[FD001_degree_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 105s elapsed, ETA 1156s
+  chunk 2/12 done, 105s elapsed, ETA 525s
+  chunk 3/12 done, 105s elapsed, ETA 315s
+  chunk 4/12 done, 105s elapsed, ETA 210s
+  chunk 5/12 done, 105s elapsed, ETA 147s
+  chunk 6/12 done, 105s elapsed, ETA 105s
+  chunk 7/12 done, 105s elapsed, ETA 75s
+  chunk 8/12 done, 105s elapsed, ETA 53s
+  chunk 9/12 done, 105s elapsed, ETA 35s
+  chunk 10/12 done, 105s elapsed, ETA 21s
+  chunk 11/12 done, 105s elapsed, ETA 10s
+  chunk 12/12 done, 105s elapsed, ETA 0s
+[FD001_degree_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 76s elapsed, ETA 838s
+  chunk 2/12 done, 76s elapsed, ETA 381s
+  chunk 3/12 done, 76s elapsed, ETA 228s
+  chunk 4/12 done, 76s elapsed, ETA 152s
+  chunk 5/12 done, 76s elapsed, ETA 107s
+  chunk 6/12 done, 76s elapsed, ETA 76s
+  chunk 7/12 done, 76s elapsed, ETA 54s
+  chunk 8/12 done, 76s elapsed, ETA 38s
+  chunk 9/12 done, 76s elapsed, ETA 25s
+  chunk 10/12 done, 76s elapsed, ETA 15s
+  chunk 11/12 done, 76s elapsed, ETA 7s
+  chunk 12/12 done, 76s elapsed, ETA 0s
+[FD001_degree_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0] saved FD001_degree_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0.npz in 188s
+FD001_degree_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0: alpha=0.1 cv=15.82 train=11.89 TEST rmse=16.06 nasa=427 || n=10: val 21.58 gap 9.33 | n=25: val 19.36 gap 7.38 | n=50: val 17.20 gap 5.05 | n=80: val 16.51 gap 3.46
+=== 00:24:40 FD001_degree_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0
+[FD001_degree_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0] matrix nnz=24467455 raw_sr=0.222, readout=2129, input neurons=9453 (0s)
+[FD001_degree_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 105s elapsed, ETA 1151s
+  chunk 2/12 done, 105s elapsed, ETA 523s
+  chunk 3/12 done, 105s elapsed, ETA 314s
+  chunk 4/12 done, 105s elapsed, ETA 209s
+  chunk 5/12 done, 105s elapsed, ETA 147s
+  chunk 6/12 done, 105s elapsed, ETA 105s
+  chunk 7/12 done, 105s elapsed, ETA 75s
+  chunk 8/12 done, 105s elapsed, ETA 52s
+  chunk 9/12 done, 105s elapsed, ETA 35s
+  chunk 10/12 done, 105s elapsed, ETA 21s
+  chunk 11/12 done, 105s elapsed, ETA 10s
+  chunk 12/12 done, 105s elapsed, ETA 0s
+[FD001_degree_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 76s elapsed, ETA 838s
+  chunk 2/12 done, 76s elapsed, ETA 381s
+  chunk 3/12 done, 76s elapsed, ETA 229s
+  chunk 4/12 done, 76s elapsed, ETA 152s
+  chunk 5/12 done, 76s elapsed, ETA 107s
+  chunk 6/12 done, 76s elapsed, ETA 76s
+  chunk 7/12 done, 76s elapsed, ETA 54s
+  chunk 8/12 done, 76s elapsed, ETA 38s
+  chunk 9/12 done, 76s elapsed, ETA 25s
+  chunk 10/12 done, 76s elapsed, ETA 15s
+  chunk 11/12 done, 76s elapsed, ETA 7s
+  chunk 12/12 done, 76s elapsed, ETA 0s
+[FD001_degree_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0] saved FD001_degree_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0.npz in 188s
+FD001_degree_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0: alpha=10 cv=15.78 train=10.20 TEST rmse=15.73 nasa=366 || n=10: val 31.32 gap 26.91 | n=25: val 22.10 gap 13.46 | n=50: val 17.78 gap 5.97 | n=80: val 15.06 gap 5.49
+=== 00:29:09 FD001_degree_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0
+[FD001_degree_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0] matrix nnz=24467455 raw_sr=0.222, readout=2129, input neurons=9453 (0s)
+[FD001_degree_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 105s elapsed, ETA 1155s
+  chunk 2/12 done, 105s elapsed, ETA 525s
+  chunk 3/12 done, 105s elapsed, ETA 315s
+  chunk 4/12 done, 105s elapsed, ETA 210s
+  chunk 5/12 done, 105s elapsed, ETA 147s
+  chunk 6/12 done, 105s elapsed, ETA 105s
+  chunk 7/12 done, 105s elapsed, ETA 75s
+  chunk 8/12 done, 105s elapsed, ETA 52s
+  chunk 9/12 done, 105s elapsed, ETA 35s
+  chunk 10/12 done, 105s elapsed, ETA 21s
+  chunk 11/12 done, 105s elapsed, ETA 10s
+  chunk 12/12 done, 105s elapsed, ETA 0s
+[FD001_degree_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 76s elapsed, ETA 834s
+  chunk 2/12 done, 76s elapsed, ETA 379s
+  chunk 3/12 done, 76s elapsed, ETA 228s
+  chunk 4/12 done, 76s elapsed, ETA 152s
+  chunk 5/12 done, 76s elapsed, ETA 106s
+  chunk 6/12 done, 76s elapsed, ETA 76s
+  chunk 7/12 done, 76s elapsed, ETA 54s
+  chunk 8/12 done, 76s elapsed, ETA 38s
+  chunk 9/12 done, 76s elapsed, ETA 25s
+  chunk 10/12 done, 76s elapsed, ETA 15s
+  chunk 11/12 done, 76s elapsed, ETA 7s
+  chunk 12/12 done, 76s elapsed, ETA 0s
+[FD001_degree_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0] saved FD001_degree_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0.npz in 188s
+FD001_degree_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0: alpha=1 cv=13.53 train=9.82 TEST rmse=12.98 nasa=266 || n=10: val 21.35 gap 12.64 | n=25: val 18.63 gap 9.41 | n=50: val 16.39 gap 6.18 | n=80: val 16.06 gap 5.32
+=== 00:33:39 FD001_weight_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0
+[FD001_weight_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0] matrix nnz=24539704 raw_sr=0.919, readout=2129, input neurons=9453 (10s)
+[FD001_weight_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 83s elapsed, ETA 910s
+  chunk 2/12 done, 83s elapsed, ETA 414s
+  chunk 3/12 done, 83s elapsed, ETA 248s
+  chunk 4/12 done, 83s elapsed, ETA 166s
+  chunk 5/12 done, 83s elapsed, ETA 116s
+  chunk 6/12 done, 83s elapsed, ETA 83s
+  chunk 7/12 done, 83s elapsed, ETA 59s
+  chunk 8/12 done, 83s elapsed, ETA 41s
+  chunk 9/12 done, 83s elapsed, ETA 28s
+  chunk 10/12 done, 83s elapsed, ETA 17s
+  chunk 11/12 done, 83s elapsed, ETA 8s
+  chunk 12/12 done, 83s elapsed, ETA 0s
+[FD001_weight_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 61s elapsed, ETA 675s
+  chunk 2/12 done, 61s elapsed, ETA 307s
+  chunk 3/12 done, 61s elapsed, ETA 184s
+  chunk 4/12 done, 61s elapsed, ETA 123s
+  chunk 5/12 done, 61s elapsed, ETA 86s
+  chunk 6/12 done, 61s elapsed, ETA 61s
+  chunk 7/12 done, 61s elapsed, ETA 44s
+  chunk 8/12 done, 61s elapsed, ETA 31s
+  chunk 9/12 done, 61s elapsed, ETA 20s
+  chunk 10/12 done, 61s elapsed, ETA 12s
+  chunk 11/12 done, 61s elapsed, ETA 6s
+  chunk 12/12 done, 61s elapsed, ETA 0s
+[FD001_weight_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0] saved FD001_weight_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0.npz in 160s
+FD001_weight_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0: alpha=0.01 cv=14.10 train=9.11 TEST rmse=16.78 nasa=423 || n=10: val 22.22 gap 14.16 | n=25: val 17.69 gap 7.47 | n=50: val 16.12 gap 5.57 | n=80: val 13.83 gap 5.29
+=== 00:37:41 FD001_weight_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0
+[FD001_weight_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0] matrix nnz=24539704 raw_sr=0.919, readout=2129, input neurons=9453 (0s)
+[FD001_weight_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 83s elapsed, ETA 912s
+  chunk 2/12 done, 83s elapsed, ETA 415s
+  chunk 3/12 done, 83s elapsed, ETA 249s
+  chunk 4/12 done, 83s elapsed, ETA 166s
+  chunk 5/12 done, 83s elapsed, ETA 116s
+  chunk 6/12 done, 83s elapsed, ETA 83s
+  chunk 7/12 done, 83s elapsed, ETA 59s
+  chunk 8/12 done, 83s elapsed, ETA 41s
+  chunk 9/12 done, 83s elapsed, ETA 28s
+  chunk 10/12 done, 83s elapsed, ETA 17s
+  chunk 11/12 done, 83s elapsed, ETA 8s
+  chunk 12/12 done, 83s elapsed, ETA 0s
+[FD001_weight_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 61s elapsed, ETA 676s
+  chunk 2/12 done, 61s elapsed, ETA 307s
+  chunk 3/12 done, 61s elapsed, ETA 184s
+  chunk 4/12 done, 61s elapsed, ETA 123s
+  chunk 5/12 done, 61s elapsed, ETA 86s
+  chunk 6/12 done, 61s elapsed, ETA 61s
+  chunk 7/12 done, 61s elapsed, ETA 44s
+  chunk 8/12 done, 61s elapsed, ETA 31s
+  chunk 9/12 done, 61s elapsed, ETA 20s
+  chunk 10/12 done, 61s elapsed, ETA 12s
+  chunk 11/12 done, 61s elapsed, ETA 6s
+  chunk 12/12 done, 61s elapsed, ETA 0s
+[FD001_weight_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0] saved FD001_weight_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0.npz in 151s
+FD001_weight_shuffle_glu-1_rho0.9_leak0.5_mapsemantic_s0: alpha=0.01 cv=17.39 train=14.94 TEST rmse=16.22 nasa=557 || n=10: val 21.28 gap 7.02 | n=25: val 20.07 gap 5.20 | n=50: val 18.15 gap 3.47 | n=80: val 17.41 gap 2.87
+=== 00:41:36 FD001_weight_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0
+[FD001_weight_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0] matrix nnz=24539704 raw_sr=0.919, readout=2129, input neurons=9453 (9s)
+[FD001_weight_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 90s elapsed, ETA 995s
+  chunk 2/12 done, 90s elapsed, ETA 452s
+  chunk 3/12 done, 90s elapsed, ETA 271s
+  chunk 4/12 done, 90s elapsed, ETA 181s
+  chunk 5/12 done, 90s elapsed, ETA 127s
+  chunk 6/12 done, 90s elapsed, ETA 90s
+  chunk 7/12 done, 90s elapsed, ETA 65s
+  chunk 8/12 done, 90s elapsed, ETA 45s
+  chunk 9/12 done, 90s elapsed, ETA 30s
+  chunk 10/12 done, 90s elapsed, ETA 18s
+  chunk 11/12 done, 90s elapsed, ETA 8s
+  chunk 12/12 done, 90s elapsed, ETA 0s
+[FD001_weight_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 65s elapsed, ETA 719s
+  chunk 2/12 done, 65s elapsed, ETA 327s
+  chunk 3/12 done, 65s elapsed, ETA 196s
+  chunk 4/12 done, 65s elapsed, ETA 131s
+  chunk 5/12 done, 65s elapsed, ETA 92s
+  chunk 6/12 done, 65s elapsed, ETA 65s
+  chunk 7/12 done, 65s elapsed, ETA 47s
+  chunk 8/12 done, 65s elapsed, ETA 33s
+  chunk 9/12 done, 65s elapsed, ETA 22s
+  chunk 10/12 done, 65s elapsed, ETA 13s
+  chunk 11/12 done, 65s elapsed, ETA 6s
+  chunk 12/12 done, 65s elapsed, ETA 0s
+[FD001_weight_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0] saved FD001_weight_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0.npz in 171s
+FD001_weight_shuffle_glu-1_rho1.2_leak0.1_mapsemantic_s0: alpha=0.1 cv=13.56 train=9.40 TEST rmse=15.61 nasa=361 || n=10: val 23.50 gap 15.13 | n=25: val 19.06 gap 8.28 | n=50: val 16.06 gap 5.83 | n=80: val 13.24 gap 4.16
+=== 00:45:49 FD001_weight_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0
+[FD001_weight_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0] matrix nnz=24539704 raw_sr=0.919, readout=2129, input neurons=9453 (0s)
+[FD001_weight_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 84s elapsed, ETA 928s
+  chunk 2/12 done, 84s elapsed, ETA 422s
+  chunk 3/12 done, 84s elapsed, ETA 253s
+  chunk 4/12 done, 84s elapsed, ETA 169s
+  chunk 5/12 done, 84s elapsed, ETA 118s
+  chunk 6/12 done, 84s elapsed, ETA 84s
+  chunk 7/12 done, 84s elapsed, ETA 60s
+  chunk 8/12 done, 84s elapsed, ETA 42s
+  chunk 9/12 done, 84s elapsed, ETA 28s
+  chunk 10/12 done, 84s elapsed, ETA 17s
+  chunk 11/12 done, 84s elapsed, ETA 8s
+  chunk 12/12 done, 84s elapsed, ETA 0s
+[FD001_weight_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 62s elapsed, ETA 684s
+  chunk 2/12 done, 62s elapsed, ETA 311s
+  chunk 3/12 done, 62s elapsed, ETA 187s
+  chunk 4/12 done, 62s elapsed, ETA 124s
+  chunk 5/12 done, 62s elapsed, ETA 87s
+  chunk 6/12 done, 62s elapsed, ETA 62s
+  chunk 7/12 done, 62s elapsed, ETA 44s
+  chunk 8/12 done, 62s elapsed, ETA 31s
+  chunk 9/12 done, 62s elapsed, ETA 21s
+  chunk 10/12 done, 62s elapsed, ETA 12s
+  chunk 11/12 done, 62s elapsed, ETA 6s
+  chunk 12/12 done, 62s elapsed, ETA 0s
+[FD001_weight_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0] saved FD001_weight_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0.npz in 153s
+FD001_weight_shuffle_glu-1_rho1.2_leak0.5_mapsemantic_s0: alpha=0.01 cv=15.34 train=11.61 TEST rmse=14.77 nasa=383 || n=10: val 26.55 gap 16.04 | n=25: val 20.89 gap 8.46 | n=50: val 16.83 gap 6.05 | n=80: val 16.24 gap 6.48
+=== PHASE A DONE 00:49:43

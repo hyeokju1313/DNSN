@@ -1,0 +1,30 @@
+{
+ "key": "FD001_degree_shuffle_glu-1_rho0.9_leak0.1_mapsemantic_s0",
+ "args": {
+  "fd": "FD001",
+  "variant": "degree_shuffle",
+  "glu": -1.0,
+  "rho": 0.9,
+  "leak": 0.1,
+  "mapping": "semantic",
+  "seed": 0,
+  "ablate": [],
+  "top": 0,
+  "workers": 12
+ },
+ "matrix": {
+  "variant": "degree_shuffle",
+  "norm": "input_fraction",
+  "glu_sign": -1.0,
+  "rho": 0.9,
+  "seed": 0,
+  "ablate": [],
+  "subset": null,
+  "n": 165122,
+  "nnz": 24467455,
+  "raw_spectral_radius": 0.22220425609146652,
+  "path": "/Users/hyeokju1313/Desktop/2026-2/AI+X/data/derived/matrices/W_degree_shuffle_input_fraction_glu-1_rho0.9_s0_ablnone.npz"
+ },
+ "readout_neurons": 2129,
+ "seconds": 197.8
+}

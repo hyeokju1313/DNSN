@@ -1,0 +1,5 @@
+=== 02:12:41 M2 warm connectome
+[FD001_m2_connectome_rho1.2_s0_warm] trainable params 40,296 (types 14,356, input weights 9,453, readout 2129) on mps
+[FD001_m2_connectome_rho1.2_s0_warm] train windows 1750, val windows 449, test engines 100
+[FD001_m2_connectome_rho1.2_s0_warm] epoch 0 (ridge init, alpha=0.01): val 15.80 test 15.25 nasa 460 (21s)
+  ep 1 batch 10/28 loss 6955305019.1 (100s, ETA this epoch 180s)

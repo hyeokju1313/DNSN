@@ -1,0 +1,28 @@
+[FD001_connectome_glu-1_rho1.2_leak0.1_mapsemantic_s0] matrix nnz=24539704 raw_sr=0.915, readout=2129, input neurons=9453 (9s)
+[FD001_connectome_glu-1_rho1.2_leak0.1_mapsemantic_s0] train 100 engines (max 362 cycles)
+  chunk 1/12 done, 90s elapsed, ETA 994s
+  chunk 2/12 done, 90s elapsed, ETA 452s
+  chunk 3/12 done, 90s elapsed, ETA 271s
+  chunk 4/12 done, 90s elapsed, ETA 181s
+  chunk 5/12 done, 90s elapsed, ETA 126s
+  chunk 6/12 done, 90s elapsed, ETA 90s
+  chunk 7/12 done, 90s elapsed, ETA 65s
+  chunk 8/12 done, 90s elapsed, ETA 45s
+  chunk 9/12 done, 90s elapsed, ETA 30s
+  chunk 10/12 done, 90s elapsed, ETA 18s
+  chunk 11/12 done, 90s elapsed, ETA 8s
+  chunk 12/12 done, 90s elapsed, ETA 0s
+[FD001_connectome_glu-1_rho1.2_leak0.1_mapsemantic_s0] test 100 engines (max 303 cycles)
+  chunk 1/12 done, 67s elapsed, ETA 734s
+  chunk 2/12 done, 67s elapsed, ETA 334s
+  chunk 3/12 done, 67s elapsed, ETA 200s
+  chunk 4/12 done, 67s elapsed, ETA 133s
+  chunk 5/12 done, 67s elapsed, ETA 93s
+  chunk 6/12 done, 67s elapsed, ETA 67s
+  chunk 7/12 done, 67s elapsed, ETA 48s
+  chunk 8/12 done, 67s elapsed, ETA 33s
+  chunk 9/12 done, 67s elapsed, ETA 22s
+  chunk 10/12 done, 67s elapsed, ETA 13s
+  chunk 11/12 done, 67s elapsed, ETA 6s
+  chunk 12/12 done, 67s elapsed, ETA 0s
+[FD001_connectome_glu-1_rho1.2_leak0.1_mapsemantic_s0] saved FD001_connectome_glu-1_rho1.2_leak0.1_mapsemantic_s0.npz in 172s
