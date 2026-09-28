@@ -1,0 +1,15 @@
+.DS_Store
+__pycache__/
+.venv/
+
+# 공통 커넥톰: 원본(1GB)과 파생 행렬(수 GB). 받는 방법은 data/README.md
+data/*
+!data/README.md
+
+# 학사규정 챗봇: 임베딩·특징 캐시
+regqa/data/derived/
+
+# 항공엔진: C-MAPSS 원본은 NASA에서 받는다(cmapss/data/README.md). 저장소 상태는 설정당 약 270MB
+cmapss/data/*
+!cmapss/data/README.md
+cmapss/results/states/*.npz
