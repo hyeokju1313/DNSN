@@ -1,0 +1,1762 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('1825', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"1825\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=116&SEQ_HISTORY=1825&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">수업운영에 관한 규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+							<div class="history historyShow" style="display: block;">
+								<span onclick="thisHistoryShow();" style="cursor: pointer;">
+									연혁 보이기 <img src="/lmxsrv/images/btn/tabBtn_open.gif" alt="보기" title="보기"/>
+								</span>
+							</div>
+							<div class="history historyHide" style="display: none;">
+								<span onclick="thisHistoryHide();" style="cursor: pointer;">
+									연혁 숨기기 <img src="/lmxsrv/images/btn/tabBtn_close_o.gif" alt="감추기" title="감추기"/>
+								</span>
+							</div>
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제      정   2011. 12.  5.</div>
+						
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">시  행  일   2012.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제1차 개정   2012.  9.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제2차 개정 2013.  2.  4.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제3차 개정 2013.  4.  8.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제4차 개정 2014.  1.  7.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제5차, 6차 개정 2015.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제7차 개정 2017.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제8차 개정 2018.  2.  6.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제9차 개정 2019.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제10차 개정 2020.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제11차 개정 2020.  7. 20.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제12차 개정 2020. 12. 22.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제13차 개정 2021.  2. 26.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제14차 개정 2021.  6. 23.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제15차 개정 2021. 12. 13.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제16차 개정 2022.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제17차 개정 2023. 10. 30.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제18차 개정 2025.  7. 23.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제19차 개정 2025. 10. 27.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+						
+							<div class="history historyContentLast" style="display: block;font-size: 9pt;">제20차 개정 2026.  5. 11.</div>
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000002" name="000002"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="86526" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=116&SEQ_HISTORY=1825&SEQ_CONTENTS=86526', 'joHistory86526', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(86526);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 한국공학대학교(이하 "본 대학교"라 한다) 학칙시행세칙 제4장의 수업운영에 관한 세부사항을 정함을 목적으로 한다. </span><span style="color:#0000ff;"><개정 2022.3.1.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="86527" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=116&SEQ_HISTORY=1825&SEQ_CONTENTS=86527', 'joHistory86527', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(86527);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (교과목 개설)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교과목 편성은 수업시간 단위를 고려하여 특정요일이나 시간대에 편중되지 않도록 주중에 균형있게 배정하여야 한다. </span></div><div class="hang level1"><span style="0">② 매 학기 교과목 개설은 교무처에서 전년도 수강수요 및 재학생 수를 고려하여 강좌수를 책정하여 해당학과로 통보한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="86528" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=116&SEQ_HISTORY=1825&SEQ_CONTENTS=86528', 'joHistory86528', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(86528);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (강의시간 배정)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 강의시간은 50분으로 하며, 교시별 시간 구분은 아래와 같다 </span><span style="color:#0000ff;"><개정 2013.2.4.> </span></div> <div class="none level1"><table cellpadding="0" cellspacing="0"><tbody><tr><td bgcolor="#d6d6d6" colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;background-color:#d6d6d6;text-align:center;" width="134"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="font-weight:bold;">교시 </span></p></td><td bgcolor="#d6d6d6" colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;background-color:#d6d6d6;text-align:center;" width="186"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="font-weight:bold;">수업시간 </span></p></td><td bgcolor="#d6d6d6" colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;background-color:#d6d6d6;text-align:center;" width="143"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="font-weight:bold;">교시 </span></p></td><td bgcolor="#d6d6d6" colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;background-color:#d6d6d6;text-align:center;" width="177"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="font-weight:bold;">수업시간 </span></p></td></tr><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="134"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">1교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">2교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">3교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">4교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">5교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">6교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">7교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">8교시 </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="186"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">09:30 ~ 10:20 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">10:30 ~ 11:20 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">11:30 ~ 12:20 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">12:30 ~ 13:20 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">13:30 ~ 14:20 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">14:30 ~ 15:20 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">15:30 ~ 16:20 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">16:30 ~ 17:20 </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="143"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">9교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">10교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">11교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">12교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">13교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">14교시 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="177"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">17:25~18:15 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">18:15~19:05 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">19:05~19:55 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">20:00~20:50 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">20:50~21:40 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">21:40~22:30 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p></td></tr></tbody></table></div><div class="hang level1"><span style="0">② 강의시간이 3시간 이상 소요되는 교과목은 주2회로 나누어 배정한다. 단, 4학년 전공과목, 야간강좌, 비전임교원 담당강좌, 실험ㆍ실습강좌, 수강인원 100명 초과 등의 교과목 특성상 필요한 경우에는 예외로 할 수 있다. </span><span style="color:#0000ff;"><개정 2020.7.20.> </span></div><div class="hang level1"><span style="0">③ 학과장은 지정된 기간내에 다음 학기에 개설되는 교과목의 강의시간 및 담당교강사, 강의실을 배정하고 이를 전산입력한 후 교무처장에게 통보한다. </span></div><div class="hang level1"><span style="0">④ 강의시간표 편성 후 학생들에게 공고되어 확정된 수업시간은 변경할 수 없다. 단, 부득이한 사유가 있을 경우 학과장을 경유하여 교무처장의 허가를 받아야 한다. </span></div><div class="hang level1"><span style="0">⑤ 전임교원의 강의시간은 주 3일 이상을 분산하여 배정하고, 1일 최대 배정시간은 주ㆍ야간을 합산하여 6시간이내를 원칙으로 한다. 단, 예외가 인정되는 경우 교무처장의 승인을 받아 처리할 수 있다. </span></div><div class="hang level1"><span style="0">⑥ 교원구분별 주당 최대 수업시간은 다음 각 호와 같으며, 비전임교원은 실제로 담당한 강의시간을 그대로 적용한다. 부득이 최대 수업시간을 초과하여 강의해야할 경우에는 총장의 허가를 얻어야 하며, 이 경우에도 법령상 최대 수업시간을 초과할 수 없다. </span><span style="color:#0000ff;"><개정 2013.2.4., 2014.1.7. 2018.2.6., 2020.3.1., 2020.7.20., 2021.6.23., 2021.12.13., 2025.7.23.> </span></div><div class="ho level2"><span style="0">1. 전임교원 18시간 </span></div><div class="ho level2"><span style="0">2. 겸임교원 및 초빙교원 9시간(법령상 최대 수업시간 12시간) </span></div><div class="ho level2"><span style="0">3. 강사 6시간(법령상 최대 수업시간 9시간) </span></div><div class="ho level2"><span style="0">4. 특임, 석좌교원 3시간 </span></div><div class="ho level2"><span style="0">5. 2~4호를 제외한 비전임교원 6시간(법령상 최대 수업시간 9시간) </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="86529" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=116&SEQ_HISTORY=1825&SEQ_CONTENTS=86529', 'joHistory86529', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(86529);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (분반)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교무처는 [별표1]의 기준에 따라 분반여부를 제시하여야 하며, 수강수요와 교육공간 여건 등으로 인해 추가 분반이 필요할 경우, 단과대학장(학과(부)장)은 교무처장의 승인을 얻어 강좌 개설을 요청할 수 있다. 단, 수강수요에 의한 추가분반은 최근 3년간 평균 수강인원이 분반 기준 이상일 경우 승인할 수 있다. </span><span style="color:#0000ff;"><개정 2021.12.13., 2023.10.30.> </span></div><div class="hang level1"><span style="0">② 제1항에도 불구하고 수준별 수업운영교과, 커리어교과, FYE교과(전공탐색 및 진로지도), 전공입문교과, 캡스톤디자인(종합설계), 현장실무교과, 원격수업, 세미나, 특별강의 등 교과목의 특성 및 운영 여건을 고려하여 분반 기준을 달리 적용할 수 있다. </span><span style="color:#0000ff;"><신설 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="86530" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=116&SEQ_HISTORY=1825&SEQ_CONTENTS=86530', 'joHistory86530', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(86530);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (폐강)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 수강신청확인 변경기간 이후 수강인원이 전공교과 10명, 교양교과 15명 미만인 경우 교무처에서는 해당강좌를 확정하여 학과에 통보하고 폐강처리 한다. </span><span style="color:#0000ff;"><개정 2026. 5. 11.> </span></div><div class="hang level1"><span style="0">② 계절학기는 전공교과 10명, 교양교과 15명 미만인 경우 폐강처리토록 한다. </span></div><div class="hang level1"><span style="0">③ 제1항에도 불구하고, 정규학기 폐강 시점에 강좌 개설 학년 재학생의 30% 이상이 수강신청하고, 수강인원이 5명 이상인 경우, 학과(부)장은 교무처장의 승인을 받아 해당 강좌의 개설을 요청할 수 있다. </span><span style="color:#0000ff;"><신설 2026. 5. 11.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000007" name="000007"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="86531" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=116&SEQ_HISTORY=1825&SEQ_CONTENTS=86531', 'joHistory86531', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(86531);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (강의계획서)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">교과목 담당교수는 수강신청기간 1주일 전까지 강의계획서의 전산입력을 완료하여 수강을 희망하는 학생들이 확인할 수 있도록 하여야 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="86532" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=116&SEQ_HISTORY=1825&SEQ_CONTENTS=86532', 'joHistory86532', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(86532);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (출결 관리)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교과목 담당교수는 출결사항을 매교시마다 기록, 관리하여야 하며, 매학기 중간 및 기말고사 전에 출석미달 학생에게 이를 통보하여야 한다. </span></div><div class="hang level1"><span style="0">② 교과목별 출석률이 총 수업시간의 1/4이상을 결석한 학생은 출석미달자로 구분하여 시험성적을 "F"로 부여한다. </span></div><div class="hang level1"><span style="0">③ 수업시간 20분 이상의 지각 또는 조퇴는 결석으로 간주하며, 3회의 지각 또는 조퇴는 1회의 결석으로 환산한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000009" name="000009"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="86533" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=116&SEQ_HISTORY=1825&SEQ_CONTENTS=86533', 'joHistory86533', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(86533);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (수업 진행상황 보고 및 수업확인)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 비전임교원의 출강은 소속 학과사무실에 비치되어 있는 출강날인부를 통해 확인한다. </span></div><div class="hang level1"><span style="0">② 학과장은 4주를 기준으로 출강부를 확인하고, 학기 별 수업진행 상황보고서(휴강 및 보강 포함)를 작성, 학기말에 교무처장에게 제출하여야 한다. </span><span style="color:#0000ff;"><개정 2019.3.1.> </span></div><div class="hang level1"><span style="0">③ 학과는 당일의 수업이 정상적으로 이루어지고 있는지를 점검하고 중요한 사항 발생시에는 이에 대해 교무처에 보고하여야 한다. </span></div><div class="hang level1"><span style="0">④ 학사일정 진행 중 다음과 같은 사유로 수업결손이 발생하는 경우 소속학과장 책임하에 강의대책(강사대체 및 보강)을 수립하여 교무처장에게 통보하며, 교무처장은 총장에게 보고하여야 한다. </span></div><div class="ho level2"><span style="0">1. 담당 교수의 신분 변동이나 기타 사정에 의해 수업이 불가능한 경우 </span></div><div class="ho level2"><span style="0">2. 학생소요 등으로 정상 수업이 불가능한 경우(해당학과장 의견서 첨부) </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000010" name="000010"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="86534" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=116&SEQ_HISTORY=1825&SEQ_CONTENTS=86534', 'joHistory86534', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(86534);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (휴강 및 보강)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교과목 담당교수는 휴강 사유 발생시 사전에 학과장에게 휴강신청서를 제출하여 허가를 받아야 하며, 당해학기 종료 이전에 반드시 보강을 실시하여 수업 결손이 발생하지 않도록 하여야 한다. 또한 수강 학생들에게 휴강일 1주일 이전에 휴강 및 보강계획을 안내하여 학생들의 불편이 없도록 최선을 다해야 한다. </span></div><div class="hang level1"><span style="0">② 교과목 담당교수는 성적 입력 전까지 보강결과를 전산 입력하여야 하며, 학과장은 그 이행여부를 확인한 후, 수업진행 상황보고서를 교무처장에게 제출하여야 한다. </span></div><div class="hang level1"><span style="0">③ 모든 교강사는 학기당 15주의 수업일을 준수하여야 하며, 수업일이 국정공휴일, 임시공휴일 또는 개교기념일 등으로 인해 공식적인 휴강이 발생한 경우에는 학기말의 보강주에 해당수업을 보강하여 수업결손이 없도록 하여야 한다. </span></div><div class="hang level1"><span style="0">④ 학기당 15주의 수업일을 미준수할 경우, 모든 교강사에 대하여 미준수 시수에 대한 강의료를 환수한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000011" name="000011"></a>
+                    <a id="c010000000" name="c010000000"></a>
+                    <div class="JO" id="86535" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=116&SEQ_HISTORY=1825&SEQ_CONTENTS=86535', 'joHistory86535', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(86535);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 10 조 (타대학 출강)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 책임시수를 충족하는 전임교원이 타대학에 출강하고자 할 경우에는 소속학과장을 경유하여 개강 전까지 교무처로 신청하여 총장의 승인을 받아야 한다. 단, 책임시수를 감면받은 보직교원은 타대학 출강을 불허한다. </span><span style="color:#0000ff;"><개정 2017.3.1., 2020.7.20> </span></div><div class="hang level1"><span style="0">② 타대학 출강기간은 주당 6시수를 초과할 수 없다. </span><span style="color:#0000ff;"><신설 2017.3.1.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000012" name="000012"></a>
+                    <a id="c011000000" name="c011000000"></a>
+                    <div class="JO" id="86536" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=116&SEQ_HISTORY=1825&SEQ_CONTENTS=86536', 'joHistory86536', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(86536);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조 (자녀수강신고)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교과목 담당교수의 자녀가 담당 교과목을 수강 신청하는 경우 담당교수는 교무처에 반드시 이를 신고하여야 한다. </span></div><div class="hang level1"><span style="0">② 자녀수강 교과목의 성적산출 근거자료(이하 근거자료)는 학과(부)장에게 제출하며, 학과(부)장은 성적 공정여부를 확인하고 교무처에 근거자료 및 공정성 확인 관련 자료를 제출하여야 한다. </span><span style="color:#0000ff;"><개정 2025.10.27.> </span></div><div class="hang level1"><span style="0">③ 교무처는 근거자료, 공정성 확인 자료를 취합 및 공정성 여부를 최종 검증하고, 성적조정위원회에 그 결과를 보고하여야 한다. </span><span style="color:#0000ff;"><신설 2025.10.27.> </span></div><div class="hang level1"><span style="0">④ 제1항부터 제3항에서 정한 의무를 위반한 교원에 대해서는 「교원인사규정」에 따라 제재할 수 있다. </span><span style="color:#0000ff;"><신설 2025.10.27.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="13"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86537"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2012년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="15"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86538"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2012년 9월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="17"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86539"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2013년 2월 4일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="19"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86540"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2013년 4월 8일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="21"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86541"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2014년 1월 7일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="23"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86542"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2015년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="25"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86543"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2017년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="27"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86544"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2018년 2월 6일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="29"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86545"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="31"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86546"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="33"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86547"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 7월 20일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="35"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86548"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 12월 22일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="37"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86549"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 2월 26일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="39"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86550"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 6월 23일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="41"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86551"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 12월 13일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="43"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86552"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="45"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86553"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2023년 10월 30일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="47"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86554"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 7월 23일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="49"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86555"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 10월 27일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="51"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="86556"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 5월 11일부터 시행한다. </span></div></div></div>
+                
+            
+        
+
+        
+            <div class="article attach_tit">[별표/서식 파일]</div>
+            <p class="txt-notice">
+			※ 미리보기 파일은 gif 파일입니다. 미리보기 시, 해당 별표/서식의 첫 번째 페이지만 보입니다.<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;전문은 다운로드를 통해 확인하실 수 있습니다.  
+			</p>
+            
+                
+                
+                
+                
+                
+                
+                
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">[별표1] 강좌 유형별 분반 기준.hwp</span>
+                                    
+                                        <a href="javascript:fileDown('7486', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <a href="javascript:showImg('X1','on')" id="X1_on" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                            <a href="javascript:showImg('X1','off')" id="X1_off" style="display: none;" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        <tr id="X1" style="display: none;">
+                                            <td>
+                                                <img src="/lmxdata/attach/2026/8/upload_3727120434137029416_1.gif" style="width: 100%;" />
+                                            </td>
+                                        </tr>
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

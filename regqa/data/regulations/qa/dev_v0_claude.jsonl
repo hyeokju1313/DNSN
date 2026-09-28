@@ -1,0 +1,20 @@
+{"id": "dev-00", "question": "장학금은 중복으로 받을 수 있어?", "in_scope": true, "source": "claude"}
+{"id": "dev-01", "question": "휴학하면 받던 장학금은 어떻게 돼?", "in_scope": true, "source": "claude"}
+{"id": "dev-02", "question": "마이크로디그리 과정은 어떻게 이수해?", "in_scope": true, "source": "claude"}
+{"id": "dev-03", "question": "전공트랙 이수 기준이 뭐야?", "in_scope": true, "source": "claude"}
+{"id": "dev-04", "question": "학생 동아리를 새로 만들려면 어떻게 해?", "in_scope": true, "source": "claude"}
+{"id": "dev-05", "question": "장애학생은 어떤 지원을 받을 수 있어?", "in_scope": true, "source": "claude"}
+{"id": "dev-06", "question": "지도교수 상담은 몇 번 받아야 해?", "in_scope": true, "source": "claude"}
+{"id": "dev-07", "question": "원격수업 출석은 어떻게 인정돼?", "in_scope": true, "source": "claude"}
+{"id": "dev-08", "question": "재학증명서는 누가 발급받을 수 있어?", "in_scope": true, "source": "claude"}
+{"id": "dev-09", "question": "학적부는 아무나 볼 수 있어?", "in_scope": true, "source": "claude"}
+{"id": "dev-10", "question": "학교 축제에 어떤 가수가 와?", "in_scope": false, "source": "claude"}
+{"id": "dev-11", "question": "도서관 스터디룸 예약은 어떻게 해?", "in_scope": false, "source": "claude"}
+{"id": "dev-12", "question": "학교 앞 버스 정류장이 어디야?", "in_scope": false, "source": "claude"}
+{"id": "dev-13", "question": "교직원 식당 가격 알려줘", "in_scope": false, "source": "claude"}
+{"id": "dev-14", "question": "교내 헬스장 회원권 있어?", "in_scope": false, "source": "claude"}
+{"id": "dev-15", "question": "교내 편의점은 몇 시까지 해?", "in_scope": false, "source": "claude"}
+{"id": "dev-16", "question": "택배 보관함 위치가 어디야?", "in_scope": false, "source": "claude"}
+{"id": "dev-17", "question": "우산 빌려주는 곳 있어?", "in_scope": false, "source": "claude"}
+{"id": "dev-18", "question": "학교 로고 파일은 어디서 받아?", "in_scope": false, "source": "claude"}
+{"id": "dev-19", "question": "시험기간에 열람실 24시간 운영해?", "in_scope": false, "source": "claude"}

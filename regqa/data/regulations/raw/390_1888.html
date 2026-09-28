@@ -1,0 +1,793 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('1888', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"1888\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=390&SEQ_HISTORY=1888&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">반도체특성화대학 복수·공동학위제도 운영 규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+		                	<div class="history historyContentLast" style="display: block;font-size: 9pt;">제정  2026. 8. 26.</div>
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000002" name="000002"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="87646" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=390&SEQ_HISTORY=1888&SEQ_CONTENTS=87646', 'joHistory87646', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87646);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 한국공학대학교(이하 "본 대학"이라 한다)에서 주관하고 국립공주대학교(이하 "참여 대학"이라 한다)가 참여하는 반도체특성화대학지원사업 및 학술교류협정을 통한 복수 또는 공동학위 수여에 관하여 필요한 세부 사항을 규정함을 목적으로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="87647" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=390&SEQ_HISTORY=1888&SEQ_CONTENTS=87647', 'joHistory87647', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87647);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (교육 목표)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">반도체 전공정 분야에 특화된 본 대학과 후공정 분야에 특화된 참여 대학이 각 영역에서 이론 및 실습 기반의 공유교육과정 및 공유학사제도를 통하여 첨단 반도체 계측·분석·검사 분야의 전문가 인재를 육성하는 것을 목표로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="87648" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=390&SEQ_HISTORY=1888&SEQ_CONTENTS=87648', 'joHistory87648', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87648);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (학점교류 및 인정)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 대학과 참여 대학 간 학술교류협정을 통해 학점을 교류할 수 있으며, 총장의 승인을 얻어 참여 대학에서 취득한 학점을 본 대학의 학점으로 인정할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="87649" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=390&SEQ_HISTORY=1888&SEQ_CONTENTS=87649', 'joHistory87649', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87649);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (용어의 정의)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① "복수학위"라 함은 본 대학과 협정을 체결한 참여 대학에서 각각 제공하는 교육과정을 이수하여 양 대학의 학위취득에 필요한 요건을 충족한 자에게 각 대학 총장 명의로 수여하는 학위를 말한다. </span></div><div class="hang level1"><span style="0">② "공동학위"라 함은 본 대학과 협정을 체결한 참여 대학과 공동으로 운영하는 교과과정을 이수하고, 학위취득에 필요한 요건을 충족한 자에게 하나의 학위증서에 양 대학 총장의 공동명의로 수여하는 학위를 말한다. </span></div><div class="hang level1"><span style="0">③ "총괄사업운영위원회"(이하 "총괄위원회"라 한다)라 함은 반도체특성화대학지원사업을 수행하기 위해 전체 사업 운영 및 관리를 전담하는 기구를 말한다. </span></div><div class="hang level1"><span style="0">④ "교육과정혁신위원회"(이하 "교육위원회"라 한다)라 함은 반도체특성화대학지원사업의 공동 교육과정의 혁신을 위해 운영을 관리하는 기구를 말한다. </span></div><div class="hang level1"><span style="0">⑤ "사업운영위원회"(이하 "운영위원회"라 한다)라 함은 총괄위원회 산하 양 대학에 각각 둔 기구로서, 반도체특성화대학지원사업의 대학별 특성화 교육과정 운영 전반에 관한 업무를 주관·지원한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="87650" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=390&SEQ_HISTORY=1888&SEQ_CONTENTS=87650', 'joHistory87650', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87650);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (공유협업 교과목)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① "공유협업 교과목"이라 함은 본 대학과 협정을 체결한 참여 대학이 교원, 장비, 강의 공간 등 반도체 특성화 인프라를 공유하여, 양 대학의 학부생들이 함께 수강할 수 있도록 개설, 운영하는 교과목을 말한다. </span></div><div class="hang level1"><span style="0">② 공유협업 교과목은 이론과 실습이 결합된 과목으로 정규학기 온라인 이론 강의 및 계절학기 오프라인 집중 실습으로 구성된 블렌디드 강좌로 운영한다. </span></div><div class="hang level1"><span style="0">③ 정규학기 온라인 이론 교육을 이수한 학생에 한하여 계절학기 오프라인 실습 교육의 수강신청 및 등록을 허용하며 최종 성적은 오프라인 실습 교육이 종료되는 계절학기에 부여한다. </span></div><div class="hang level1"><span style="0">④ 교육과정의 원활한 운영을 위하여 대학간 학사정보를 상호 공유하여 운영하되 강좌개설, 수강신청, 학점부여 등 학사운영 전반에 관한 사항은 소속 대학의 <a href="javascript:golink('3', '31', '','', '');">학칙</a> 및 관련 규정을 적용하여 반영한다. </span></div><div class="hang level1"><span style="0">⑤ 그 외 공유협업 교과목 개설 및 운영과 관련한 세부 사항은 운영위원회에서 별도로 정하여 운영한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000007" name="000007"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="87651" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=390&SEQ_HISTORY=1888&SEQ_CONTENTS=87651', 'joHistory87651', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87651);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (복수학위제)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 본 대학에서 6학기(전공 69학점 이상)를 이수하여 본 대학 소속 학과 전공의 이수 요건을 충족하고, 참여 대학에서 4학기(전공 42학점 이상, 교양 12학점 이상)를 등록 후 이수하여 참여 대학 개별 전공의 이수 요건을 충족한 경우 복수학위를 수여한다. 단, 전체 학위 이수 과정 중 공유협업 교과목을 최소 15학점 이수하여야 하며 그 외 필수 교과목은 따로 정한다. </span></div><div class="hang level1"><span style="0">② 복수학위 과정을 이수 중인 본 대학 학부생이 본 대학 전공 학위를 취득하는 데 필요한 모든 전공 학점을 이수하는 것을 필수조건으로 하며, 현장 연구 및 어학 자격에 대한 본 대학 공통 졸업요건을 만족하여야 한다. 그 외 본 대학 전공의 이수 요건은 본 대학의 학과 또는 전공별 내규로 정한다. </span></div><div class="hang level1"><span style="0">③ 본 대학의 학부생이 복수학위제로 취득 가능한 참여 대학 전공은 전기전자제어공학부의 세부 전공으로 제한되며, 참여 대학 전공의 이수 요건은 참여 대학의 학과 또는 전공별 내규로 정한다. </span></div><div class="hang level1"><span style="0">④ 참여 대학 학부생이 6학기를 이수하여 참여 대학 소속 학과 전공의 이수 요건을 충족하고, 본 대학에서 4학기를 이수하여 본 대학 반도체공학부 나노반도체공학전공의 이수 요건을 충족한 경우 복수학위를 수여한다. 단, 각 대학에서 이수하여야 하는 교양 학점은 따로 정한다. </span></div><div class="hang level1"><span style="0">⑤ 복수학위 과정을 이수 중인 참여 대학 학부생이 본 대학 반도체공학부 나노반도체공학전공 학위를 취득하기 위하여 전공필수 교과목을 포함한 전공 42학점 이상 및 교양 필수 교과목을 포함한 교양 12학점 이상을 이수하여야 하며, 캡스톤디자인, 현장 연구 및 어학 자격에 대한 본 대학 공통 졸업요건을 만족하여야 한다. 단, 본 대학 학위취득을 위한 이수 교과는 본 대학의 학과(부)에서 따로 정한다. </span></div><div class="hang level1"><span style="0">⑥ 그 외 복수학위 이수와 관련한 세부 사항은 운영위원회에서 별도로 정한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="87652" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=390&SEQ_HISTORY=1888&SEQ_CONTENTS=87652', 'joHistory87652', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87652);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (복수학위의 신청 및 선발)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 본 대학에서 4학기 이상(최소 70학점)을 이수하고 복수학위 과정을 신청하기 위해 필요한 선수 과목을 모두 이수했거나 이수 예정인 학부생은 복수학위 과정을 신청할 수 있다. </span></div><div class="hang level1"><span style="0">② 복수학위 과정의 학생 선발 및 지원절차 등에 관한 사항은 총괄위원회와 협의하여 총장이 따로 정한다. </span></div><div class="hang level1"><span style="0">③ 제2항에 따라 복수학위 과정에 선발된 학부생이 복수학위 과정 이수를 포기하고자 할 때에는 포기 신청서를 본 대학 및 교육위원회에 제출하여야 하며, 복수학위 취득을 위해 참여 대학에서 수학 중인 학부생이 휴학하기 위해서는 복수학위 과정 이수를 포기하여야 한다. </span></div><div class="hang level1"><span style="0">④ 복수학위 과정을 중도에 포기하는 경우, 참여 대학에서의 기이수학점을 총졸업학점에 포함하고 이수 구분은 자유 선택으로 하며 반도체특성화대학지원사업의 재원으로 위 학부생에게 지급된 장학금 일체를 환수하는 것을 원칙으로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000009" name="000009"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="87653" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=390&SEQ_HISTORY=1888&SEQ_CONTENTS=87653', 'joHistory87653', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87653);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (공동학위제)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 본 대학과 참여 대학이 협업하여 첨단반도체계측검사 동반융합전공[한국공학대학교-국립공주대학교 SeMI(Semiconductor Metrology & Inspection) 동반융합전공, 이하 "SeMI 동반융합전공"이라 한다] 학위 이수 과정을 운영한다. </span></div><div class="hang level1"><span style="0">② 소속 학과(부)와 SeMI 동반융합전공의 교과과정에 공통으로 편제된 교과목을 이수할 경우, 최대 6학점까지 중복 학점으로 인정할 수 있다. </span></div><div class="hang level1"><span style="0">③ SeMI 동반융합전공 학위 과정 중 공유협업 교과목 15학점 포함 총 36학점 이상 이수하여 공동학위 이수 요건을 충족하는 경우, 본 대학과 참여 대학의 공동학위를 수여한다. </span></div><div class="hang level1"><span style="0">④ SeMI 동반융합전공의 교과목 개설 및 운영에 관한 사항은 교육위원회와 협의하여 총장이 따로 정한다. </span></div><div class="hang level1"><span style="0">⑤ 공유협업 교과는 계절학기에 개설되며, 수강생들은 원소속 대학의 계절학기 절차에 따라 수강하는 것을 원칙으로 한다. </span></div><div class="hang level1"><span style="0">⑥ 그 외 공동학위 이수와 관련한 세부 사항은 운영위원회에서 별도로 정한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000010" name="000010"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="87654" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=390&SEQ_HISTORY=1888&SEQ_CONTENTS=87654', 'joHistory87654', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87654);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (공동학위의 신청 및 선발)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 본 대학에서 2학기 이상(최소 35학점)을 이수하고 공동학위 과정을 신청하기 위해 필요한 선수 과목을 모두 이수했거나 이수 예정인 학부생은 SeMI 동반융합전공 공동학위 과정을 신청할 수 있다. </span></div><div class="hang level1"><span style="0">② 공동학위 과정의 학생 선발 및 지원절차 등에 관한 사항은 총괄위원회와 협의하여 총장이 따로 정한다. </span></div><div class="hang level1"><span style="0">③ 제2항에 따라 공동학위 과정에 선발된 학부생이 공동학위 과정 이수를 포기하고자 할 때에는 포기 신청서를 본 대학 및 교육위원회에 제출하여야 한다. </span></div><div class="hang level1"><span style="0">④ 공동학위 과정을 중도에 포기하는 경우, 공동학위 과정에서의 기이수학점을 총졸업학점에 포함하고 이수 구분은 자유 선택으로 하며 반도체특성화대학지원사업의 재원으로 위 학부생에게 지급된 장학금의 환수 여부 및 범위 등 세부 사항은 따로 정한다. </span></div> <div class="none level1"><span style="0">단, 기이수교과목 중 소속 학과와 SeMI 동반융합전공의 교과과정에 공통으로 편제된 전공 교과목의 이수 구분은 전공으로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000011" name="000011"></a>
+                    <a id="c010000000" name="c010000000"></a>
+                    <div class="JO" id="87655" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=390&SEQ_HISTORY=1888&SEQ_CONTENTS=87655', 'joHistory87655', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87655);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 10 조 (학위수여)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① SeMI 동반융합전공 과정을 이수 중인 학부생이 졸업 기준을 모두 충족했을 경우 본 대학과 참여 대학의 총장 명의가 병행 표기된 학위를 수여한다. </span></div><div class="hang level1"><span style="0">② 본 대학과 참여 대학의 복수학위 과정을 이수 중인 학부생이 졸업 기준을 모두 충족했을 경우 각 대학의 총장 명의로 복수의 독립된 학위를 수여한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000012" name="000012"></a>
+                    <a id="c011000000" name="c011000000"></a>
+                    <div class="JO" id="87656" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=390&SEQ_HISTORY=1888&SEQ_CONTENTS=87656', 'joHistory87656', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87656);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조 (운영세칙 등)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 이 규정에 명시되지 않은 사항은 <a href="javascript:golink('3', '31', '','', '');">학칙</a> 및 제규정을 준용한다. </span></div><div class="hang level1"><span style="0">② 이 규정 시행 이전에 진행된 사항에 대해서는 총괄위원회, 교육위원회 및 본 대학 운영위원회의 의결된 결과를 기준으로 하여 적용토록 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="13"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부   칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87657"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 8월 26일부터 시행한다. </span></div></div></div>
+                
+            
+        
+
+        
+            <div class="article attach_tit">[별표/서식 파일]</div>
+            <p class="txt-notice">
+			※ 미리보기 파일은 gif 파일입니다. 미리보기 시, 해당 별표/서식의 첫 번째 페이지만 보입니다.<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;전문은 다운로드를 통해 확인하실 수 있습니다.  
+			</p>
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">[별지서식 1] 공동학위(국문)-한국공학대학교,○○대학교.hwp</span>
+                                    
+                                        <a href="javascript:fileDown('7595', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <a href="javascript:showImg('X0','on')" id="X0_on" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                            <a href="javascript:showImg('X0','off')" id="X0_off" style="display: none;" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        <tr id="X0" style="display: none;">
+                                            <td>
+                                                <img src="/lmxdata/attach/2026/8/upload_5834791271982640408_1.gif" style="width: 100%;" />
+                                            </td>
+                                        </tr>
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

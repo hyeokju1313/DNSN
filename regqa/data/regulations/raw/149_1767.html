@@ -1,0 +1,863 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('1767', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"1767\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=149&SEQ_HISTORY=1767&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">산업기술·경영대학원 학위수여 규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+		                	<div class="history historyContentLast" style="display: block;font-size: 9pt;">개정 2025.11.18.</div>
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000002" name="000002"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="80248" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=149&SEQ_HISTORY=1767&SEQ_CONTENTS=80248', 'joHistory80248', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(80248);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 <a href="javascript:golink('3', '35', '','', '');">대학원통합학칙</a> 제3장에 의거 산업기술·경영대학원(이하 "대학원" 이라 한다) 학위수여에 관한 사항을 규정함을 목적으로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="80249" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=149&SEQ_HISTORY=1767&SEQ_CONTENTS=80249', 'joHistory80249', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(80249);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (학위수여 요건)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">다음의 요건을 갖춘 자에게는 학위를 수여할 수 있다. </span></div><div class="hang level1"><span style="0">① 논문제출자 </span></div><div class="ho level2"><span style="0">1. 전공학점 25학점 이상을 취득하고, 논문지도를 이수한 자 </span></div><div class="ho level2"><span style="0">2. 평점평균이 3.0이상인 자 </span></div><div class="ho level2"><span style="0">3. 학위청구논문 심사에 합격한 자 </span></div><div class="hang level1"><span style="0">② 논문대체학점 신청자 </span></div><div class="ho level2"><span style="0">1. 전공학점 32학점(현장연구포함) 이상을 취득한 자, 단 고숙련마이스터     과정은 + PBL(OJT) 4학점 추가이수 </span></div><div class="ho level2"><span style="0">2. 평점평균이 3.0이상인 자 </span></div><div class="ho level2"><span style="0">3. 논문대체학점을 취득한 자 </span></div><div class="hang level1"><span style="0">③ 논문대체프로젝트 석사 학위 신청자 </span></div><div class="ho level2"><span style="0">1. 전공학점 25학점 이상을 취득하고, 프로젝트 학위 심의를 신청하여 승인 받은 자 </span></div><div class="ho level2"><span style="0">2. 평점평균이 3.0이상인 자 </span></div><div class="ho level2"><span style="0">3. 논문대체 프로젝트 석사 학위 심사에 합격한 자<제정 2025.11.18.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="80250" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=149&SEQ_HISTORY=1767&SEQ_CONTENTS=80250', 'joHistory80250', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(80250);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (학위종별)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 대학원에 수여하는 학위의 종별은 다음과 같다. </span></div> <div class="none level1"><table cellpadding="0" cellspacing="0"><tbody><tr><td bgcolor="#aeaeae" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:solid #808080 2px;border-bottom:none #000000 1px;background-color:#aeaeae;text-align:center;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:110%;" type="none"><span style="color:#ffffff;">학  과 (전 공) </span></p></td><td bgcolor="#aeaeae" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:solid #808080 2px;border-bottom:none #000000 1px;background-color:#aeaeae;text-align:center;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:110%;" type="none"><span style="color:#ffffff;">학  위  구  분 </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">기술보호경영학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">경영학석사(기술보호경영학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">기계공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(기계공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">기계설계공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(기계설계공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">메카트로닉스공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(메카트로닉스공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">전자공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(전자공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">컴퓨터공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(컴퓨터공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">신소재공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(신소재공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">생명화학공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(생명화학공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">나노반도체공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(나노반도체공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">디자인공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(디자인공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">전기공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(전기공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:solid #000000 2px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">스마트팩토리융합학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:solid #000000 2px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(스마트팩토리융합공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">기계제조공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(기계제조공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:100%;" type="none"><span style="0">소프트웨어융합공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(소프트웨어융합공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">복지행정학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">정책학석사(복지행정학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">스마트시스템융합학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:none #000000 1px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(스마트시스템융합공학) </span></p></td></tr><tr><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 2px;border-right:none #000000 1px;border-top:none #000000 1px;border-bottom:solid #000000 2px;background-color:#e4e4e4;text-align:justify;" width="268"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">AI탄소중립융합공학과 </span></p></td><td bgcolor="#e4e4e4" colspan="1" rowspan="1" style="border-left:none #000000 1px;border-right:none #000000 2px;border-top:none #000000 1px;border-bottom:solid #000000 2px;background-color:#e4e4e4;text-align:justify;" width="264"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:6pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">공학석사(AI탄소중립융합공학) </span></p></td></tr></tbody></table></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="80251" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=149&SEQ_HISTORY=1767&SEQ_CONTENTS=80251', 'joHistory80251', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(80251);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (학위수여대상자 결정)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">논문 심사위원회에서 통과된 학위논문은 대학원위원회에서 학위수여 여부를 결정하고 대학원장은 그 결과를 총장에게 보고하여야 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="80252" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=149&SEQ_HISTORY=1767&SEQ_CONTENTS=80252', 'joHistory80252', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(80252);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (학위수여시기)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 대학원의 학위수여는 년2회로 하며 매년 2월과 8월중에 행한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000007" name="000007"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="80253" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=149&SEQ_HISTORY=1767&SEQ_CONTENTS=80253', 'joHistory80253', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(80253);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (학위수여)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 대학원의 학위수여는 대학원장의 추천에 의하여 총장이 수여한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="80254" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=149&SEQ_HISTORY=1767&SEQ_CONTENTS=80254', 'joHistory80254', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(80254);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (학위수여취소)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 대학원의 학위를 받은 자로서 그 명예를 손상하는 행위가 있을 때에는 대학원위원회의 의결을 거쳐 그 수여를 취소할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="9"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부  칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80255"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 공포한 날부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="11"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부  칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80256"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2002년 12월 1일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(학위수건에 관한 경과조치)</div><div class="none"><span style="0">학위수여규정 제2조에 의한 학위수여요건은 2003학번부터 적용한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="14"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부  칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80257"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2004년 1월 20일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="16"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부  칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80258"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2005년 9월 23일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="18"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부  칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80259"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2009년 10월 26일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="20"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부  칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80260"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 9월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="22"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부  칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80261"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 10월 10일부터 시행한다. 단, 나노광공학과 명칭 변경에 관한 사항은 2020년 3월 1일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(학과명칭변경에 따른 경과조치)</div><div class="hang"><span style="0">① 이 규정 시행 전의 나노광공학과 재적생은 나노반도체공학과 재적생으로 본다. </span></div><div class="hang"><span style="0">② 전항에도 불구하고 희망학생에 한하여 본 <a href="javascript:golink('3', '31', '','', '');">학칙</a> 시행 전의 학과명 및 학위명을 적용하여 졸업증서를 수여할 수 있다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="25"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부 칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80262"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 3월 1일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(계약학과 명칭변경에 따른 경과조치)</div><div class="none"><span style="0">이 규정 시행전의 화합물반도체학과 재적생은 화합물반도체공학과 재적생으로 본다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="28"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부 칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80263"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 10월 14일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="30"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80264"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 2월 8일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="32"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80265"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 3월 1일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(졸업기준 변경에 대한 경과조치)</div><div class="none"><span style="0">제2조는 2022학번을 부여받은 신·편입생부터 적용하고 신ㆍ편입 당시 2021이전의 학번을 부여받은 학생은 변경 전의 규정을 적용한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="35"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80266"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 3월 14일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="37"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80267"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 4월 11일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="39"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80268"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 6월 25일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="41"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80269"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 10월 14일부터 시행한다. 단, 디자인공학부 학과명 변경에 관한 사항은 2026년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="43"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="80270"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 11월 18일부터 시행한다. </span></div><div class="none"><span style="0">(학위논문제출과정) </span></div><div class="none"><table cellpadding="0" cellspacing="0"><tbody><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 2px;border-right:solid #000000 2px;border-top:solid #000000 2px;border-bottom:solid #000000 2px;text-align:justify;" width="542"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:90%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">석 제       호 </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">학      위      기 </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">성    명： </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">생년월일： </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:90%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:90%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0">위 사람은 본교 산업기술대학원 석사학위과정(          학)을  이수하고 소정의 시험과 제출한 아래의 논문이 대학원위원회의 심사를 통과하여 (    )석사의 자격을 갖추었으므로 이를 인정함. </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0">논   문 : </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0">년      월      일 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">한국공학대학교 산업기술대학원장 </span></p><p class="none level0" level="0" ordinal="(" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">(학위)   ( 성      명)          직인 </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="font-weight:bold;">위의 인정에 의하여 (    ) 석사학위를 수여함 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0">년      월      일 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:110%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">한 국 공 학 대 학 교   총  장 </span></p><p class="none level0" level="0" ordinal="(" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">(학위)   ( 성       명 )          직인 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:40%;" type="none"><span style="0">학위번호 : </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:40%;" type="none"><span style="0"> </span></p></td></tr></tbody></table></div><div class="none"><span style="0">(논문대체학점이수과정) </span></div><div class="none"><table cellpadding="0" cellspacing="0"><tbody><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 2px;border-right:solid #000000 2px;border-top:solid #000000 2px;border-bottom:solid #000000 2px;text-align:justify;" width="546"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">석 제       호 </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">학      위      기 </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">성    명： </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">생년월일： </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:90%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:90%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">위 사람은 본교 산업기술대학원 석사학위과정(      학)을 이수하고 소정의 시험을 통과하여 (    )석사의 자격을 갖추었으므로 이를 인정함. </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:110%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:110%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">년      월      일 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0">한국공학대학교 산업기술대학원장 </span></p><p class="none level0" level="0" ordinal="(" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0">(학위)   ( 성       명)          직인 </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="font-weight:bold;">위의 인정에 의하여 (    ) 석사학위를 수여함 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">년      월      일 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">한 국 공 학 대 학 교   총  장 </span></p><p class="none level0" level="0" ordinal="(" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">(학위)   ( 성        명 )          직인 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:80%;" type="none"><span style="0">학위번호 : </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:80%;" type="none"><span style="0"> </span></p></td></tr></tbody></table></div><div class="none"><span style="0">(학위논문제출과정) </span></div><div class="none"><table cellpadding="0" cellspacing="0"><tbody><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 2px;border-right:solid #000000 2px;border-top:solid #000000 2px;border-bottom:solid #000000 2px;text-align:justify;" width="542"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:90%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">석 제       호 </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">학      위      기 </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">성    명： </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">생년월일： </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:90%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:90%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0">위 사람은 본교 산업기술·경영대학원 석사학위과정(          학)을  이수하고 소정의 시험과 제출한 아래의 논문이 대학원위원회의 심사를 통과하여 (    )석사의 자격을 갖추었으므로 이를 인정함. </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0">논   문 : </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0">년      월      일 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">한국공학대학교 산업기술·경영대학원장 </span></p><p class="none level0" level="0" ordinal="(" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">(학위)   ( 성      명)          직인 </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="font-weight:bold;">위의 인정에 의하여 (    ) 석사학위를 수여함 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0">년      월      일 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:110%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">한 국 공 학 대 학 교   총  장 </span></p><p class="none level0" level="0" ordinal="(" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:140%;" type="none"><span style="0">(학위)   ( 성       명 )          직인 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:40%;" type="none"><span style="0">학위번호 : </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:40%;" type="none"><span style="0"> </span></p></td></tr></tbody></table></div><div class="none"><span style="0">(논문대체학점이수과정) </span></div><div class="none"><table cellpadding="0" cellspacing="0"><tbody><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 2px;border-right:solid #000000 2px;border-top:solid #000000 2px;border-bottom:solid #000000 2px;text-align:justify;" width="546"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">석 제       호 </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">학      위      기 </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">성    명： </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">생년월일： </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:90%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:90%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">위 사람은 본교 산업기술·경영대학원 석사학위과정(      학)을 이수하고 소정의 시험을 통과하여 (    )석사의 자격을 갖추었으므로 이를 인정함. </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:110%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:110%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">년      월      일 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0">한국공학대학교 산업기술·경영대학원장 </span></p><p class="none level0" level="0" ordinal="(" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:150%;" type="none"><span style="0">(학위)   ( 성       명)          직인 </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="font-weight:bold;">위의 인정에 의하여 (    ) 석사학위를 수여함 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">년      월      일 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">한 국 공 학 대 학 교   총  장 </span></p><p class="none level0" level="0" ordinal="(" style="text-align:distribute;margin-right:160pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:160%;" type="none"><span style="0">(학위)   ( 성        명 )          직인 </span></p><p class="none level0" level="0" ordinal="" style="text-align:center;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0"> </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:80%;" type="none"><span style="0">학위번호 : </span></p><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-right:20pt;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:80%;" type="none"><span style="0"> </span></p></td></tr></tbody></table></div></div></div>
+                
+            
+        
+
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

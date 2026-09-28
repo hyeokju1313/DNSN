@@ -1,0 +1,1859 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('1883', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"1883\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">학생 경력개발 및 취업ㆍ창업 지원 규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+							<div class="history historyShow" style="display: block;">
+								<span onclick="thisHistoryShow();" style="cursor: pointer;">
+									연혁 보이기 <img src="/lmxsrv/images/btn/tabBtn_open.gif" alt="보기" title="보기"/>
+								</span>
+							</div>
+							<div class="history historyHide" style="display: none;">
+								<span onclick="thisHistoryHide();" style="cursor: pointer;">
+									연혁 숨기기 <img src="/lmxsrv/images/btn/tabBtn_close_o.gif" alt="감추기" title="감추기"/>
+								</span>
+							</div>
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제정 2019.07.12.</div>
+						
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">개정 2021.06.09.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+						
+							<div class="history historyContentLast" style="display: block;font-size: 9pt;">개정 2026.09.01.</div>
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="2" name="2"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 1 장  총칙</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="87230" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87230', 'joHistory87230', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87230);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 학생의 경력개발 및 취업과 창업을 지원하기 위하여 전문성을 갖춘 지원조직을 구성하고, 학생에 대한 지원과 다양한 교과 및 비교과 프로그램의 계획, 편성 및 운영, 성과평가, 개선 및 환류에 관한 사항을 규정함을 목적으로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="87231" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87231', 'joHistory87231', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87231);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (정의)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정에서 사용하는 용어의 정의는 다음 각 호와 같다. </span></div><div class="ho level1"><span style="0">1. "경력개발지원" 이란 학생들의 입학부터 취업까지 진로탐색, 현장교육, 역량강화 등을 촉진하기 위해 제공하는 교과/비교과프로그램 운영, 상담 등 일련의 활동을 말한다 </span></div><div class="ho level1"><span style="0">2. "취업지원" 이란 학생들의 사회진출을 지원하고 취업역량을 향상시키기 위한 교과/비교과프로그램 운영, 상담 및 취업대상 기업체 관리, 취업 정보제공 및 추천 등 일련의 활동을 말한다 </span></div><div class="ho level1"><span style="0">3. "창업지원" 이란 학생이 보유한 창의적 아이디어 및 기술을 기반으로 창업준비과정 및 창업활동을 지원하기 위한 교과/비교과프로그램운영, 상담 등 일련의 활동을 말한다. </span></div><div class="ho level1"><span style="0">4. "환류"라 함은 경력개발 및 취·창업 지원 프로그램의 운영 결과 또는 성과를 확인 및 점검, 모니터링하여 향후 프로그램 개선에 반영하는 일체의 절차를 말한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="87232" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87232', 'joHistory87232', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87232);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (조직)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">학생의 경력개발 및 취·창업 지원을 위하여 주관부서는 경력개발처(이하"주관부서"라 한다)로 하며, 운영부서로 진로취업지원팀, 현장교육지원센터, 창업교육센터를 둔다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="87233" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87233', 'joHistory87233', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87233);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (업무)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">학생의 경력개발 및 취업과 창업지원 운영부서는 다음 각 호의 업무를 수행한다 </span></div><div class="ho level1"><span style="0">1. 학생의 경력개발 및 취·창업 지원에 관한 계획 수립 </span></div><div class="ho level1"><span style="0">2. 학생의 경력개발 및 취·창업 지원 프로그램에 대한 수요조사 및 만족도조사에 관한 사항 </span></div><div class="ho level1"><span style="0">3. 진로 상담 </span></div><div class="ho level1"><span style="0">4. 학생 경력개발을 위한 진로 교과목 및 비교과 프로그램 운영 </span></div><div class="ho level1"><span style="0">5. 취업 상담 </span></div><div class="ho level1"><span style="0">6. 취업 교과목 및 비교과프로그램 운영 </span></div><div class="ho level1"><span style="0">7. 취업대상 기업체 네트워크 구축 및 관리 </span></div><div class="ho level1"><span style="0">8. 취업 추천 및 알선 </span></div><div class="ho level1"><span style="0">9. 취·창업 통계조사 및 분석 </span></div><div class="ho level1"><span style="0">10. 창업 상담 </span></div><div class="ho level1"><span style="0">11. 창업 교과목 및 비교과프로그램 운영 </span></div><div class="ho level1"><span style="0">12. 진로취업지도교수제 운영 </span></div><div class="ho level1"><span style="0">13. 현장실습 운영 및 지원 </span></div><div class="ho level1"><span style="0">14. 현장실무교과 지원 </span></div><div class="ho level1"><span style="0">15. 캡스톤디자인 지원 </span></div><div class="ho level1"><span style="0">16. 산업기술대전 기획 및 운영 </span></div><div class="ho level1"><span style="0">17. 경력개발 및 취·창업 지원 시스템(학생경력개발시스템) 관리 </span></div><div class="ho level1"><span style="0">18. 기타 학생 경력개발 및 취·창업에 관한 사항 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="7" name="7"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 2 장  연간계획</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="87235" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87235', 'joHistory87235', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87235);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (계획의 수립 및 시행)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 주관부서장은 학생들의 취업과 창업을 위한 연간계획을 작성하여 학생경력개발위원회의 심의를 거처 시행한다. </span></div><div class="hang level1"><span style="0">② 계획에는 다음 각 호의 사항이 포함 되어야 한다 </span></div><div class="ho level2"><span style="0">1. 진로 및 취·창업 상담 운영에 관한 사항 </span></div><div class="ho level2"><span style="0">2. 진로 및 취·창업 교과목 운영에 관한 사항 </span></div><div class="ho level2"><span style="0">3. 진로 및 취·창업 비교과프로그램운영에 관한 사항 </span></div><div class="ho level2"><span style="0">4. 진로 및 취·창업 비교과프로그램에 대한 수요조사 결과 및 만족도조사 결과에 관한 사항 </span></div><div class="ho level2"><span style="0">5. 기타 진로 및 취·창업 지원 프로그램 운영 및 지원에 관한 사항 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="9" name="9"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 3 장  학생경력개발위원회</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000010" name="000010"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="87237" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87237', 'joHistory87237', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87237);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (학생경력개발위원회)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 학생 경력개발 및 취·창업 지원 관련 사항 중 중요한 사항을 심의하고 결정하기 위하여 학생경력개발위원회(이하 위원회라 한다)를 둔다. </span></div><div class="hang level1"><span style="0">② 위원회는 경력개발처장, 교육기획팀장, 교양자율전공대학장, 현장실습지원센터장, 창업교육센터장, 진로취업지원팀장, 학사운영팀장, 학생상담센터장, 국제교육센터장, 기업지원센터장을 포함하여 11인 이내의 위원으로 구성한다. <개정 2021.06.09., 2026. 9. 1.> </span></div><div class="hang level1"><span style="0">③ 위원장은 경력개발처장으로 한다. 위원장은 위원회를 대표하며, 회무를 관리한다. 위원장이 사고가 있을 때에는 위원장이 미리 지정한 위원이 이 직무를 대행한다. </span></div><div class="hang level1"><span style="0">④ 위원회의 간사는 위원회 관련 사무를 처리한다. </span></div><div class="hang level1"><span style="0">⑤ 위원회는 위원장이 소집하며, 회의는 재적위원 과반수의 출석으로 개회하고 출석위원 과반수의 찬성으로 의결한다. </span></div><div class="hang level1"><span style="0">⑥ 위원회는 다음 각 호의 사항을 심의한다. <개정 2021.06.09.> </span></div><div class="ho level2"><span style="0">1. 경력개발지원/취업지원/창업지원 및 그와 관련 제도의 신설, 변경, 폐지 </span></div><div class="ho level2"><span style="0">2. 기타 경력개발지원/취업지원/창업지원 업무운영에 관한 주요사항 </span></div><div class="ho level2"><span style="0">3. 경력개발지원/취업지원/창업지원 관련 수요자 요구조사 및 분석에 관한 사항 </span></div><div class="ho level2"><span style="0">4. 경력개발지원/취업지원/창업지원 관련 활동에 대한 성과분석과 개선과제 도출에 관한 사항 </span></div><div class="ho level2"><span style="0">5. 경력개발지원/취업지원/창업지원 관련 개선과제 이행실태 점검에 관한 사항 </span></div><div class="ho level2"><span style="0">6. 대학일자리플러스센터 운영 관련 중요사항 심의 및 결정에 관한 사항 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="11" name="11"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 4 장  경력개발지원</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000012" name="000012"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="87239" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87239', 'joHistory87239', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87239);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (경력개발지도)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">각 학과(부)장 및 운영부서장은 학생의 성공적인 미래설계와 경력개발을 위해 개인별 입학부터 졸업까지의 교과/비교과 등 이수 경로를 지도하고 학생의 직무역량 향상을 위하여 노력 한다 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000013" name="000013"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="87240" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87240', 'joHistory87240', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87240);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (진로상담)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 학생의 경력개발을 위하여 운영부서는 상담을 실시 한다. </span></div><div class="hang level1"><span style="0">② 상담의 세부운영 절차는 <a href="javascript:golink('3', '179', '','', '');">학생상담운영규정</a>을 따른다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000014" name="000014"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="87241" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87241', 'joHistory87241', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87241);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (진로교과목)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">운영부서는 진로에 대한 목표의식을 높이고 체계적인 진로설계를 위하여 수업부서와 협의를 통해 진로교과목을 운영 할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000015" name="000015"></a>
+                    <a id="c010000000" name="c010000000"></a>
+                    <div class="JO" id="87242" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87242', 'joHistory87242', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87242);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 10 조 (진로지원프로그램)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">운영부서는 진로와 관련된 특강, 진로검사 등 학생의 진로탐색을 촉진할 수 있는 비교과프로그램을 계획, 운영한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000016" name="000016"></a>
+                    <a id="c011000000" name="c011000000"></a>
+                    <div class="JO" id="87243" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87243', 'joHistory87243', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87243);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조 (현장교육)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 학생의 현장 적응력과 창의력을 향상시키기 위한 현장실습, 현장실무교과 지원, 캡스톤디자인 지원 활동을 실시한다. </span></div><div class="hang level1"><span style="0">② 현장교육의 세부운영 절차는 <a href="javascript:golink('3', '353', '','', '');">현장교육지원센터 운영규정</a>을 따른다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="17" name="17"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 5 장  취업지원</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000018" name="000018"></a>
+                    <a id="c012000000" name="c012000000"></a>
+                    <div class="JO" id="87245" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87245', 'joHistory87245', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87245);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 12 조 (취업지도)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 각 학과(부)장은 소속 학과(부)학생의 취업 여건 개선과 취업률 향상을 위하여 진로취업지도 교수의 자문을 받아 취업 지도를 총괄한다. <개정 2021.06.09.> </span></div><div class="hang level1"><span style="0">② 주관부서장은 취업 지도가 효과적으로 이루어질 수 있도록 협조 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000019" name="000019"></a>
+                    <a id="c013000000" name="c013000000"></a>
+                    <div class="JO" id="87246" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87246', 'joHistory87246', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87246);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 13 조 (취업상담)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 학생 개인별 맞춤형 취업지도를 위하여 운영부서는 상담을 실시 한다. </span></div><div class="hang level1"><span style="0">② 상담의 세부운영 절차는 <a href="javascript:golink('3', '179', '','', '');">학생상담운영규정</a>을 따른다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000020" name="000020"></a>
+                    <a id="c014000000" name="c014000000"></a>
+                    <div class="JO" id="87247" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87247', 'joHistory87247', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87247);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 14 조 (취업교과목)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">운영부서는 취업에 대한 목표의식을 높이고 체계적인 취업준비를 위하여 수업부서와 협의를 통해 취업교과목을 운영 할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000021" name="000021"></a>
+                    <a id="c015000000" name="c015000000"></a>
+                    <div class="JO" id="87248" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87248', 'joHistory87248', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87248);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 15 조 (취업지원프로그램)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 운영부서는 채용시장의 변화를 반영하여 취업과 관련된 특강, 입사지원서작성, 면접방법, 자격증취득지원 등 취업을 촉진할 수 있는 비교과프로그램을 계획, 운영한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000022" name="000022"></a>
+                    <a id="c016000000" name="c016000000"></a>
+                    <div class="JO" id="87249" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87249', 'joHistory87249', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87249);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 16 조 (기업체 네트워크 구축)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 운영부서는 취업여건 개선을 위하여 강소·중견기업 관리체제를 구축, 운영하고 기업체 방문 등을 통해 기업체와의 네트워크 강화 및 취업홍보 활동을  한다. </span></div><div class="hang level1"><span style="0">② 운영부서는 학생이 취업한 기업체 정보를 유지 및 관리 한다 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000023" name="000023"></a>
+                    <a id="c017000000" name="c017000000"></a>
+                    <div class="JO" id="87250" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87250', 'joHistory87250', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87250);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 17 조 (취업 정보제공)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">운영부서는 채용 및 시험 등 취업에 관한 정보를 제공 하며, 이를 위해 취업지원 자료를 발간할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000024" name="000024"></a>
+                    <a id="c018000000" name="c018000000"></a>
+                    <div class="JO" id="87251" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87251', 'joHistory87251', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87251);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 18 조 (취업지원제도)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">학생들의 취업 경쟁력 제고를 위한 취업지원관련 정책 수립 및 인턴쉽 등 각종 취업지원 활동을 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000025" name="000025"></a>
+                    <a id="c019000000" name="c019000000"></a>
+                    <div class="JO" id="87252" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87252', 'joHistory87252', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87252);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 19 조 (취업통계조사)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 진로취업지도교수는 소속학과(부) 졸업생 취업현황을 조사하여 그 결과를 학과(부)장의 승인을 받아 주관부서장에게 제출한다. <개정 2021.06.09.> </span></div><div class="hang level1"><span style="0">② 주관부서장은 대학 전체의 취업통계조사 결과를 정리 분석하여 총장에게 보고 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="26" name="26"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 6 장  창업지원</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000027" name="000027"></a>
+                    <a id="c020000000" name="c020000000"></a>
+                    <div class="JO" id="87254" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87254', 'joHistory87254', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87254);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 20 조 (창업상담)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 학생 개인별 맞춤형 창업지도를 위하여 운영부서는 상담을 실시한다. </span></div><div class="hang level1"><span style="0">② 상담의 세부운영 절차는 <a href="javascript:golink('3', '179', '','', '');">학생상담운영규정</a>을 따른다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000028" name="000028"></a>
+                    <a id="c021000000" name="c021000000"></a>
+                    <div class="JO" id="87255" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87255', 'joHistory87255', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87255);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 21 조 (창업 교과목)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">운영부서는 교내 창업문화 확산을 위하여 수업부서와 협의를 통해 창업교과목을 운영 할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000029" name="000029"></a>
+                    <a id="c022000000" name="c022000000"></a>
+                    <div class="JO" id="87256" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87256', 'joHistory87256', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87256);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 22 조 (창업지원프로그램 운영)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">운영부서는 시대에 맞는 창업주제를 반영하여 창업과 관련된 특강, 창업경진대회, 창업동아리, 창업캠프 등 창업을 촉진할 수 있는 비교과프로그램을 계획, 운영한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000030" name="000030"></a>
+                    <a id="c023000000" name="c023000000"></a>
+                    <div class="JO" id="87257" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87257', 'joHistory87257', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87257);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 23 조 (창업친화적 학사제도 운영)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">운영부서는 대학 내 창업문화 확산 및 창업활성화를 위하여 학생들을 대상으로 창업휴학, 창업실습, 창업현장실습, 창업연계전공 등을 운영 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000031" name="000031"></a>
+                    <a id="c024000000" name="c024000000"></a>
+                    <div class="JO" id="87258" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87258', 'joHistory87258', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87258);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 24 조 (창업 정보제공)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">운영부서는 창업지원 프로그램에 관한 정보를 제공 하며, 이를 위해 창업지원자료를 발간할 수 있다 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000032" name="000032"></a>
+                    <a id="c025000000" name="c025000000"></a>
+                    <div class="JO" id="87259" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87259', 'joHistory87259', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87259);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 25 조 (창업통계조사)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">운영부서는 창업 교과 및 비교과 프로그램, 창업친화적 학사제도, 학생 창업현황을 조사 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="33" name="33"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 7 장  진로취업지도교수제</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000034" name="000034"></a>
+                    <a id="c026000000" name="c026000000"></a>
+                    <div class="JO" id="87261" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87261', 'joHistory87261', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87261);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 26 조 (진로취업지도교수제)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">주관부서는 학생의 경력개발과 사회진출을 활성화하기 위한 진로 및 취업활동의 효율적이고 합리적인 방안을 강구하기 위하여 진로취업지도교수제도를 운영한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000035" name="000035"></a>
+                    <a id="c027000000" name="c027000000"></a>
+                    <div class="JO" id="87262" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87262', 'joHistory87262', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87262);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 27 조 (진로취업지도교수의 역할)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">취업 진로지도 교수의 역할은 다음과 같다. <개정 2021.06.09.> </span></div><div class="ho level1"><span style="0">1. 해당 학과(부) 취업계획 수립 및 추진 </span></div><div class="ho level1"><span style="0">2. 해당 학과(부)의 진로·취업관련 교과·비교과 프로그램 자문 및 지원 </span></div><div class="ho level1"><span style="0">3. 해당 학과(부) 지도교수별 진로·취업상담 및 취업현황 총괄 관리 </span></div><div class="ho level1"><span style="0">4. 취업 우수기업 발굴 </span></div><div class="ho level1"><span style="0">5. 기업·학생 매칭실적 관리 및 보고 </span></div><div class="ho level1"><span style="0">6. 졸업생 멘토 네트워크 구축 및 운영 </span></div><div class="ho level1"><span style="0">7. 진로와 미래 교과목 전담 운영 </span></div><div class="ho level1"><span style="0">8. 진로 및 취업 업무에 대한 자문 </span></div><div class="ho level1"><span style="0">9. 기타 진로 및 취업에 관한 제반 업무 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000036" name="000036"></a>
+                    <a id="c028000000" name="c028000000"></a>
+                    <div class="JO" id="87263" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87263', 'joHistory87263', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87263);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 28 조 (임명절차 및 변경)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 진로취업지도 교수는 해당 학과(부)장이 추천하여 경력개발처장을 거쳐 총장이 임명한다. </span></div><div class="hang level1"><span style="0">② 특별한 사유가 발생할 경우, 해당 학과(부)장의 요청에 의하여 진로취업지도 교수를 변경할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="37" name="37"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 8 장  환류</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000038" name="000038"></a>
+                    <a id="c029000000" name="c029000000"></a>
+                    <div class="JO" id="87265" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87265', 'joHistory87265', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87265);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 29 조 (환류)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 주관부서는 학년도 말에 다음 각 호를 시행하여야 한다. <개정 2020.06.29., 2021.02.25.> </span></div><div class="ho level2"><span style="0">1. 프로그램별, 영역별 CQI를 포함한 성과보고서 작성 </span></div><div class="ho level2"><span style="0">2. 프로그램 운영결과를 분석하여 개선방안 마련 </span></div><div class="ho level2"><span style="0">3. 비교과 교육과정 편성기준과 개선방안을 반영하여 프로그램 개편안과 차년도 운영계획 작성 </span></div><div class="hang level1"><span style="0">② 학생경력개발위원회는 프로그램 개편안과 차년도 운영계획을 심의한다. <개정 2021.02.25.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="39" name="39"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 9 장  이용자 권리 및 정보관리</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000040" name="000040"></a>
+                    <a id="c030000000" name="c030000000"></a>
+                    <div class="JO" id="87267" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=178&SEQ_HISTORY=1883&SEQ_CONTENTS=87267', 'joHistory87267', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87267);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 30 조 (이용자의 권리 및 정보관리)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 학생은 개인정보와 취·창업 지도 및 상담내용에 대한 비밀보장을 받을 권리가 있다. </span></div><div class="hang level1"><span style="0">② 주관부서는 학생의 개인정보와 취·창업 지도 및 상담내용의 비밀유지를 원칙으로 한다 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="41"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87268"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019년  7월   12일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(경과조치)</div><div class="none"><span style="0">이 규정이 시행되기 전에 운영한 대학일자리센터운영위원회는 이 규정에 따라 학생경력개발위원회로 수행된 것으로 본다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="44"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87269"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 6월 29일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="46"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87270"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 2월 25일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="48"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87271"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 6월 8일부터 시행한다. </span></div></div></div>
+                
+            
+        
+
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

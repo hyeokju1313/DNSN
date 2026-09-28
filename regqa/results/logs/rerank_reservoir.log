@@ -1,0 +1,56 @@
+{'train': 9312, 'val': 2770, 'eval': 2040, 'dev': 400}
+[dense only] L1: R@1 0.89 R@5 1.00 MRR 0.93 | L2: R@1 0.80 R@5 0.92 MRR 0.83 | L3: R@1 0.80 R@5 1.00 MRR 0.89 | L4: R@1 0.93 R@5 1.00 MRR 0.95 전부@5 0.73 | L5a: R@1 0.80 R@5 1.00 MRR 0.90 | ALL: R@1 0.85 R@5 0.98 MRR 0.90
+  14/146 chunks, 57s elapsed, ETA 533s
+  28/146 chunks, 77s elapsed, ETA 325s
+  42/146 chunks, 95s elapsed, ETA 234s
+  56/146 chunks, 111s elapsed, ETA 179s
+  70/146 chunks, 127s elapsed, ETA 138s
+  84/146 chunks, 139s elapsed, ETA 103s
+  98/146 chunks, 172s elapsed, ETA 84s
+  112/146 chunks, 192s elapsed, ETA 58s
+  126/146 chunks, 212s elapsed, ETA 34s
+  140/146 chunks, 232s elapsed, ETA 10s
+  [connectome] train: 9312 pairs in 240s
+  4/44 chunks, 25s elapsed, ETA 252s
+  8/44 chunks, 26s elapsed, ETA 116s
+  12/44 chunks, 26s elapsed, ETA 69s
+  16/44 chunks, 61s elapsed, ETA 108s
+  20/44 chunks, 63s elapsed, ETA 76s
+  24/44 chunks, 63s elapsed, ETA 53s
+  28/44 chunks, 95s elapsed, ETA 55s
+  32/44 chunks, 97s elapsed, ETA 36s
+  36/44 chunks, 97s elapsed, ETA 22s
+  40/44 chunks, 119s elapsed, ETA 12s
+  44/44 chunks, 119s elapsed, ETA 0s
+  [connectome] val: 2770 pairs in 121s
+  3/32 chunks, 50s elapsed, ETA 481s
+  6/32 chunks, 53s elapsed, ETA 228s
+  9/32 chunks, 54s elapsed, ETA 138s
+  12/32 chunks, 54s elapsed, ETA 90s
+  15/32 chunks, 98s elapsed, ETA 111s
+  18/32 chunks, 99s elapsed, ETA 77s
+  21/32 chunks, 101s elapsed, ETA 53s
+  24/32 chunks, 103s elapsed, ETA 34s
+  27/32 chunks, 121s elapsed, ETA 22s
+  30/32 chunks, 121s elapsed, ETA 8s
+  [connectome] eval: 2040 pairs in 122s
+  1/7 chunks, 15s elapsed, ETA 89s
+  2/7 chunks, 15s elapsed, ETA 37s
+  3/7 chunks, 15s elapsed, ETA 20s
+  4/7 chunks, 15s elapsed, ETA 11s
+  5/7 chunks, 15s elapsed, ETA 6s
+  6/7 chunks, 15s elapsed, ETA 2s
+  7/7 chunks, 15s elapsed, ETA 0s
+  [connectome] dev: 400 pairs in 15s
+[res_connectome_rho1.2_leak0.5_T8] C=0.01 λ=0.0 val MRR only 0.272 comb 0.850 (519s)
+   only: L1: R@1 0.04 R@5 0.41 MRR 0.20 | L2: R@1 0.04 R@5 0.36 MRR 0.19 | L3: R@1 0.00 R@5 0.27 MRR 0.16 | L4: R@1 0.13 R@5 0.73 MRR 0.34 전부@5 0.13 | L5a: R@1 0.00 R@5 0.20 MRR 0.13 | ALL: R@1 0.04 R@5 0.40 MRR 0.21
+   comb: L1: R@1 0.89 R@5 1.00 MRR 0.93 | L2: R@1 0.80 R@5 0.92 MRR 0.83 | L3: R@1 0.80 R@5 1.00 MRR 0.89 | L4: R@1 0.93 R@5 1.00 MRR 0.95 전부@5 0.73 | L5a: R@1 0.80 R@5 1.00 MRR 0.90 | ALL: R@1 0.85 R@5 0.98 MRR 0.90
+   abstain(comb): out-of-scope reject 0.90, in-scope false reject 0.07
+  14/146 chunks, 38s elapsed, ETA 357s
+  28/146 chunks, 59s elapsed, ETA 251s
+  42/146 chunks, 79s elapsed, ETA 196s
+  56/146 chunks, 94s elapsed, ETA 151s
+  70/146 chunks, 108s elapsed, ETA 117s
+  84/146 chunks, 122s elapsed, ETA 90s
+/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 5 leaked semaphore objects to clean up at shutdown: {'/loky-95089-32jb98th', '/loky-95089-7anscy4u', '/loky-95089-op52q8hy', '/loky-95089-wcfxjlmx', '/loky-95089-7w7ra89w'}
+  warnings.warn(

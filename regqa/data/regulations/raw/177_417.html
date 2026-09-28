@@ -1,0 +1,1483 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('417', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"417\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">생활관운영규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+							<div class="history historyShow" style="display: block;">
+								<span onclick="thisHistoryShow();" style="cursor: pointer;">
+									연혁 보이기 <img src="/lmxsrv/images/btn/tabBtn_open.gif" alt="보기" title="보기"/>
+								</span>
+							</div>
+							<div class="history historyHide" style="display: none;">
+								<span onclick="thisHistoryHide();" style="cursor: pointer;">
+									연혁 숨기기 <img src="/lmxsrv/images/btn/tabBtn_close_o.gif" alt="감추기" title="감추기"/>
+								</span>
+							</div>
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제정 2007.02.20.</div>
+						
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+						
+							<div class="history historyContentLast" style="display: block;font-size: 9pt;">개정 2024.06.20.</div>
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="2" name="2"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제  1  장    총 칙</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="24635" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24635', 'joHistory24635', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24635);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 한국공학대학교 생활관 운영에 필요한 사항을 규정함을 목적으로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="4" name="4"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제  2  장   생활관 운영</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="24637" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24637', 'joHistory24637', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24637);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (업무수행)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">생활관의 생활관생 관리 및 운영에 관한 사항은 학생처 학생생활복지센터에서 수행하며, 생활관을 관리 운영하는 용역업체를 지휘 감독한다.<개정2022.12.09> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c002002000" name="c002002000"></a>
+                    <div class="JO" id="24638" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24638', 'joHistory24638', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24638);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조2 (사감 및 생활조교)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">생활관에는 관생들의 관리 및 생활지도를 위해 사감과 생활조교를 둘 수 있다. 단, 생활조교 운영에 관한 세부사항은 따로 정한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000007" name="000007"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="24639" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24639', 'joHistory24639', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24639);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (개관기간)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">생활관은 1학기, 여름학기, 2학기, 겨울학기로 구분하여 개관하며, 필요에 따라 개관기간을 조정 또는 일정한 기간 동안 폐관할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="24640" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24640', 'joHistory24640', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24640);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (이용제한)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">생활관 시설물의 이용은 생활관생에게 한한다. 다만, 교육목적 및 관리에 지장이 없는 범위 내에서 일부 외부인에게도 허가할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000009" name="000009"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="24641" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24641', 'joHistory24641', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24641);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (생활관생 수칙)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">생활관생의 공동생활에 필요한 생활관생 수칙을 따로 정한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="10" name="10"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제  3  장    입주 및 퇴관</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000011" name="000011"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="24643" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24643', 'joHistory24643', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24643);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (입주자격 및 선발)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">생활관에 입주할 수 있는 자는 본교 학부 재학생, 대학원생, 외국인 학생 및 학생처장이 별도로 정하는 자로 하며, 생활관 입주 대상자 선발은 성적, 원거리 거주, 학년간 배분 등을 고려해서 선발한다. 단, 세부사항은 따로 정한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000012" name="000012"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="24644" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24644', 'joHistory24644', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24644);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (입주기간)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">입주기간은 학기, 6개월, 1년으로 구분하며, 입주 시기는 매학기 초로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000013" name="000013"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="24645" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24645', 'joHistory24645', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24645);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (입주절차)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">생활관에 입주하고자 하는 학생은 관생 선발기간에 정해진 전산시스템을통해 입주신청을 하고 입주합격 후 생활관비를 납부해야 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000014" name="000014"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="24646" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24646', 'joHistory24646', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24646);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (입주제한)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">다음 각 호에 해당하는 학생은 입주할 수 없다. </span></div><div class="ho level1"><span style="0">1. <a href="javascript:golink('3', '31', '','', '');">학칙</a>에 의해 징계 처분을 받은 자 </span></div><div class="ho level1"><span style="0">2. 중대한 생활관 규정위반으로 퇴관처분을 받은 자 </span></div><div class="ho level1"><span style="0">3. 전염성 질환자 또는 보균자 </span></div><div class="ho level1"><span style="0">4. 휴학 중 인자 </span></div><div class="ho level1"><span style="0">5. 기숙사 생활에 부적합하다고 판단되는 자 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000015" name="000015"></a>
+                    <a id="c009002000" name="c009002000"></a>
+                    <div class="JO" id="24647" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24647', 'joHistory24647', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24647);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조의2 (입주제한 예외)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">단기 입주(방학 기간 및 계절학기 입주)의 경우 휴학생의 입주를 허용한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="16" name="16"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제  4  장   자치회의 및 운영위원회의 운영</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000017" name="000017"></a>
+                    <a id="c010000000" name="c010000000"></a>
+                    <div class="JO" id="24649" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24649', 'joHistory24649', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24649);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 10 조 (생활관생 자치회)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">쾌적한 생활관 조성을 위해서 "생활관생 자치회"(이하 "자치회") 기구를 두며, 구성 등은 다음과 같다. </span></div><div class="ho level1"><span style="0">1. 자치회 임원은 타의 모범이 되며 리더십이 있는 생활관생 중에서 선발한다. </span></div><div class="ho level1"><span style="0">2. 자치회는 자치회장 1, 부회장 2(층장 겸직), 층별 층장 13명 등 총 16명으로 구성한다.<개정 2019.5.22., 2021.02.25> </span></div><div class="ho level1"><span style="0">3. 자치회 임원은 쾌적한 생활관 조성 등에 관한 의견을 수렴한다. </span></div><div class="ho level1"><span style="0">4. 자치회 운영에 관한 세부사항은 자치회칙으로 정한다. </span></div><div class="ho level1"><span style="0">5. 자치회 운영은 TIP생활관과 제2생활관을 통합하여 운영한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000018" name="000018"></a>
+                    <a id="c011000000" name="c011000000"></a>
+                    <div class="JO" id="24650" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24650', 'joHistory24650', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24650);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조 (자치회 운영비 공표)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 대학은 매학기 소정의 자치회 운영비를 지원한다. </span></div><div class="hang level1"><span style="0">② 자치회 운영비는 투명하게 집행하고 학기말에는 집행내역을 공표해야 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000019" name="000019"></a>
+                    <a id="c012000000" name="c012000000"></a>
+                    <div class="JO" id="24651" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24651', 'joHistory24651', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24651);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 12 조 (운영위원회의 운영)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 생활관에서 일어나는 중대 사항을 심의하기 위해 운영위원회를 둔다. </span></div><div class="hang level1"><span style="0">② 위원회는 학생처장을 포함한 총장이 지정한 9인 이내의 위원으로 구성한다. </span></div><div class="hang level1"><span style="0">③ 위원장은 학생처장이 되며, 위원회의 의견이 가부동수일 때는 결정권을 행사한다. </span></div><div class="hang level1"><span style="0">④ 운영위원회는 2/3의 참석으로 운영되며, 참석인원 과반수의 찬성으로 결정한다. </span></div><div class="hang level1"><span style="0">⑤ 퇴관으로 결정된 자는 1주일 내에 퇴관해야 하며, 즉시 보호자에게도 통보한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000020" name="000020"></a>
+                    <a id="c013000000" name="c013000000"></a>
+                    <div class="JO" id="24652" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24652', 'joHistory24652', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24652);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 13 조 (운영위원회의 심의사항)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">운영위원회는 다음 각 호의 사항을 심의한다. </span></div><div class="ho level1"><span style="0">1. <a href="javascript:golink('3', '177', '','', '');">생활관운영규정</a>의 개정에 관한 사항 </span></div><div class="ho level1"><span style="0">2. 생활관 입주자의 선정기준에 관한 사항 </span></div><div class="ho level1"><span style="0">3. 교직원 및 외부인 등의 생활관 입주에 관한 사항 </span></div><div class="ho level1"><span style="0">4. 생활관 내 분쟁 조정에 관한 사항 </span></div><div class="ho level1"><span style="0">5. 기타 생활관 운영에 필요하다고 판단되는 사항 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000021" name="000021"></a>
+                    <a id="c014000000" name="c014000000"></a>
+                    <div class="JO" id="24653" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24653', 'joHistory24653', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24653);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 14 조 (퇴관처분)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">다음에 해당하는 자에 대해서는 퇴관을 명할 수 있다. </span></div><div class="ho level1"><span style="0">1. 중대한 생활규정 위반 또는 벌점 누계 17점 이상 자 </span></div><div class="ho level1"><span style="0">2. 공동생활에 부적합하다고 판단된 자 </span></div><div class="ho level1"><span style="0">3. 제9조(입주제한)의 각 호에 해당하는 사항이 발생하는 경우 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000022" name="000022"></a>
+                    <a id="c015000000" name="c015000000"></a>
+                    <div class="JO" id="24654" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24654', 'joHistory24654', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24654);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 15 조 (변상책임)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">생활관의 시설이나 비품을 파손한 자는 변상하여야 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="23" name="23"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제  5  장    재  정</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000024" name="000024"></a>
+                    <a id="c016000000" name="c016000000"></a>
+                    <div class="JO" id="24656" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24656', 'joHistory24656', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24656);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 16 조 (생활관비)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 생활관 입주자는 대학에서 책정하는 비용을 납부하여야 한다. ②본 대학교 학생이 아닌 자가 생활관(게스트하우스)을 이용할 경우에도 이용료를 부담해야 하며, 이용료 부담은 운영위원회에서 정한다.<개정 2019.1.31.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000025" name="000025"></a>
+                    <a id="c017000000" name="c017000000"></a>
+                    <div class="JO" id="24657" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24657', 'joHistory24657', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24657);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 17 조 (납부금)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">생활관비에 관한 세부사항은 생활관생 수칙에 정한 기준에 따른다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000026" name="000026"></a>
+                    <a id="c018000000" name="c018000000"></a>
+                    <div class="JO" id="24658" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=177&SEQ_HISTORY=417&SEQ_CONTENTS=24658', 'joHistory24658', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(24658);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 18 조 (회계 운영)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">생활관 회계는 교비에 편입하여 운영하고, 본 대학교의 회계 연도에 준한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="27"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="24659"><div class="JO"><div class="article">제 1 조(시행일)</div><div class="none"><span style="0">이 규정은 2007년 2월 20일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="29"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="24660"><div class="JO"><div class="article">제 1 조(시행일)</div><div class="none"><span style="0">이 규정은 2008년 3월 2일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="31"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="24661"><div class="JO"><div class="article">제 1 조(시행일)</div><div class="none"><span style="0">이 규정은 2009년 12월 16일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="33"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="24662"><div class="JO"><div class="article">제 1 조(시행일)</div><div class="none"><span style="0">이 규정은 2011년 12월 21일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="35"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="24663"><div class="JO"><div class="article">제 1 조(시행일)</div><div class="none"><span style="0">이 규정은 2015년 4월  6일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="37"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="24664"><div class="JO"><div class="article">제 1 조(시행일)</div><div class="none"><span style="0">이 규정은 2016년 12월 28일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="39"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="24665"><div class="JO"><div class="article">제 1 조(시행일)</div><div class="none"><span style="0">이 규정은 2018년 4월 11일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="41"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="24666"><div class="JO"><div class="article">제 1 조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 1월 31일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="43"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="24667"><div class="JO"><div class="article">제 1 조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 5월 22일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="45"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="24668"><div class="JO"><div class="article">제 1 조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 2월 25일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="47"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="24669"><div class="JO"><div class="article">제 1 조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="49"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="24670"><div class="JO"><div class="article">제 1 조(시행일)</div><div class="none"><span style="0">이 규정은 2024년 6월 20일부터 시행한다. </span></div></div></div>
+                
+            
+        
+
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

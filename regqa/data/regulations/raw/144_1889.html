@@ -1,0 +1,1469 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('1889', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"1889\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">반도체소부장 혁신융합대학 학사 운영 규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+							<div class="history historyShow" style="display: block;">
+								<span onclick="thisHistoryShow();" style="cursor: pointer;">
+									연혁 보이기 <img src="/lmxsrv/images/btn/tabBtn_open.gif" alt="보기" title="보기"/>
+								</span>
+							</div>
+							<div class="history historyHide" style="display: none;">
+								<span onclick="thisHistoryHide();" style="cursor: pointer;">
+									연혁 숨기기 <img src="/lmxsrv/images/btn/tabBtn_close_o.gif" alt="감추기" title="감추기"/>
+								</span>
+							</div>
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제      정 2025. 10. 27.</div>
+						
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">시  행  일 2025. 10. 27.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제1차 개정 2026.  2. 23.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+						
+							<div class="history historyContentLast" style="display: block;font-size: 9pt;">제2차 개정 2026.  8. 26.</div>
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000002" name="000002"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="87572" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS=87572', 'joHistory87572', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87572);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 한국공학대학교(이하 "본교"라 한다.) 반도체소부장 혁신융합대학 사업(이하"사업"이라 한다.)에 의하여 운영되는 학사 및 교육과정에 대한 세부사항을 규정함을 목적으로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="87573" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS=87573', 'joHistory87573', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87573);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (적용범위)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 본 사업에 참여하는 컨소시엄 대학간 공동교육과정 운영을 위해 개설하는 반도체부품장비제어전공 및 첨단반도체패키지전공(이하"융합전공"이라 한다.)과 마이크로디그리에 한하여 적용한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="87574" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS=87574', 'joHistory87574', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87574);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (교육 목표)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 사업을 통해 지역경계를 허무는 교육 융합으로써 반도체소부장 혁신융합 교육체계를 제공하여 차세대 반도체소부장 산업을 선도하는 통합형 인재를 양성한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="87575" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS=87575', 'joHistory87575', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87575);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (학점교류 및 인정)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 본 사업에 참여하는 컨소시엄 대학 간 학점교류 협정을 통해 학점을 교류할 수 있으며, 총장의 승인을 얻어 교류대학에서 취득한 학점을 본교 학점으로 인정할 수 있다. </span></div><div class="hang level1"><span style="0">② 사업단은 학점교류 홍보 및 신청접수를 담당하고, 교류 신청 및 성적처리 등 학점교류와 관련한 학사행정은 학사운영팀이 담당한다. </span></div><div class="hang level1"><span style="0">③ 학점교류 교과목이 본교 전공 교과인 경우, 별지 제1호서식에 따른 타 대학 학점교류 신청서를 작성하고, 소속 학과(부)장의 승인을 얻어 교류대학 취득 학점을 전공학점으로 인정받을 수 있다. </span></div><div class="hang level1"><span style="0">④ 학점교류 교과목이 본교 융합전공 과목인 경우, 교류대학 취득 학점을 융합전공 학점으로 인정한다. </span></div><div class="hang level1"><span style="0">⑤ 학점교류로 취득한 성적의 등급은 [별표1]의 기준에 따라 환산하여 표기하는 것을 원칙으로 한다. </span><span style="color:#0000ff;"><개정 2026.8.26.> </span></div><div class="hang level1"><span style="0">⑥ 사업에서 운영하는 융합전공을 이수한 학생에게는 사업기간 동안 반도체소부장 혁신융합대학 사업단장 명의의 융합전공 이수인증서를 발급할 수 있다. </span><span style="color:#0000ff;"><신설 2026.8.26.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="87576" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS=87576', 'joHistory87576', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87576);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (교육과정)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 사업의 융합전공 교육과정은 [별표2], 마이크로디그리 교육과정은 [별표3]과 같으며, 마이크로디그리는 컨소시엄 대학 공통의 초급, 중급, 고급과정을 적용한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000007" name="000007"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="87577" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS=87577', 'joHistory87577', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87577);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (마이크로디그리)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 마이크로디그리는 재학 중 이수한 교과목을 대상으로 하며, 별도의 신청 및 선발 절차 없이 과정별 9학점 이상을 이수 시 취득할 수 있다. 다만, 과정별 9학점은 2025학년도 여름학기 이후 개설된 교과목으로 이수하여야 한다. </span><span style="color:#0000ff;"><개정 2026.8.26.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="87578" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS=87578', 'joHistory87578', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87578);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (융합전공)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 융합전공은 마이크로디그리 초급과정 9학점, 각 융합전공별 마이크로디그리 중급 또는 고급 과정 9학점을 포함하여 부전공은 21학점 이상, 복수전공은 36학점 이상을 이수하여야 한다. 단, 사업 1차년도 부전공 및 복수전공 이수자 중 졸업대상자는 위 조건에서 예외로 한다. </span><span style="color:#0000ff;"><개정 2026.2.23.> </span></div><div class="hang level1"><span style="0">②  삭제 </span><span style="color:#0000ff;"><2026.2.23.> </span></div><div class="hang level1"><span style="0">③  삭제 </span><span style="color:#0000ff;"><2026.2.23.> </span></div><div class="hang level1"><span style="0">④ 소속학과(부)와 융합전공의 교과과정에 공통으로 편제된 교과목 또는 [별표 2] 교육과정의 교과목과 유사하다고 인정되는 교과목은 유사 교과목 승인을 통해 최대 6학점까지 중복 학점으로 인정할 수 있다. </span><span style="color:#0000ff;"><신설 2026.2.23.> </span></div><div class="hang level1"><span style="0">⑤ 초급 마이크로디그리에 해당되는 기초 교과목은 융합전공, 부전공 및 복수전공 이수학점에서 최대 12학점까지 인정한다. </span><span style="color:#0000ff;"><신설 2026.2.23.> </span></div><div class="hang level1"><span style="0">⑥ 위 항에서 규정하지 않은 사항은 "<a href="javascript:golink('3', '119', '','', '');">융합전공 운영에 관한 규정</a>"을 준용한다. </span><span style="color:#0000ff;"><신설 2026.2.23.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000009" name="000009"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="87579" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS=87579', 'joHistory87579', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87579);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (학석사연계)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 반도체소부장 분야의 고급인재 양성을 위해 융합전공의 학석사 연계과정을 운영할 수 있다. </span></div><div class="hang level1"><span style="0">② 학석사 연계과정 운영에 관한 사항은 별도로 정한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000010" name="000010"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="87580" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS=87580', 'joHistory87580', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87580);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (학위수여)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 융합전공 복수전공자가 졸업 기준을 모두 충족했을 경우 해당 융합전공명이 병행 표기된 학위를 수여한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000011" name="000011"></a>
+                    <a id="c010000000" name="c010000000"></a>
+                    <div class="JO" id="87581" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS=87581', 'joHistory87581', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87581);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 10 조 (유연학기제)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 유연학기제는 교육과정 이수를 위하여 방학 기간에 본교 또는 교류대학에 개설된 교과목을 이수하는 것을 말한다. </span></div><div class="hang level1"><span style="0">② 유연학기제와 관련한 세부 사항은 별도로 정하여 운영한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000012" name="000012"></a>
+                    <a id="c011000000" name="c011000000"></a>
+                    <div class="JO" id="87582" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS=87582', 'joHistory87582', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87582);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조 (집중이수제)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 집중이수제는 교육과정을 8주 단위로 집중해 이수하고 단축된 기간은 취업 또는 창업 활동에 활용하는 것을 말한다. </span></div><div class="hang level1"><span style="0">② 융합전공 복수전공을 이수하는 4학년 학생만 신청 가능하며 고급과정만 개설 운영한다. </span></div><div class="hang level1"><span style="0">③ 집중이수제와 관련한 세부 사항은 별도로 정하여 운영한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000013" name="000013"></a>
+                    <a id="c012000000" name="c012000000"></a>
+                    <div class="JO" id="87583" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=144&SEQ_HISTORY=1889&SEQ_CONTENTS=87583', 'joHistory87583', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87583);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 12 조 (지침 및 준용)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 이 내규에 명시되지 않은 사항은 <a href="javascript:golink('3', '31', '','', '');">학칙</a> 및 제규정을 준용한다. </span></div><div class="hang level1"><span style="0">② 이 내규 시행 이전에 운영된 내용도 이 내규를 따르되, 사업관리위원회 또는 교육과정심의위원회 심의를 거쳐 진행된 사안에 대해서는 따로 정하여 운영한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="14"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87584"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 10월 27일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(경과조치)</div><div class="none"><span style="0">이 규정 시행 이전에 진행된 사항에 대해서는 반도체소부장 혁신융합대학 총괄사업관리위원회, 본교 반도체소부장 혁신융합대학 사업관리위원회 및 반도체소부장 혁신융합대학 교육과정 심의위원회 의결사항과 반도체소부장 혁신융합대학 학사 내규에서 규정한 사항을 기준으로 하여 적용토록 한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="17"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87585"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="19"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87586"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 9월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+
+        
+            <div class="article attach_tit">[별표/서식 파일]</div>
+            <p class="txt-notice">
+			※ 미리보기 파일은 gif 파일입니다. 미리보기 시, 해당 별표/서식의 첫 번째 페이지만 보입니다.<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;전문은 다운로드를 통해 확인하실 수 있습니다.  
+			</p>
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">[별표1] 성적 환산 기준.hwp</span>
+                                    
+                                        <a href="javascript:fileDown('7581', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <a href="javascript:showImg('X0','on')" id="X0_on" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                            <a href="javascript:showImg('X0','off')" id="X0_off" style="display: none;" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        <tr id="X0" style="display: none;">
+                                            <td>
+                                                <img src="/lmxdata/attach/2026/8/upload_14242973224522310320_2.gif" style="width: 100%;" />
+                                            </td>
+                                        </tr>
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+                
+                
+                
+                
+                
+                
+                
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">[별표2] 융합전공 교육과정.hwp</span>
+                                    
+                                        <a href="javascript:fileDown('7583', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <a href="javascript:showImg('X2','on')" id="X2_on" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                            <a href="javascript:showImg('X2','off')" id="X2_off" style="display: none;" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        <tr id="X2" style="display: none;">
+                                            <td>
+                                                <img src="/lmxdata/attach/2026/8/upload_14242973224522310320_5.gif" style="width: 100%;" />
+                                            </td>
+                                        </tr>
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+                
+                
+                
+                
+                
+                
+                
+            
+                
+                
+                
+                
+                
+                
+                
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">[별표3] 마이크로디그리 교육과정.hwp</span>
+                                    
+                                        <a href="javascript:fileDown('7586', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <a href="javascript:showImg('X5','on')" id="X5_on" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                            <a href="javascript:showImg('X5','off')" id="X5_off" style="display: none;" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        <tr id="X5" style="display: none;">
+                                            <td>
+                                                <img src="/lmxdata/attach/2026/8/upload_14242973224522310320_6.gif" style="width: 100%;" />
+                                            </td>
+                                        </tr>
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">[별지 제1호서식] 타대학 학점교류 학점인정신청.hwp</span>
+                                    
+                                        <a href="javascript:fileDown('7587', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <a href="javascript:showImg('X6','on')" id="X6_on" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                            <a href="javascript:showImg('X6','off')" id="X6_off" style="display: none;" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        <tr id="X6" style="display: none;">
+                                            <td>
+                                                <img src="/lmxdata/attach/2026/8/upload_14242973224522310320_11.gif" style="width: 100%;" />
+                                            </td>
+                                        </tr>
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

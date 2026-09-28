@@ -1,0 +1,1069 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('1792', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"1792\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=121&SEQ_HISTORY=1792&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">캡스톤디자인(종합설계) 운영에 관한 규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+							<div class="history historyShow" style="display: block;">
+								<span onclick="thisHistoryShow();" style="cursor: pointer;">
+									연혁 보이기 <img src="/lmxsrv/images/btn/tabBtn_open.gif" alt="보기" title="보기"/>
+								</span>
+							</div>
+							<div class="history historyHide" style="display: none;">
+								<span onclick="thisHistoryHide();" style="cursor: pointer;">
+									연혁 숨기기 <img src="/lmxsrv/images/btn/tabBtn_close_o.gif" alt="감추기" title="감추기"/>
+								</span>
+							</div>
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제      정 2012. 11.  5.</div>
+						
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제1차 개정 2015.  9.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제2차 개정 2018.  1. 10.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제3차 개정 2023.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제4차 개정 2025.  1.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제5차 개정 2025.  4. 22.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제6차 개정 2026.  1. 19.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+						
+							<div class="history historyContentLast" style="display: block;font-size: 9pt;">제7차 개정 2026.  2. 23.</div>
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000002" name="000002"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="81866" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=121&SEQ_HISTORY=1792&SEQ_CONTENTS=81866', 'joHistory81866', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(81866);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 캡스톤디자인(종합설계) (이하 "캡스톤디자인"이라 한다.) 교과목 운영에 관한 세부사항을 정함을 목적으로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="81867" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=121&SEQ_HISTORY=1792&SEQ_CONTENTS=81867', 'joHistory81867', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(81867);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (정의)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 규정에 사용하는 용어의 뜻은 다음과 같다."캡스톤디자인"이란 1~3학년 동안 배운 전공지식을 바탕으로 산업현장과 사회에서 필요로 하는 과제를 학생들이 스스로 기획·설계·제작함으로서 창의성과 실무능력, 팀워크, 리더십을 배양하도록 지원하는 교육과정을 말한다. 캡스톤디자인 유형은 전공분야의 문제해결을 위한 창의작품형과 그 외의 융합ㆍ연계형(전공융합형, 기업연계형, 창업연계형, 지역연계형, 글로벌연계형)들로 구분한다. </span><span style="color:#0000ff;">[본조신설 2018.1.10.] <개정 2023.3.1.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="81868" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=121&SEQ_HISTORY=1792&SEQ_CONTENTS=81868', 'joHistory81868', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(81868);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (주관부서)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">캡스톤디자인의 주관부서는 교무처이고, 관련부서는 현장실습지원센터, 각 학과(부)이며, 다음 사항을 관장한다. </span><span style="color:#0000ff;"><개정 2015.9.1., 2018.1.10., 2025.4.22.> </span></div><div class="ho level1"><span style="0">1. 캡스톤디자인 운영에 관한 계획 수립 </span></div><div class="ho level1"><span style="0">2. 캡스톤디자인 업무 일정 공지 </span></div><div class="ho level1"><span style="0">3. 캡스톤디자인 심사, 성적평가에 관한 사항 </span></div><div class="ho level1"><span style="0">4. 작품지원비에 관한 사항 </span></div><div class="ho level1"><span style="0">5. 캡스톤디자인 결과물 활용에 관한 사항 </span><span style="color:#0000ff;"><신설 2018.1.10.> </span></div><div class="ho level1"><span style="0">6. 캡스톤디자인 운영 및 평가 </span><span style="color:#0000ff;"><신설 2018.1.10.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="81869" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=121&SEQ_HISTORY=1792&SEQ_CONTENTS=81869', 'joHistory81869', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(81869);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (운영위원회)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 캡스톤디자인 운영에 필요한 사항을 심의하기 위하여 캡스톤디자인 운영위원회를 두며, 위원회의 구성은 위원장 1인을 포함한 위원 15인 이내로 하며, 위원회의 사무를 보좌하기 위하여 간사 1인을 둘 수 있다. </span></div><div class="hang level1"><span style="0">② 위원장은 교무처장으로 하며, 각 위원은 총장이 임명한다. </span></div><div class="hang level1"><span style="0">③ 위원회는 다음의 각 호의 사항을 심의한다. </span></div><div class="ho level2"><span style="0">1. 캡스톤디자인 운영계획에 관한 사항 </span></div><div class="ho level2"><span style="0">2. 캡스톤디자인 심의·평가에 관한 사항 </span></div><div class="ho level2"><span style="0">3. 기타 캡스톤디자인 운영에 필요한 주요사항 </span></div><div class="hang level1"><span style="0">④ 위원회는 재적위원 과반수로 개회하고 출석위원과 과반수의 찬성으로 의결한다. </span></div> <div class="none level1"><span style="color:#0000ff;">[본조신설 2018.1.10.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="81870" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=121&SEQ_HISTORY=1792&SEQ_CONTENTS=81870', 'joHistory81870', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(81870);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (교육과정)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 캡스톤디자인은 전학과에 전공필수 교과로 편성하며, 계열별 교과목 및 이수학점, 개설시기 등은 다음과 같다. </span><span style="color:#0000ff;"><개정 2015.9.1., 2023.3.1., 2024.12.9., 2026.1.19.> </span></div> <div class="none level1"><table cellpadding="0" cellspacing="0"><tbody><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="139"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">구분 </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">교과목 </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">학점(이론/실기) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">학년/학기 </span></p></td></tr><tr><td colspan="1" rowspan="9" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="139"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">공학계열 </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:justify;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">종합설계기획 </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">1(1/0) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">3/2 </span></p></td></tr><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:justify;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">종합설계1 </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">2(1/2) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">4/1 </span></p></td></tr><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:justify;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">종합설계2 </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">1(0/2) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">4/2 </span></p></td></tr><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:justify;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">AI·SW 캡스톤디자인기획** </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">1(1/0) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">3/2 </span></p></td></tr><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:justify;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">AI·SW 캡스톤디자인1** </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">2(1/2) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">4/1 </span></p></td></tr><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:justify;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">AI·SW 캡스톤디자인2** </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">1(0/2) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">4/2 </span></p></td></tr><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:justify;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">캡스톤디자인기획* </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">1(1/0) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">3/2 </span></p></td></tr><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:justify;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">캡스톤디자인1* </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">2(1/2) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">4/1 </span></p></td></tr><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:justify;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">캡스톤디자인2* </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">1(0/2) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">4/2 </span></p></td></tr><tr><td colspan="1" rowspan="3" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="139"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">상경계열 </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:justify;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">경영캡스톤디자인기획 </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">1(1/0) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">3/2 </span></p></td></tr><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:justify;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">경영캡스톤디자인1(졸업연구) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">2(1/2) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">4/1 </span></p></td></tr><tr><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:justify;" width="241"><p class="none level0" level="0" ordinal="" style="text-align:justify;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">경영캡스톤디자인2(졸업연구) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="124"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">1(0/2) </span></p></td><td colspan="1" rowspan="1" style="border-left:solid #000000 1px;border-right:solid #000000 1px;border-top:solid #000000 1px;border-bottom:solid #000000 1px;text-align:center;" width="135"><p class="none level0" level="0" ordinal="" style="text-align:center;margin-top:0pt;margin-bottom:0pt;line-height-none-none-none-none:130%;" type="none"><span style="0">4/2 </span></p></td></tr></tbody></table></div> <div class="none level1"><span style="0">* 디자인공학부 </span></div> <div class="none level1"><span style="0">** AI융합대학 </span></div><div class="hang level1"><span style="0">② 캡스톤디자인 교과는 해당학기에 병수개설하여 운영한다. </span><span style="color:#0000ff;"><개정 2015.9.1.> </span></div><div class="hang level1"><span style="0">③ 삭제 </span><span style="color:#0000ff;"><2015.9.1.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000007" name="000007"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="81871" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=121&SEQ_HISTORY=1792&SEQ_CONTENTS=81871', 'joHistory81871', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(81871);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (이수원칙)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 캡스톤디자인은 캡스톤디자인기획, 캡스톤디자인1, 캡스톤디자인2를 순차적으로 이수하여야 한다. </span><span style="color:#0000ff;"><개정 2015.9.1.> </span></div><div class="hang level1"><span style="0">② 캡스톤디자인 교과의 성적평가가 "F"일 경우, 반드시 재수강하여 성적을 취득하여야 한다. </span><span style="color:#0000ff;"><개정 2015.9.1.> </span></div><div class="hang level1"><span style="0">③ 학석사연계과정 합격자, 조기 취·창업자, 성공학기제 체험형 인턴십 참여자에 한하여 캡스톤디자인2 이수 의무를 면제할 수 있으며, 각 유형의 면제 적용 대상은 별도로 정한다. <신설 2026.1.19., 개정 2026. 2. 23.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="81872" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=121&SEQ_HISTORY=1792&SEQ_CONTENTS=81872', 'joHistory81872', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(81872);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (이수절차)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 캡스톤디자인은 1인 또는 5인이하의 팀제로 운영한다. </span></div><div class="hang level1"><span style="0">② 팀원 중 대표자는 수강신청기간 이후 정해진 기간동안 캡스톤디자인 계획서를 입력하여 승인을 득하여야 한다. </span></div><div class="hang level1"><span style="0">③ 캡스톤디자인 교과별 세부 운영사항은 다음 각호와 같다. </span><span style="color:#0000ff;"><개정 2015.9.1.> </span></div><div class="ho level2"><span style="0">1. 캡스톤디자인 기획 : 교과과정을 통하여 습득한 지식과 기술을 바탕으로 지도교수와 상의하여 연구과제를 선정하고, 이에 관한 문헌조사 및 제작방법 등에 관하여 학습·연구한다 </span></div><div class="ho level2"><span style="0">2. 캡스톤디자인1 : 캡스톤디자인기획에서 계획한 과제에 의거 졸업작품을 설계 및 제작한다. </span></div><div class="ho level2"><span style="0">3. 캡스톤디자인2 : 캡스톤디자인기획, 캡스톤디자인1에서 수행한 과제를 심화하여 연구 및 설계, 제작의 완성도를 높이며, 작품제작을 통한 문제해결 및 수행과정을 논문형식 보고서로 작성하고, 학과별 작품전시 등을 시행한다. </span></div><div class="hang level1"><span style="0">④ 작성된 보고서는 지도교수에게 제출 한다. </span><span style="color:#0000ff;"><개정 2015.9.1.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000009" name="000009"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="81873" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=121&SEQ_HISTORY=1792&SEQ_CONTENTS=81873', 'joHistory81873', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(81873);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (지도교수)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 캡스톤디자인의 효과적인 운영을 위하여 지도교수를 배정한다. </span></div><div class="hang level1"><span style="0">② 캡스톤디자인 유형에 따라 복수의 지도교수를 둘 수 있으며, 기업연계형의 경우 기업체 지도교수를 반드시 포함하여야 한다. 복수의 지도교수를 배정할 경우, 책임 지도교수를 지정하여 캡스톤디자인을 지도한다. </span><span style="color:#0000ff;"><신설 2018.1.10.> </span></div><div class="hang level1"><span style="0">③ 지도교수는 학생들이 산업체의 요구 및 연구동향을 반영한 창의적인 주제를 선정할 수 있도록 지도한다. </span></div><div class="hang level1"><span style="0">④ 지도교수는 캡스톤디자인계획서 승인 또는 반려, 성적입력, 공학인증 지표관리, 캡스톤디자인 보고서 심사 등의 역할을 수행한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000010" name="000010"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="81874" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=121&SEQ_HISTORY=1792&SEQ_CONTENTS=81874', 'joHistory81874', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(81874);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (평가)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 캡스톤디자인은 개인별 등급(A+~F)으로 평가한다. </span></div><div class="hang level1"><span style="0">② 학과(전공)는 캡스톤디자인 교과에 대한 평가항목과 평가방법을 사전 공지하여야 한다. </span><span style="color:#0000ff;"><개정 2015.9.1.> </span></div><div class="hang level1"><span style="0">③ 캡스톤디자인기획, 캡스톤디자인2는 기술성, 독창성, 실용성, 표현력의 4가지 항목으로 평가한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000011" name="000011"></a>
+                    <a id="c010000000" name="c010000000"></a>
+                    <div class="JO" id="81875" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=121&SEQ_HISTORY=1792&SEQ_CONTENTS=81875', 'joHistory81875', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(81875);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 10 조 (작품제작 지원)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 대학은 작품을 제작하는데 필요한 재료구입에 대하여 예산을 지원할 수 있다. </span></div><div class="hang level1"><span style="0">② 삭제 </span><span style="color:#0000ff;"><2018.1.10.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000012" name="000012"></a>
+                    <a id="c011000000" name="c011000000"></a>
+                    <div class="JO" id="81876" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=121&SEQ_HISTORY=1792&SEQ_CONTENTS=81876', 'joHistory81876', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(81876);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조 (결과물 활용)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 캡스톤디자인 작품은 지정된 기한 내에 학생이 소속한 학과에 제출하여야 한다. </span></div><div class="hang level1"><span style="0">② 캡스톤디자인 우수 작품으로 선정된 팀은 다음과 같은 사항에 적극적으로 참여하고 협조하여야 한다. </span></div><div class="ho level2"><span style="0">1. 산업기술대전 및 전공학부(과)의 작품 전시 </span></div><div class="ho level2"><span style="0">2. 캡스톤디자인 경진대회 및 캡스톤마켓 참여 </span></div><div class="ho level2"><span style="0">3. 특허출원 및 지시재산권 등록 </span></div><div class="ho level2"><span style="0">4. 기술이전 </span></div><div class="hang level1"><span style="0">③ 대학은 작품개발의 성과 확대를 위하여 특허출원, 기술이전 등 필요한 경비에 대하여 지원할 수 있다. </span></div> <div class="none level1"><span style="color:#0000ff;">[본조신설 2018.1.10.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="13"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="81877"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2012년 11월 5일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(경과조치)</div><div class="none"><span style="0">이 규정 시행이전에 이루어진 사항은 이 규정에 의하여 행한 것으로 본다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="16"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="81878"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2015년 9월 1일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(경과조치)</div><div class="none"><span style="0">캡스톤디자인 교과 개선에 따른 학점은 2016학년도부터 적용하며, 본규정 시행일 이전 휴학자 중 4학년 복학생 및 캡스톤디자인1 이수자는 캡스톤디자인1, 캡스톤디자인2(3학점)를 이수한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="19"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="81879"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2018년 1월 10일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="21"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="81880"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2023년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="23"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부      칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="81881"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 1월 1일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(경과조치)</div><div class="none"><span style="0">제5조제1항의 캡스톤디자인(종합설계) 이수학점 변경은 2025학번부터 적용한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="26"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부   칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="81882"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 <a href="javascript:golink('3', '75', '','', '');">직제규정</a> 개정에 따라 해당 부서의 직제 변경 시점부터 시행한 것으로 하며, 이전에 <a href="javascript:golink('3', '75', '','', '');">직제규정</a>에 따라 시행한 사항은 본 규정을 따른 것으로 본다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="28"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부   칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="81883"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 1월 19일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="30"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부   칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="81884"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 2월 23일부터 시행한다. 단, 학석사연계과정 합격자의 경우 캡스톤디자인2 이수 의무 면제를 2027년 3월 1일부터 적용한다. </span></div></div></div>
+                
+            
+        
+
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

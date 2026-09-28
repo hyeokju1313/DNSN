@@ -1,0 +1,1081 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('1886', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"1886\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=141&SEQ_HISTORY=1886&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">비교과 교육과정 운영 규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+							<div class="history historyShow" style="display: block;">
+								<span onclick="thisHistoryShow();" style="cursor: pointer;">
+									연혁 보이기 <img src="/lmxsrv/images/btn/tabBtn_open.gif" alt="보기" title="보기"/>
+								</span>
+							</div>
+							<div class="history historyHide" style="display: none;">
+								<span onclick="thisHistoryHide();" style="cursor: pointer;">
+									연혁 숨기기 <img src="/lmxsrv/images/btn/tabBtn_close_o.gif" alt="감추기" title="감추기"/>
+								</span>
+							</div>
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제      정 2019.  1. 28.</div>
+						
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">시  행  일 2019.  2.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제1차 개정 2020.  7. 20.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제2차 개정 2021.  2. 26.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제3차 개정 2022.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제4차 개정 2025.  4. 22.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제5차 개정 2026.  6.  8.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+						
+							<div class="history historyContentLast" style="display: block;font-size: 9pt;">제6차 개정 2026.  8. 26.</div>
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="2" name="2"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 1 장  총 칙</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="87363" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=141&SEQ_HISTORY=1886&SEQ_CONTENTS=87363', 'joHistory87363', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87363);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 한국공학대학교 (이하 "본 대학"이라 한다.) 비교과 교육과정 운영에 필요한 사항을 규정함을 목적으로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="87364" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=141&SEQ_HISTORY=1886&SEQ_CONTENTS=87364', 'joHistory87364', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87364);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (정의)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정에서 사용하는 용어의 정의는 다음 각 호와 같다. </span></div><div class="ho level1"><span style="0">1. "핵심역량"이란 대학의 교육목표 달성 및 인재상 구현을 위해 필요한 역량으로, <a href="javascript:golink('1', '115', 'c002002000', '', '');">교육과정 편성 및 운영규정 제2조의 2</a>에서 정의된 6대 역량을 말한다. </span></div><div class="ho level1"><span style="0">2. "전공능력"이란 각 전공 분야에서 요구되는 직무, 과업,역할을 수행하는데 필요한 지식, 기술, 태도를 포함하는 복합적·종합적 능력으로, <a href="javascript:golink('1', '115', 'c002003000', '', '');">교육과정 편성 및 운영규정 제2조의 3</a>에서 정한 능력을 말한다. </span></div><div class="ho level1"><span style="0">3. "비교과 교육과정"이란 핵심역량 또는 전공능력 개발을 위하여 체계적으로 제공되는 교육프로그램 및 활동을 말하며, 학점을 부여하지 않음을 원칙으로 한다. 비교과 교육과정은 정규교육과정과의 연계 여부에 따라 교과플러스 프로그램과 학생성장플러스 프로그램으로 구분한다. </span></div><div class="ho level1"><span style="0">4. "환류"란 비교과 교육과정 운영 결과 또는 성과를 확인·점검·분석하여 향후 프로그램 개선 및 차년도 교육과정 편성에 반영하는 일체의 절차를 말한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="87365" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=141&SEQ_HISTORY=1886&SEQ_CONTENTS=87365', 'joHistory87365', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87365);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (수행조직)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 비교과 교육과정의 총괄 부서는 교육기획팀으로 하며, 비교과 교육과정 교육과정 기획 및 운영, 비교과관리시스템 운영 및 관리, 비교과 교육과정 관련 위원회 운영 등을 담당한다. </span></div><div class="hang level1"><span style="0">② 비교과 교육과정의 운영 부서는 프로그램 계획 수립 및 운영, 프로그램 성과 분석 및 환류 등을 담당하며, 프로그램별 운영 부서는 별도로 정한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="87366" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=141&SEQ_HISTORY=1886&SEQ_CONTENTS=87366', 'joHistory87366', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87366);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (비교과 마일리지제도)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">비교과 교육과정의 학생 참여를 장려하기 위해 비교과 교육과정 마일리지 제도를 운영하며 상세한 내용은 별도로 정한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="7" name="7"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 2 장  교과플러스 프로그램</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="87368" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=141&SEQ_HISTORY=1886&SEQ_CONTENTS=87368', 'joHistory87368', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87368);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (교과플러스 프로그램 편성 및 운영)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교과플러스 프로그램은 정규교육과정과 연계하여 교육과정 학습의 보완·심화·성과공유를 지원하는 비교과과정을 말하며, 연계한 교육과정에 따라 교양플러스 프로그램(교양교육과정 연계)과 전공플러스 프로그램(전공교육과정 연계)으로 구분한다. 교과플러스 프로그램은 다음 각 호의 사항을 고려하여 편성한다. </span></div><div class="ho level2"><span style="0">1. 본교의 교육목적, 교육목표, 인재상 및 핵심역량 또는 전공능력 </span></div><div class="ho level2"><span style="0">2. 학과(부) 교육목적 및 목표 </span></div><div class="ho level2"><span style="0">3. 교육과정과의 연계성 : 교육과정 보완, 심화, 성과공유 등의 연계성 고려 </span></div><div class="ho level2"><span style="0">4. 프로그램 운영 성과, 학생 만족도 조사 및 수요 조사 등 분석 결과 </span></div><div class="hang level1"><span style="0">② 운영 학과 및 부서는 정해진 시스템에 연계 교과목, 운영 계획 및 운영 결과, 프로그램 CQI 보고서 등을 등록·관리하여야 하며, 총괄 부서는 프로그램 운영에 필요한 구체적인 사항을 별도로 정할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000009" name="000009"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="87369" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=141&SEQ_HISTORY=1886&SEQ_CONTENTS=87369', 'joHistory87369', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87369);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (교과플러스 프로그램 환류 및 개선)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 운영 학과 및 부서는 프로그램별 CQI 보고서, 교육 수요자 만족도 조사 결과 등을 기반으로 하여 매년 개선방향을 도출하고 이를 프로그램 개선에 반영한다. </span></div><div class="hang level1"><span style="0">②  </span><span style="font-weight:bold;"> </span><span style="0">교과플러스 프로그램 편성, 운영, 평가, 개선에 관한 사항은 다음 각 호의 위원회에서 심의한다. </span></div><div class="ho level2"><span style="0">1. 교양플러스 프로그램 : 교양교육운영위원회 심의 후 교육과정위원회 최종 심의 </span></div><div class="ho level2"><span style="0">2. 전공플러스 프로그램 : 전공교육운영위원회 심의 후 교육과정위원회 최종 심의 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="10" name="10"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 3 장  학생성장플러스 프로그램</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000011" name="000011"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="87371" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=141&SEQ_HISTORY=1886&SEQ_CONTENTS=87371', 'joHistory87371', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87371);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (학생성장플러스 프로그램 편성 및 운영)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 학생성장플러스 프로그램은 학습역량 강화를 비롯하여 정서·심리적 안정을 지원하며 진로 및 취·창업역량을 개발하는 프로그램으로 다음 각 호의 사항을 고려하여 편성한다. </span></div><div class="ho level2"><span style="0">1. 본교의 교육목적, 교육목표, 인재상 및 핵심역량 </span></div><div class="ho level2"><span style="0">2. 프로그램 운영 성과, 학생 만족도 조사 및 수요 조사 등 분석 결과 </span></div><div class="ho level2"><span style="0">3. 대학 ESG 경영 기본 계획(ESG 관련 비교과 운영, 학습 부진 학생 및 학습소수자 포용, 지역사회 상생 협력 등) </span></div><div class="hang level1"><span style="0">② 운영 부서는 정해진 시스템에 핵심역량, 운영 계획 및 운영 결과, 프로그램 CQI 보고서 등을 등록·관리하여야 하며, 총괄 부서는 프로그램 운영에 필요한 구체적인 사항을 별도로 정할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000012" name="000012"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="87372" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=141&SEQ_HISTORY=1886&SEQ_CONTENTS=87372', 'joHistory87372', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87372);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (학생성장플러스 프로그램 환류 및 개선)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 총괄부서는 매년 학생성장플러스 프로그램을 포함한 비교과 교육과정 운영 성과를 종합 분석하고 개편 방향을 도출한다. </span></div><div class="hang level1"><span style="0">② 운영 부서는 프로그램별 CQI 보고서, 교육 수요자 만족도 조사 결과, 제1항의 총괄부서 분석 자료 등을 기반으로 하여 매년 개선방향을 도출하고 이를 프로그램 개선에 반영한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="13" name="13"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 4 장  비교과 교육과정 운영위원회 등</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000014" name="000014"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="87374" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=141&SEQ_HISTORY=1886&SEQ_CONTENTS=87374', 'joHistory87374', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87374);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (비교과 교육과정 운영위원회)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 비교과 교육과정 운영에 관한 중요 사항을 심의하기 위하여 비교과 교육과정 운영위원회를 두며, 위원회는 위원장 1인과 15명 이내의 위원으로 구성한다. </span></div><div class="hang level1"><span style="0">② 위원장은 교무처장으로 하며, 위원은 위원장이 추천하여 총장이 임명한다. 위원의 임기는 2년으로 하되 연임할 수 있다. </span></div><div class="hang level1"><span style="0">③ 위원회는 다음 각 호의 사항을 심의 및 의결한다. 다만, 교과플러스 프로그램 편성, 운영, 평가, 개선에 관한 사항은 제6조 제2항에서 정한 위원회에서 심의하는 것을 원칙으로 하되, 아래의 제2호 내지 제4호의 경우 필요시 비교과 교육과정 운영위원회에서 총괄하여 심의할 수 있다. </span></div><div class="ho level2"><span style="0">1. 학생성장플러스 프로그램 개설 및 신설 적절성 심의 </span></div><div class="ho level2"><span style="0">2. 비교과 교육과정 편성 및 운영 기준 수립 </span></div><div class="ho level2"><span style="0">3. 비교과 교육과정 성과 분석 및 개편 방향 </span></div><div class="ho level2"><span style="0">4. 기타 비교과 교육과정과 관련되는 주요 사항 </span></div><div class="hang level1"><span style="0">④ 위원회는 위원장이 소집하며, 재적위원 과반수의 참석으로 개회하고, 출석위원 과반수의 찬성으로 의결한다. 위원회의 사무를 처리하기 위하여 간사를 둘 수 있으며, 본 대학 교직원 중에서 임명한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000015" name="000015"></a>
+                    <a id="c010000000" name="c010000000"></a>
+                    <div class="JO" id="87375" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=141&SEQ_HISTORY=1886&SEQ_CONTENTS=87375', 'joHistory87375', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(87375);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 10 조 (기타)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정에 명시하지 아니한 세부 사항은 내규로 정하거나 총장이 따로 정한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="16"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87376"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 2월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="18"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87377"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 7월 20일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="20"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87378"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 2월 26일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="22"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87379"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="24"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87380"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 <a href="javascript:golink('3', '75', '','', '');">직제규정</a> 개정에 따라 해당 부서의 직제 변경 시점부터 시행한 것으로 하며, 이전에 <a href="javascript:golink('3', '75', '','', '');">직제규정</a>에 따라 시행한 사항은 본 규정을 따른 것으로 본다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="26"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="87381"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 8월 26일부터 시행한다. </span></div></div></div>
+                
+            
+        
+
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

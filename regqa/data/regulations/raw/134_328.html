@@ -1,0 +1,934 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('328', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"328\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=134&SEQ_HISTORY=328&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">교내 인증제 운영 및 관리 규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+							<div class="history historyShow" style="display: block;">
+								<span onclick="thisHistoryShow();" style="cursor: pointer;">
+									연혁 보이기 <img src="/lmxsrv/images/btn/tabBtn_open.gif" alt="보기" title="보기"/>
+								</span>
+							</div>
+							<div class="history historyHide" style="display: none;">
+								<span onclick="thisHistoryHide();" style="cursor: pointer;">
+									연혁 숨기기 <img src="/lmxsrv/images/btn/tabBtn_close_o.gif" alt="감추기" title="감추기"/>
+								</span>
+							</div>
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제      정 2019.  7. 29.</div>
+						
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제1차 개정 2021.  2. 26.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제2차 개정 2022.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제3차 개정 2025.  4. 22.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+						
+							<div class="history historyContentLast" style="display: block;font-size: 9pt;">제4차 개정 2025.  9. 22.</div>
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="2" name="2"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 1 장  총  칙</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="22235" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=134&SEQ_HISTORY=328&SEQ_CONTENTS=22235', 'joHistory22235', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(22235);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 한국공학대학교(이하 "본 대학"이라 한다) 인증제 운영과 관리에 필요한 제반 사항을 정함을 목적으로 한다. </span><span style="color:#0000ff;"><개정 2022.3.1.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="22236" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=134&SEQ_HISTORY=328&SEQ_CONTENTS=22236', 'joHistory22236', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(22236);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (용어의 정의)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① ‘교내 인증제'라 함은 본 대학 내 각 부서에서 운영하는 일반학과(부) 재학생 대상의 우수 인재 인증 프로그램을 말하며, 본 규정에서는 ‘대학인증제'와 ‘부서별인증제'로 구분한다. </span></div><div class="hang level1"><span style="0">② ‘대학 인증제'라 함은 대학본부차원으로 주관하고 관리하는 인증제를 말하며, 종류는 다음과 같다. </span></div><div class="ho level2"><span style="0">1. 핵심역량기반인증제(6PAC) : 6대 핵심역량 기반 교과 이수 및 비교과 프로그램 참여를 통한 인증제(교육기획팀) </span><span style="color:#0000ff;"><개정 2025.4.22., 2025.9.22.> </span></div><div class="ho level2"><span style="0">2. 산학연계특화교육인증제(SHIFT) : 현장실습, 캡스톤디자인 등 산학연계 교육 참여를 통한 인증제(현장실습지원센터) </span><span style="color:#0000ff;"><개정 2025.4.22.> </span></div><div class="hang level1"><span style="0">③ ‘부서별 인증제'라 함은 대학 인증제를 제외하고, 본 대학의 각 부서에서 실시하는 교내인증제를 말한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="22237" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=134&SEQ_HISTORY=328&SEQ_CONTENTS=22237', 'joHistory22237', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(22237);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (적용 범위)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">교내 실시되는 인증제는 이 규정을 적용하되 운영에 관한 사항은‘대학인증제'의 운영 시, 관리에 관한 사항은‘부서별인증제'의 관리 시 적용한다. </span><span style="color:#0000ff;"><개정 2025.4.21.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="6" name="6"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 2 장  운영 및 관리 주체</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000007" name="000007"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="22239" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=134&SEQ_HISTORY=328&SEQ_CONTENTS=22239', 'joHistory22239', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(22239);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (총괄부서)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">교내 인증제 운영 및 관리의 총괄부서는 교육기획팀으로 하며, 그 역할은 다음 각 호와 같다. </span><span style="color:#0000ff;"><개정 2025.4.22., 2025.9.22.> </span></div><div class="ho level1"><span style="0">1. 교내 인증제 총괄 관리 및 모니터링 </span></div><div class="ho level1"><span style="0">2. 역량기반인증제 기획 및 운영, 성과분석 및 결과환류 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="22240" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=134&SEQ_HISTORY=328&SEQ_CONTENTS=22240', 'joHistory22240', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(22240);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (관련부서)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">관련부서는 산학연계특화교육인증제를 실시하는 현장실습지원센터와 부서별인증제를 실시하는 전 부서로 하며, 그 역할은 다음 각 호와 같다. </span><span style="color:#0000ff;"><개정 2025.4.22.> </span></div><div class="ho level1"><span style="0">1. 인증제 운영 계획안 수립 </span></div><div class="ho level1"><span style="0">2. 인증제 운영 및 운영결과에 대한 보고서 작성 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="9" name="9"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 3 장  업무절차</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000010" name="000010"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="22242" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=134&SEQ_HISTORY=328&SEQ_CONTENTS=22242', 'joHistory22242', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(22242);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (운영 및 관리 계획 수립)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 총괄부서에서는 교내 인증제 운영  및 관리 계획을 수립한다. </span></div><div class="hang level1"><span style="0">② 대학 인증제 운영계획 수립은 매년 이루어지며, 운영계획에는 다음 각 호의 사항이 포함된다. </span></div><div class="ho level2"><span style="0">1. 역량기반인증제 운영의 목적 </span></div><div class="ho level2"><span style="0">2. 인증기준 및 운영방식 </span></div><div class="hang level1"><span style="0">③ 부서별인증제 관리계획 수립은 매년 이루어지며, 관리계획에는 다음 각 호의 사항이 포함된다. </span></div><div class="ho level2"><span style="0">1. 부서별인증제 관리의 목적 </span></div><div class="ho level2"><span style="0">2. 인증제 관리 적용대상 및 범위, 절차 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000011" name="000011"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="22243" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=134&SEQ_HISTORY=328&SEQ_CONTENTS=22243', 'joHistory22243', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(22243);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (인증제 운영 및 관리)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 총괄부서와 대학 인증제 운영부서는 운영계획에 따라 대학 인증제를 시행한다. </span></div><div class="hang level1"><span style="0">② 부서별인증제 운영 부서는 다음 각 호의 절차를 따라 시행하여야 한다. </span></div><div class="ho level2"><span style="0">1. 인증제 실시 전 운영계획서를 총괄부서에 제출하여 승인을 받아야한다. </span></div><div class="ho level2"><span style="0">2. 학년도 또는 학기 단위로 결과보고서를 작성한다. </span></div><div class="ho level2"><span style="0">3. 결과보고서 및 원자료(데이터)를 총괄부서로 송부한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000012" name="000012"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="22244" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=134&SEQ_HISTORY=328&SEQ_CONTENTS=22244', 'joHistory22244', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(22244);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (인증제 성과분석 및 환류)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 총괄부서는 교내인증제 운영 및 관리에 대한‘교내인증제 종합분석 보고서'를 연 1회 작성하고, 이를 교내 전 부서에 제공한다. </span></div><div class="hang level1"><span style="0">② 관련부서는 총괄부서에서 제공한 종합분석 결과와 부서별 자체 분석 결과 등을 바탕으로 개선점을 도출하고, 다음 학기 운영계획 수립 시 이를 반영한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="13" name="13"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 4 장  위원회</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000014" name="000014"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="22246" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=134&SEQ_HISTORY=328&SEQ_CONTENTS=22246', 'joHistory22246', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(22246);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (설치 및 구성)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교내 인증제 운영 및 관리에 관한 주요사항은 교내 인증제 운영위원회에서 심의하고 지원한다. </span><span style="color:#0000ff;"><개정 2025.4.22., 2025.9.22.> </span></div><div class="hang level1"><span style="0">② 위원회는 다음 각 호의 사항을 심의하고 지원한다. </span></div><div class="ho level2"><span style="0">1. 대학인증제 운영에 관한 사항 </span></div><div class="ho level2"><span style="0">2. 부서별인증제 관리에 관한 사항 </span></div><div class="ho level2"><span style="0">3. 기타 위 각 호에 부수되는 사항 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="15"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="22247"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 7월 29일부터 시행한다 </span><span style="font-weight:bold;">. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="17"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="22248"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 2월 26일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="19"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="22249"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="21"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="22250"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 4월 22일부터 시행한다. </span></div><div class="none"><span style="0">단, 직제 개편과 관련한 사항은 해당 부서의 직제 변경부터 시행한 것으로 하며, 이전에 <a href="javascript:golink('3', '75', '','', '');">직제규정</a>에 따라 시행한 사항은 본 규정을 따른 것으로 본다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="23"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="22251"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 9월 22일부터 시행한다. </span></div></div></div>
+                
+            
+        
+
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

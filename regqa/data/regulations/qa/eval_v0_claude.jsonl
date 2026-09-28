@@ -1,0 +1,102 @@
+{"id": "v0-000", "level": "L1", "question": "휴학은 재학 중에 총 몇 년까지 할 수 있어?", "answer": "총 2년", "source": "claude", "gold_any": ["31:제21조", "32:제4조"]}
+{"id": "v0-001", "level": "L1", "question": "졸업하려면 몇 학점을 들어야 해?", "answer": "130학점 이상", "source": "claude", "gold_any": ["31:제35조", "32:제16조"]}
+{"id": "v0-002", "level": "L1", "question": "재수강은 한 과목당 몇 번까지 할 수 있어?", "answer": "교과목당 2회(F는 횟수 제외)", "source": "claude", "gold_any": ["32:제25조"]}
+{"id": "v0-003", "level": "L1", "question": "재수강하려면 성적이 어느 정도 이하여야 돼?", "answer": "C+ 이하", "source": "claude", "gold_any": ["32:제25조"]}
+{"id": "v0-004", "level": "L1", "question": "계절학기는 최대 몇 학점까지 신청할 수 있어?", "answer": "6학점", "source": "claude", "gold_any": ["32:제42조"]}
+{"id": "v0-005", "level": "L1", "question": "지각을 몇 번 하면 결석 한 번으로 쳐?", "answer": "3회", "source": "claude", "gold_any": ["32:제38조", "116:제7조"]}
+{"id": "v0-006", "level": "L1", "question": "결석을 얼마나 하면 그 과목이 F가 돼?", "answer": "총 수업시간의 1/4 이상", "source": "claude", "gold_any": ["31:제31조", "32:제37조", "116:제7조"]}
+{"id": "v0-007", "level": "L1", "question": "학점포기는 재학 중 몇 학점까지 가능해?", "answer": "6학점", "source": "claude", "gold_any": ["32:제26조"]}
+{"id": "v0-008", "level": "L1", "question": "수강철회는 한 학기에 몇 과목까지 할 수 있어?", "answer": "2과목 이내", "source": "claude", "gold_any": ["32:제24조"]}
+{"id": "v0-009", "level": "L1", "question": "복수전공을 하려면 몇 학점을 따야 해?", "answer": "다전공 36학점 이상, 주전공 45학점 이상", "source": "claude", "gold_any": ["32:제20조"]}
+{"id": "v0-010", "level": "L1", "question": "부전공으로 인정받으려면 몇 학점이 필요해?", "answer": "21학점 이상", "source": "claude", "gold_any": ["32:제20조"]}
+{"id": "v0-011", "level": "L1", "question": "졸업최우등생은 평점이 몇 이상이어야 해?", "answer": "4.00 이상", "source": "claude", "gold_any": ["32:제51조의2"]}
+{"id": "v0-012", "level": "L1", "question": "시험에서 부정행위를 하면 그 과목 성적은 어떻게 돼?", "answer": "F 처리(학점 미부여)", "source": "claude", "gold_any": ["32:제58조", "127:제3조"]}
+{"id": "v0-013", "level": "L1", "question": "다른 대학에서 딴 학점은 최대 얼마까지 인정돼?", "answer": "졸업학점의 1/4 이내", "source": "claude", "gold_any": ["31:제29조", "131:제8조"]}
+{"id": "v0-014", "level": "L1", "question": "학사학위 취득 유예는 최대 몇 학기까지 가능해?", "answer": "최대 2개 학기", "source": "claude", "gold_any": ["133:제4조"]}
+{"id": "v0-015", "level": "L1", "question": "학위 취득 유예 기간에 휴학할 수 있어?", "answer": "휴학할 수 없음", "source": "claude", "gold_any": ["133:제8조"]}
+{"id": "v0-016", "level": "L1", "question": "MOOC 강의는 재학 중 몇 학점까지 인정해 줘?", "answer": "최대 3학점", "source": "claude", "gold_any": ["126:제8조"]}
+{"id": "v0-017", "level": "L1", "question": "사회봉사 과목을 신청하려면 몇 학점 이상 이수해야 해?", "answer": "17학점 이상", "source": "claude", "gold_any": ["122:제3조"]}
+{"id": "v0-018", "level": "L1", "question": "사회봉사 1학점을 받으려면 몇 시간 봉사해야 해?", "answer": "30시간 이상", "source": "claude", "gold_any": ["122:제4조", "122:제7조"]}
+{"id": "v0-019", "level": "L1", "question": "캡스톤디자인 팀은 최대 몇 명까지 꾸릴 수 있어?", "answer": "1인 또는 5인 이하", "source": "claude", "gold_any": ["121:제7조"]}
+{"id": "v0-020", "level": "L1", "question": "유고결석 신청은 언제까지 해야 해?", "answer": "사유발생일 10일 이내", "source": "claude", "gold_any": ["32:제39조"]}
+{"id": "v0-021", "level": "L1", "question": "추가시험 신청 기한은 언제까지야?", "answer": "결시사유발생일 7일 이내", "source": "claude", "gold_any": ["32:제48조"]}
+{"id": "v0-022", "level": "L1", "question": "전과는 재학 중 몇 번 할 수 있어?", "answer": "2회", "source": "claude", "gold_any": ["31:제18조", "32:제11조"]}
+{"id": "v0-023", "level": "L1", "question": "재입학은 몇 번까지 허가돼?", "answer": "2회", "source": "claude", "gold_any": ["32:제10조"]}
+{"id": "v0-024", "level": "L1", "question": "생활관 벌점이 몇 점이면 퇴관이야?", "answer": "누계 17점 이상", "source": "claude", "gold_any": ["177:제14조"]}
+{"id": "v0-025", "level": "L1", "question": "성적 이의신청은 언제 할 수 있어?", "answer": "성적 공개 이후 정정·이의신청 마감기간까지", "source": "claude", "gold_any": ["32:제53조"]}
+{"id": "v0-026", "level": "L1", "question": "수업 한 교시는 몇 분이야?", "answer": "50분", "source": "claude", "gold_any": ["116:제3조"]}
+{"id": "v0-027", "level": "L2", "question": "학사경고 몇 번 받으면 잘려?", "answer": "연속 4회면 제적", "source": "claude", "gold_any": ["31:제24조"]}
+{"id": "v0-028", "level": "L2", "question": "평점이 몇 밑으로 떨어지면 경고 받아?", "answer": "평점평균 1.5 미만", "source": "claude", "gold_any": ["31:제33조"]}
+{"id": "v0-029", "level": "L2", "question": "수업에 20분 늦게 들어가면 어떻게 처리돼?", "answer": "결석으로 간주", "source": "claude", "gold_any": ["32:제38조", "116:제7조"]}
+{"id": "v0-030", "level": "L2", "question": "지난 학기 평점이 3.8인데 학점 더 들을 수 있어?", "answer": "직전학기 3.75 이상이면 3학점 초과 가능", "source": "claude", "gold_any": ["32:제22조"]}
+{"id": "v0-031", "level": "L2", "question": "군대에서 원격으로 들은 수업도 학점으로 인정돼?", "answer": "총 12학점 이내(학기당 3, 연간 6)", "source": "claude", "gold_any": ["31:제29조"]}
+{"id": "v0-032", "level": "L2", "question": "할머니가 돌아가셔서 수업을 빠지면 출석 인정돼?", "answer": "기타가족(3촌 이내) 사망 3일", "source": "claude", "gold_any": ["32:제39조"]}
+{"id": "v0-033", "level": "L2", "question": "입원해서 기말을 못 봤는데 나중에 볼 수 있어?", "answer": "추가시험 신청 가능", "source": "claude", "gold_any": ["32:제48조", "31:제30조"]}
+{"id": "v0-034", "level": "L2", "question": "수강신청 기간을 놓쳤는데 정정기간에 추가로 넣을 수 있어?", "answer": "수강신청확인 변경기간에 추가 신청 가능", "source": "claude", "gold_any": ["32:제21조"]}
+{"id": "v0-035", "level": "L2", "question": "C+ 받은 과목을 다시 들으면 예전 성적은 지워져?", "answer": "이전 성적 삭제, R 표시", "source": "claude", "gold_any": ["32:제60조"]}
+{"id": "v0-036", "level": "L2", "question": "학교를 그만두려면 어떻게 해야 해?", "answer": "자퇴원 제출, 총장 허가", "source": "claude", "gold_any": ["31:제23조", "32:제8조"]}
+{"id": "v0-037", "level": "L2", "question": "등록금을 안 내면 어떻게 돼?", "answer": "정당한 이유 없이 미등록 시 제적", "source": "claude", "gold_any": ["31:제24조", "31:제43조"]}
+{"id": "v0-038", "level": "L2", "question": "개강하고 한 달쯤 지나서 자퇴하면 등록금을 얼마나 돌려받아?", "answer": "반환사유 발생일 기준표", "source": "claude", "gold_any": ["31:제44조"]}
+{"id": "v0-039", "level": "L2", "question": "8학기를 넘겨서 다니면 등록금을 다 내야 돼?", "answer": "수강신청 학점 수에 따라 징수", "source": "claude", "gold_any": ["31:제43조"]}
+{"id": "v0-040", "level": "L2", "question": "기숙사는 어떤 기준으로 뽑아?", "answer": "성적, 원거리 거주, 학년 배분", "source": "claude", "gold_any": ["177:제6조"]}
+{"id": "v0-041", "level": "L2", "question": "휴학 중인데 방학 동안 기숙사에 살 수 있어?", "answer": "단기 입주는 휴학생 허용", "source": "claude", "gold_any": ["177:제9조의2", "177:제9조"]}
+{"id": "v0-042", "level": "L2", "question": "졸업 요건을 다 채웠는데 졸업을 좀 미루고 싶어", "answer": "학사학위 취득 유예", "source": "claude", "gold_any": ["31:제37조", "133:제2조", "133:제4조"]}
+{"id": "v0-043", "level": "L2", "question": "외국 대학에 교환학생 가서 딴 학점은 성적에 들어가?", "answer": "D0 이상만 P로 표기, 전체 취득학점에만 포함", "source": "claude", "gold_any": ["131:제9조"]}
+{"id": "v0-044", "level": "L2", "question": "다른 학교 수업을 들으려면 평점이 몇 이상이어야 해?", "answer": "3.0(B0) 이상", "source": "claude", "gold_any": ["131:제4조"]}
+{"id": "v0-045", "level": "L2", "question": "자격증 따면 학점으로 바꿀 수 있어?", "answer": "성공학기제 학습형 자격증", "source": "claude", "gold_any": ["374:제3조", "374:제6조"]}
+{"id": "v0-046", "level": "L2", "question": "마지막 학기에 취업해서 수업을 못 나가면 어떻게 해?", "answer": "조기 취업자 출석 인정 특례", "source": "claude", "gold_any": ["130:제2조", "130:제3조"]}
+{"id": "v0-047", "level": "L2", "question": "A 학점 받을 수 있는 인원에 제한이 있어?", "answer": "상대평가 A0 이상 40% 이하", "source": "claude", "gold_any": ["32:제51조"]}
+{"id": "v0-048", "level": "L2", "question": "수강 인원이 몇 명 안 되면 강의가 없어져?", "answer": "전공 10명, 교양 15명 미만 폐강", "source": "claude", "gold_any": ["116:제5조"]}
+{"id": "v0-049", "level": "L2", "question": "교수님이 휴강하면 꼭 보강해야 돼?", "answer": "학기 종료 전 보강", "source": "claude", "gold_any": ["116:제9조", "32:제33조"]}
+{"id": "v0-050", "level": "L2", "question": "1학년 1학기 끝나자마자 과를 옮길 수 있어?", "answer": "1학기 이상 이수한 신입학생 대상", "source": "claude", "gold_any": ["32:제11조"]}
+{"id": "v0-051", "level": "L2", "question": "자유전공학부는 언제 전공을 골라?", "answer": "정규학기 2개학기 이상 이수 후", "source": "claude", "gold_any": ["143:제3조"]}
+{"id": "v0-052", "level": "L3", "question": "24학번은 한 학기에 최대 몇 학점까지 들을 수 있어?", "answer": "21학점", "source": "claude", "gold_any": ["32:제22조"]}
+{"id": "v0-053", "level": "L3", "question": "25학번 학기당 최대 수강학점은?", "answer": "19학점", "source": "claude", "gold_any": ["32:제22조"]}
+{"id": "v0-054", "level": "L3", "question": "24학번인데 학사경고를 받았어. 다음 학기는 몇 학점까지 돼?", "answer": "18학점", "source": "claude", "gold_any": ["32:제22조의1"]}
+{"id": "v0-055", "level": "L3", "question": "25학번 학사경고자는 수강학점이 몇 학점으로 제한돼?", "answer": "16학점", "source": "claude", "gold_any": ["32:제22조의1"]}
+{"id": "v0-056", "level": "L3", "question": "25학번이 다른 대학 수업을 들으려면 몇 학점 이상 이수해야 해?", "answer": "33학점 이상", "source": "claude", "gold_any": ["131:제4조"]}
+{"id": "v0-057", "level": "L3", "question": "23학번 타대학 수강 자격은 몇 학점 이상이야?", "answer": "35학점 이상", "source": "claude", "gold_any": ["131:제4조"]}
+{"id": "v0-058", "level": "L3", "question": "25학번인데 수강철회하고 남는 학점이 최소 몇이어야 해?", "answer": "제24조 표의 2025학번 기준", "source": "claude", "gold_any": ["32:제24조"]}
+{"id": "v0-059", "level": "L3", "question": "졸업학점이 130학점인 학과는 2학년 수료하려면 몇 학점이 필요해?", "answer": "65학점 이상", "source": "claude", "gold_any": ["31:제34조"]}
+{"id": "v0-060", "level": "L3", "question": "7학기인데 수강신청은 최소 몇 학점 해야 돼?", "answer": "7학기 이후 최소 3학점 이상", "source": "claude", "gold_any": ["32:제22조"]}
+{"id": "v0-061", "level": "L3", "question": "6학기 넘게 다닌 학사경고자도 수강학점 제한을 받아?", "answer": "6학기 이상 이수자는 제외", "source": "claude", "gold_any": ["32:제22조의1", "132:제6조"]}
+{"id": "v0-062", "level": "L3", "question": "부모님이 돌아가시면 며칠까지 결석 인정돼?", "answer": "직계가족 사망 5일", "source": "claude", "gold_any": ["32:제39조"]}
+{"id": "v0-063", "level": "L3", "question": "삼촌 장례식이면 며칠 출석 인정받을 수 있어?", "answer": "기타가족(3촌 이내) 사망 3일", "source": "claude", "gold_any": ["32:제39조"]}
+{"id": "v0-064", "level": "L3", "question": "외국인 유학생은 졸업하려면 한국어 몇 급이 필요해?", "answer": "TOPIK 4급 이상", "source": "claude", "gold_any": ["32:제17조"]}
+{"id": "v0-065", "level": "L3", "question": "유학생 전담 학과의 졸업학점은 몇 학점이야?", "answer": "120학점 이상", "source": "claude", "gold_any": ["31:제35조"]}
+{"id": "v0-066", "level": "L3", "question": "편입생은 전에 다니던 학교 학점을 얼마까지 인정받아?", "answer": "해당학번 2학년 수료 기준학점까지", "source": "claude", "gold_any": ["32:제18조"]}
+{"id": "v0-067", "level": "L4", "question": "25학번인데 학사경고 받고 지원 프로그램을 안 들으면 몇 학점까지 들을 수 있어?", "answer": "16학점. 프로그램 이수 또는 6학기 이상이면 제한 없음", "source": "claude", "gold_all": [["32:제22조의1"], ["132:제6조"]], "gold_any": ["132:제6조", "32:제22조의1"]}
+{"id": "v0-068", "level": "L4", "question": "학사경고를 받았는데 지원 프로그램을 들으면 경고가 없어져?", "answer": "재학 중 1회 이전 학사경고 면제", "source": "claude", "gold_all": [["32:제51조의1", "132:제6조"], ["31:제33조"]], "gold_any": ["132:제6조", "31:제33조", "32:제51조의1"]}
+{"id": "v0-069", "level": "L4", "question": "학사경고 기준이 뭐고 몇 번 받으면 제적이야?", "answer": "1.5 미만, 연속 4회 제적", "source": "claude", "gold_all": [["31:제33조"], ["31:제24조"]], "gold_any": ["31:제24조", "31:제33조"]}
+{"id": "v0-070", "level": "L4", "question": "군휴학 끝나고 복학할 때 뭘 내야 하고, 복학 신청은 언제까지 해?", "answer": "전역증 사본 등, 수강정정 및 확인기간까지", "source": "claude", "gold_all": [["32:제6조"], ["32:제7조"]], "gold_any": ["32:제6조", "32:제7조"]}
+{"id": "v0-071", "level": "L4", "question": "재수강할 수 있는 성적 기준이랑 재수강하면 이전 성적이 어떻게 되는지 알려줘", "answer": "C+ 이하, 이전 성적 삭제", "source": "claude", "gold_all": [["32:제25조"], ["32:제60조"]], "gold_any": ["32:제25조", "32:제60조"]}
+{"id": "v0-072", "level": "L4", "question": "학점포기랑 재수강 둘 다 C+ 이하만 가능한 거야?", "answer": "둘 다 C+ 이하", "source": "claude", "gold_all": [["32:제25조"], ["32:제26조"]], "gold_any": ["32:제25조", "32:제26조"]}
+{"id": "v0-073", "level": "L4", "question": "타대학 수강 자격이랑 인정받을 수 있는 최대 학점을 알려줘", "answer": "평점 3.0 이상 등, 졸업학점 1/4 이내", "source": "claude", "gold_all": [["131:제4조"], ["131:제8조", "31:제29조"]], "gold_any": ["131:제4조", "131:제8조", "31:제29조"]}
+{"id": "v0-074", "level": "L4", "question": "학위 취득 유예 신청 자격이 뭐고, 유예 중에도 등록금을 내야 해?", "answer": "8학기 이상 이수 등, 등록금 납부 의무 없음", "source": "claude", "gold_all": [["133:제6조"], ["133:제8조"]], "gold_any": ["133:제6조", "133:제8조"]}
+{"id": "v0-075", "level": "L4", "question": "결석 기준이랑 유고결석으로 인정되는 사유를 알려줘", "answer": "1/4 이상 결석 시 F, 유고결석 사유표", "source": "claude", "gold_all": [["31:제31조", "32:제37조", "116:제7조"], ["32:제39조"]], "gold_any": ["116:제7조", "31:제31조", "32:제37조", "32:제39조"]}
+{"id": "v0-076", "level": "L4", "question": "캡스톤디자인2가 면제되는 경우랑 성공학기제 인턴십 조건 알려줘", "answer": "학석사연계·조기 취창업·체험형 인턴십", "source": "claude", "gold_all": [["121:제6조"], ["374:제8조", "374:제3조"]], "gold_any": ["121:제6조", "374:제3조", "374:제8조"]}
+{"id": "v0-077", "level": "L4", "question": "조기취업자 출석 인정 받으려면 어떤 서류를 내고, 온라인 강좌도 적용돼?", "answer": "4대보험 가입내역 등, 비실시간 비대면 강좌는 미적용", "source": "claude", "gold_all": [["130:제6조"], ["130:제7조"]], "gold_any": ["130:제6조", "130:제7조"]}
+{"id": "v0-078", "level": "L4", "question": "계절학기 최대 학점이랑 계절학기 성적이 평점에 들어가는지 알려줘", "answer": "6학점, 일반학기 평점 제외·전체평점 포함", "source": "claude", "gold_all": [["32:제42조"], ["32:제43조"]], "gold_any": ["32:제42조", "32:제43조"]}
+{"id": "v0-079", "level": "L4", "question": "복수전공에는 어떤 종류가 있고 몇 학점을 들어야 해?", "answer": "복수·융합·자기설계, 36학점", "source": "claude", "gold_all": [["31:제28조"], ["32:제20조"]], "gold_any": ["31:제28조", "32:제20조"]}
+{"id": "v0-080", "level": "L4", "question": "졸업 요건을 전부 알려줘. 학점, 학기, 어학 기준까지", "answer": "8학기 이상, 130학점, 어학자격기준", "source": "claude", "gold_all": [["31:제36조"], ["31:제35조", "32:제16조"], ["32:제17조"]], "gold_any": ["31:제35조", "31:제36조", "32:제16조", "32:제17조"]}
+{"id": "v0-081", "level": "L4", "question": "학석사연계과정에 붙었는데 졸업을 유예하면 어떻게 돼? 캡스톤2는 면제야?", "answer": "자격 상실, 캡스톤2 면제 대상", "source": "claude", "gold_all": [["31:제28조의3"], ["121:제6조"]], "gold_any": ["121:제6조", "31:제28조의3"]}
+{"id": "v0-082", "level": "L5a", "question": "군휴학도 2년 휴학 한도에 포함돼?", "answer": "산입하지 않음", "source": "claude", "gold_any": ["31:제21조", "32:제4조"]}
+{"id": "v0-083", "level": "L5a", "question": "F 받은 과목을 재수강하면 재수강 횟수에 들어가?", "answer": "포함하지 않음", "source": "claude", "gold_any": ["32:제25조"]}
+{"id": "v0-084", "level": "L5a", "question": "사회봉사 학점도 학기당 최대 수강학점에 포함돼?", "answer": "포함되지 않음", "source": "claude", "gold_any": ["32:제22조", "122:제4조"]}
+{"id": "v0-085", "level": "L5a", "question": "졸업학기에 다른 학교에 가서 수업을 들어도 돼?", "answer": "불허", "source": "claude", "gold_any": ["131:제4조"]}
+{"id": "v0-086", "level": "L5a", "question": "학위 취득 유예를 신청한 뒤에 취소할 수 있어?", "answer": "원칙적으로 불가, 부득이한 사유는 예외", "source": "claude", "gold_any": ["133:제10조"]}
+{"id": "v0-087", "level": "L5a", "question": "편입생도 졸업 우등생으로 뽑힐 수 있어?", "answer": "편입학자는 선정하지 않음", "source": "claude", "gold_any": ["32:제51조의2"]}
+{"id": "v0-088", "level": "L5a", "question": "신입생은 1학년 때 일반휴학을 할 수 있어?", "answer": "입학 후 1년간은 병역·질병·육아 등만", "source": "claude", "gold_any": ["32:제4조"]}
+{"id": "v0-089", "level": "L5a", "question": "계절학기 등록을 하고 나서 취소할 수 있어?", "answer": "원칙적으로 불허, 취업·군입대·입원은 예외", "source": "claude", "gold_any": ["32:제46조"]}
+{"id": "v0-090", "level": "L5a", "question": "징계받은 학생도 기숙사에 들어갈 수 있어?", "answer": "입주할 수 없음", "source": "claude", "gold_any": ["177:제9조"]}
+{"id": "v0-091", "level": "L5a", "question": "P/NP 과목도 평점평균 계산에 들어가?", "answer": "적용하지 않음", "source": "claude", "gold_any": ["31:제32조"]}
+{"id": "v0-092", "level": "L5b", "question": "학교 셔틀버스 시간표 알려줘", "answer": null, "source": "claude", "gold_any": []}
+{"id": "v0-093", "level": "L5b", "question": "오늘 학식 메뉴가 뭐야?", "answer": null, "source": "claude", "gold_any": []}
+{"id": "v0-094", "level": "L5b", "question": "교내 와이파이 비밀번호 알려줘", "answer": null, "source": "claude", "gold_any": []}
+{"id": "v0-095", "level": "L5b", "question": "학교 주차 등록은 어떻게 해?", "answer": null, "source": "claude", "gold_any": []}
+{"id": "v0-096", "level": "L5b", "question": "졸업사진 촬영은 언제야?", "answer": null, "source": "claude", "gold_any": []}
+{"id": "v0-097", "level": "L5b", "question": "체육관 이용 시간 알려줘", "answer": null, "source": "claude", "gold_any": []}
+{"id": "v0-098", "level": "L5b", "question": "도서관은 몇 시까지 열어?", "answer": null, "source": "claude", "gold_any": []}
+{"id": "v0-099", "level": "L5b", "question": "학교 근처 맛집 추천해 줘", "answer": null, "source": "claude", "gold_any": []}
+{"id": "v0-100", "level": "L5b", "question": "컴퓨터실 프린터는 어떻게 써?", "answer": null, "source": "claude", "gold_any": []}
+{"id": "v0-101", "level": "L5b", "question": "교내 카페 학생 할인 있어?", "answer": null, "source": "claude", "gold_any": []}

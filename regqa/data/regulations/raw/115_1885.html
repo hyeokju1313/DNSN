@@ -1,0 +1,2105 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('1885', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"1885\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">교육과정 편성 및 운영 규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+							<div class="history historyShow" style="display: block;">
+								<span onclick="thisHistoryShow();" style="cursor: pointer;">
+									연혁 보이기 <img src="/lmxsrv/images/btn/tabBtn_open.gif" alt="보기" title="보기"/>
+								</span>
+							</div>
+							<div class="history historyHide" style="display: none;">
+								<span onclick="thisHistoryHide();" style="cursor: pointer;">
+									연혁 숨기기 <img src="/lmxsrv/images/btn/tabBtn_close_o.gif" alt="감추기" title="감추기"/>
+								</span>
+							</div>
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제      정 2018.  2.  6.</div>
+						
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제1차 개정 2018.  3. 20.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제2차 개정 2018. 10.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제3차 개정 2020.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제4차 개정 2020.  9.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제5차 개정 2020. 12. 22.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제6차 개정 2021.  9. 29.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제7차 개정 2021. 10. 19.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제8차 개정 2022.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제9차 개정 2022. 11. 16.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제10차 개정 2022. 12. 30.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제11차 개정 2023. 12. 18.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제11차 개정 2024.  6. 10.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제12차 개정 2025.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제13차 개정 2025.  7. 23.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제14차 개정 2025. 11. 24.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제15차 개정 2026.  6.  8.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+						
+							<div class="history historyContentLast" style="display: block;font-size: 9pt;">제16차 개정 2026.  8. 26.</div>
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000002" name="000002"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="88139" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88139', 'joHistory88139', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88139);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 규정은 학칙 제25조 제2항에 근거하여 한국공학대학교(이하 "본 대학교"라 한다) 교육과정 편성과 운영에 관한 전반적인 사항을 정함을 목적으로 한다. </span><span style="color:#0000ff;"><개정 2020.3.1., 2020.9.1., 2022.3.1.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="88140" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88140', 'joHistory88140', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88140);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (인재상)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 대학교의 건학이념과 학칙 제1조 제1항의 교육목적을 달성하기 위한 인재상은 다음과 같다. </span><span style="color:#0000ff;"><개정 2020.3.1.> </span></div><div class="ho level1"><span style="0">1. 열린마음과 도전정신을 바탕으로 문제해결 능력을 보유한 창의형 지식인 </span></div><div class="ho level1"><span style="0">2. 전문지식과 산학협력을 바탕으로 현장중심의 혁신을 주도하는 실천형 전문가 </span></div><div class="ho level1"><span style="0">3. 진취적·개방적 마인드에 기초한 비전과 역량을 겸비한 진취적 세계인 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c002002000" name="c002002000"></a>
+                    <div class="JO" id="88141" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88141', 'joHistory88141', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88141);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조의 2 (핵심역량)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 본 대학교의 핵심역량은 다음 각 호와 같다. </span></div><div class="ho level2"><span style="0">1. 융합사고 역량 : 여러 분야의 지식을 연결·통합하여 새로운 아이디어를 창출할 수 있는 능력 </span></div><div class="ho level2"><span style="0">2. 문제해결 역량 : 새로운 관점에서 문제를 인식하고 창의적으로 해결안을 강구하는 능력 </span></div><div class="ho level2"><span style="0">3. 전공직무 역량 : 다양한 수단과 도구를 사용하여 전공 관련 지식과 기술을 습득하고 활용할 수 있는 능력 </span></div><div class="ho level2"><span style="0">4. 글로벌 역량 : 공동체적 관점에서 글로벌 사회를 이해하고 외국인과 효과적으로 소통·교류할 수 있는 능력 </span></div><div class="ho level2"><span style="0">5. 대인관계 역량 : 타인과 더불어 소통하고 협력하면서 책임을 다해 목표를 달성할 수 있는 능력 </span></div><div class="ho level2"><span style="0">6. 자기관리 역량 : 자신의 내ㆍ외부 자원을 조절ㆍ관리하면서 새롭고 다양한 환경에 적응할 수 있는 능력 </span></div><div class="hang level1"><span style="0">② 핵심역량의 설정 기준 및 도출 과정은 다음 각 호와 같다. </span></div><div class="ho level2"><span style="0">1. 대학의 교육목표 달성 및 인재상 구현을 위해 필요한 역량으로 설정하되, 산업 현장의 요구나 시대적 동향을 반영하여 선정한다. </span></div><div class="ho level2"><span style="0">2. 인재상과 핵심역량 간에는 내용의 위계성과 일관성을 유지하되, 각 역량별 정의와 명칭은 차별성과 독립성을 갖도록 한다. </span></div><div class="ho level2"><span style="0">3. 대학 구성원 및 대외전문가 등의 의견 수렴을 통해 설정하고, 공청회 등의 수정ㆍ보완 절차를 거쳐 교육과정위원회와 교무위원회 심의로 확정한다. </span><span style="color:#0000ff;"><개정 2022.12.27.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c002003000" name="c002003000"></a>
+                    <div class="JO" id="88142" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88142', 'joHistory88142', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88142);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조의 3 (전공능력)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 전공학과(부)는 관련 분야에서 요구하는 직무, 과업, 역할을 수행하는 데 필요한 지식, 기술, 태도를 포함하는 복합적·종합적 능력을 전공능력으로 설정한다. </span></div><div class="hang level1"><span style="0">② 전공능력의 설정 기준과 도출 과정은 다음과 같다. </span><span style="color:#0000ff;"><개정 2022.12.27., 2024.6.10.> </span></div><div class="ho level2"><span style="0">1. 학과(부) 교육목표 달성을 위해 필요한 능력으로 설정하되, 대학의 교육목표, 인재상, 발전계획과 연계성과 일관성을 갖도록 한다. </span></div><div class="ho level2"><span style="0">2. 국가 산업 및 사회 변화, 지역사회 등 대내외적 여건 분석, 학문변화 분석 등을 진행하여 설정한다. </span></div><div class="ho level2"><span style="0">3. 학과(부) 구성원 및 산업체, 학생 요구분석 등의 의견수렴을 통해 설정하고, 수정보완 절차를 거쳐 학과(부) 전공교육운영위원회, 전공능력심의위원회, 교육과정위원회 심의로 확정하여 교무위원회에 보고한다. </span><span style="color:#0000ff;"><개정 2025.11.24.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c002004000" name="c002004000"></a>
+                    <div class="JO" id="88143" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88143', 'joHistory88143', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88143);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조의 4 (전공능력심의위원회)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 전공역량 설정 및 검토, 전공능력기반 교육과정 환류 관련 심의를 위하여 전공능력심의위원회를 둔다. </span></div><div class="hang level1"><span style="0">② 위원장은 전공교육혁신센터장으로 하고, 위원은 각 전공학과(부) PD교수로 구성한다. 위원회의 사무를 처리하기 위하여 간사를 둘 수 있다. </span></div> <div class="none level1"><span style="color:#0000ff;"><신설 2025.11.24.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000007" name="000007"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="88144" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88144', 'joHistory88144', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88144);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (교육과정 편성주기 및 절차)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교육과정은 학년도 단위로 편성하며, 4년을 주기로 전면개편하는 것을 원칙으로 한다. 다만, 학문적, 사회적 변화를 교육과정에 반영하기 위해서 필요한 경우에는 수시 개편할 수 있다. </span></div><div class="hang level1"><span style="0">② 교육과정위원회는 교육과정 개발 및 운영계획, 교육과정 개편계획, 기타 교육과정 편성 및 운영에 필요한 사항을 심의하여 교육과정 편성 방향을 안내한다. </span></div><div class="hang level1"><span style="0">③ 각 전공학과(부)는 교육과정 편성 방향 및 규정을 참고하여 전공 교육과정 개편계획을 학과(부)별 전공교육운영위원회를 거쳐 교무처로 제출한다. </span></div><div class="hang level1"><span style="0">④ 교양·전공설계센터는 교육과정 편성 방향 및 규정을 참고하여 교양 교육과정 개편계획을 교양교육운영위원회를 거쳐 교무처로 제출하여야 한다. </span><span style="color:#0000ff;"><개정 2026. 6. 8.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c003002000" name="c003002000"></a>
+                    <div class="JO" id="88145" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88145', 'joHistory88145', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88145);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조의 2 (전공교육운영위원회)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 전공능력 설정 및 검토, 전공학과(부) 교육과정 개편 심의를 위하여 학과(부)별로 전공교육운영위원회를 둔다. </span></div><div class="hang level1"><span style="0">② 위원회는 총 10인 이상으로 구성하고, 각 전공학과(부) 소속 정년계열 전임교원과 산업체 인사로 구성한다. 정년계열 전임교원은 PD교수, 진로취업지도교수를 포함하여 전체 위원정수의 2분의 1이상, 산업체는 전체 위원정수의 3분의 1이상이 되도록 구성하여야 한다. </span></div><div class="hang level1"><span style="0">③ 위원장은 학과(부)장으로 하고 위원회의 사무를 처리하기 위하여 간사를 둘 수 있다. </span></div><div class="hang level1"><span style="0">④ 산업체 위원은 학과(부) 전공분야에 전문성이 있는 인사로 임명하며, 구체적 기준은 별도로 정할 수 있다. </span></div><div class="hang level1"><span style="0">⑤ PD교수는 각 학과(부) 교육과정의 기획·운영, 전공핵심역량 및 전공능력의 체계적 관리, 교육목표 및 성과 평가 등 전공교육과정 전반을 총괄한다. </span><span style="color:#0000ff;"><신설 2025.11.24.> </span></div><div class="hang level1"><span style="0">⑥ PD교수의 역할 범위는 다음 각 호와 같다. </span></div><div class="ho level2"><span style="0">1. 전공 교육과정 총괄: 학과(전공) 교육목표 및 전공역량을 수립·관리하며, 교육과정 구성 및 개선, 운영 전반을 관리한다. </span></div><div class="ho level2"><span style="0">2. 전공능력 개발: 학생들의 전공능력을 구체적으로 정의하고 검토한다. </span></div><div class="ho level2"><span style="0">3. 교육 성과 분석 및 환류: 전공 교육과정 학습 성과 결과를 바탕으로 교육과정을 개선하는 환류 체계를 구축하고 관리한다. </span><span style="color:#0000ff;"><신설 2025.11.24.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000009" name="000009"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="88146" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88146', 'joHistory88146', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88146);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (교육과정 편성구분)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">교육과정은 학칙 제25조에 따라 교양교육과정, 전공교육과정, 현장실무교과, 교과플러스 프로그램으로 구분하며, 교육과정별로 다음 각 호와 같이 구분한다. <개정 2020.3.1., 2020.9.1., 2024.6.10., 2026. 8. 26.> </span></div><div class="ho level1"><span style="0">1. 교양교육과정 : 기초교과, 계열기초, 디지털소양교과, 핵심교양, 일반교양, 커리어교과 </span></div><div class="ho level1"><span style="0">2. 전공교육과정 : 전공필수, 전공선택 </span></div><div class="ho level1"><span style="0">3. 현장실무교과 : 현장실습 및 EH교과 등을 포함하여 현장형 교과(현장실무교과 편성구분에 관한 사항은 따로 정한다.) </span></div><div class="ho level1"><span style="0">4. 교과플러스 프로그램 : 교양플러스 프로그램, 전공플러스 프로그램 <신설 2026. 8. 26.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000010" name="000010"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="88147" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88147', 'joHistory88147', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88147);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (교육과정 편성 기본 원칙)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교육과정 편성의 기본 원칙은 다음 각 호와 같다. <개정 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">1. 본교의 교육목표, 인재상 및 핵심역량 기반의 교육과정 편성 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">2. 학문적 보편성 및 교육적 필요성에 근거한 교육과정 편성 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">3. 학생의 수요와 사회의 요구를 반영한 교육과정 편성 <신설 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">② 교양 교육과정은 교양 교육의 목표 및 교양영역별 교육목표에 부합하고, 다른 교양 교과목과 내용상 중복 또는 유사성이 있는지 등을 고려하여 균형있게 편성한다. <개정 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">③ 전공 교육과정은 학과(부) 교육목적과 목표에 부합하고, 전공능력을 제고할 수 있도록 일관성있게 편성한다. <개정 2026. 8. 26.> </span></div> <div class="none level1"><span style="color:#0000ff;">[제목개정 2026.8.26.] </span></div> <div class="none level1"><span style="0">[제목개정 2026. 8. 26.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000011" name="000011"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="88148" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88148', 'joHistory88148', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88148);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (교육과정 편성기준)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교육과정 기본 편성기준은 다음 각 호와 같다. <개정 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">1. 이론과목은 1학점당 1시간, 실험·실습·실기과목은 1학점당 2시간을 기준으로 편성한다. <개정 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">2. 이론 및 이론ㆍ실습 병행교과는 2학점 또는 3학점, 실습교과는 1학점 또는 2학점 단위로 함을 원칙으로 하고, 3학점을 초과하거나 6시간을 초과하는 교과목은 2개 학기에 나누어 편성한다.(단, 종합설계는 제외) <개정 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">② 교양 교육과정 편성기준은 다음 각 호와 같다. <개정 2024.6.10., 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">1. 기초교과 : 대학교육에서 요구되는 기본적인 지적 언어적 능력 및 자율적 학구능력을 함양하고, 우리 대학 핵심역량의 기초능력을 배양하는 교과목으로 편성한다. <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">2. 계열기초 : 계열별 전공교육을 받기 위한 토대가 되는 기초능력을 함양하는 교과목으로 편성한다. <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">3. 디지털소양교과 : 디지털 대전환 시대를 이해하고 대응하기 위한 첨단 기술 분야의 인재로 성장할 수 있는 기초능력을 함양하는 교과목으로 편성한다. <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">4. 핵심교양 : 교양교육의 보편적 목적인 인간과 세계에 대한 올바른 이해와 건전한 가치관을 형성하며, 우리 대학 핵심역량에서 요구되는 능력을 심화시키는 교과목으로 편성한다. <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">5. 일반교양 : 학생 개인의 관심과 특성에 맞추어 자유롭게 다양한 학문 분야를 경험할 수 있으며, 자신에게 필요한 핵심역량을 강화할 수 있는 교과목으로 편성한다. <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">6. 커리어교과 : 전문인으로서의 자기주도적 목표설정과 실행을 위한 미래사회와 진로 탐색, 취업역량 강화, 사회봉사를 위한 교과목으로 편성한다. <신설 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">③ 전공 교육과정 편성기준은 다음과 같다.<개정 2022.11.16., 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">1. 전공교과는 최근 3년간 총 편성학점을 고려하여 편성한다. <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">2. 전공필수교과는 28학점 이내에서 편성하여야 한다. 단, 정부재정지원사업으로 인한 한시적 교과목 운영이 필요한 경우에는 28학점을 초과하여 편성할 수 있다. <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">3. 전공학과(부)는 이수 적합성 등을 고려하여 타 전공학과(부)에서 편성한 교과목을 타 학과 전공 인정 교과목으로 지정하여 전공선택으로 편성할 수 있다. <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">4. 전공학과(부)는 전공교과와 일반대학원에 편성한 교과목의 내용이 동일한 경우에는 대학원 공동교과목으로 지정하여 편성할 수 있다. <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">5. 단과대 및 전공학과(부)는 전공 소개 및 탐구, 산업 전반 이해 등에 대한 교과목을 전공탐색교과(밀알교과)로 지정하여 편성할 수 있다. <신설 2026. 8. 26.> </span></div> <div class="none level2"><span style="color:#0000ff;">[제목개정 2026.8.26.] </span></div> <div class="none level2"><span style="0">[제목개정 2026. 8. 26.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000012" name="000012"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="88149" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88149', 'joHistory88149', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88149);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (교육과정 이수기준)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 학생은 교육과정을 다음 각 호와 같이 이수하여야 한다. <개정 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">1. 졸업 학점 및 교육과정별 최소 기준학점 : 입학년도의 교육과정 <개정 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">2. 필수교과 : 입학년도의 교육과정(졸업시점에서 필수교과가 폐지되었거나 선택과목으로 변경되었을 경우에는 제외. 단, 대체교과가 설정된 경우에는 이수) <개정 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">3. 이수 교과목 : 최신 교육과정 <개정 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">② 제1항 제1호 및 제2호에도 불구하고, 편입학생의 졸업학점 및 교육과정별 최소 기준학점, 필수교과 적용년도는 편입학년도의 2년 전 학년도로 한다. 단, 특별 편입학 등 사정에 따라 달리 정할 수 있다. <신설 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">③ 졸업에 필요한 총 학점은 학칙 제35조 및 학칙시행세칙 제16조를 따르며, 현장실무교과는 최소 1개 교과 이상은 반드시 이수하여야 한다. 교양교과, 전공교과, 현장실무교과의 세부 이수기준은 별도로 정할 수 있다. <신설 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">④ 다전공과 부전공 이수에 필요한 총 학점과 이수기준은 학칙시행세칙 제20조를 따른다. <신설 2026. 8. 26.> </span></div> <div class="none level1"><span style="color:#0000ff;">[제목개정 2026.8.26.] </span></div> <div class="none level1"><span style="0">[제목개정 2026. 8. 26.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000013" name="000013"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="88150" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88150', 'joHistory88150', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88150);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (교육과정 개편기준)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">교육과정 개편은 신설, 폐지, 변경(학점·이수구분·시수·학기·학년 등)으로 구분하며, 개편기준은 다음 각 호와 같다. <개정 2026. 8. 26.> </span></div><div class="ho level1"><span style="0">1. 교과신설시에는 표준강의계획서 입력 및 핵심역량, 전공역량, 진로분야 등의 역량지수를 설정한다. <신설 2026. 8. 26.> </span></div><div class="ho level1"><span style="0">2. 교과목이 폐지된 경우에는 대체교과목을 지정할 수 있으며, 학점·이수구분·시수·학기·학년 등의 단순 변경은 동일교과목으로 처리한다. <신설 2026. 8. 26.> </span></div><div class="ho level1"><span style="0">3. 3년 이상 연속하여 폐강된 과목은 폐강사유 및 과목운영계획서(개선계획)를 작성하여 폐지여부를 학과 내에서 검토하며 그 결과를 교무처로 송부한다. 4년 이상 연속하여 폐강될 경우 자동 폐지한다. <신설 2026. 8. 26.> </span></div><div class="ho level1"><span style="0">4. 효율적인 교과목 이력관리 및 졸업이수기준의 일관성을 위하여 필수교과의 개편을 최소화한다. <신설 2026. 8. 26.> </span></div> <div class="none level1"><span style="color:#0000ff;">[제목개정 2026.8.26.] </span></div> <div class="none level1"><span style="0">[제목개정 2026. 8. 26.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000014" name="000014"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="88151" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88151', 'joHistory88151', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88151);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (교양 교육과정 개발 및 운영)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교양·전공설계센터는 본 대학교의 교육목적 및 교육목표에 부합하는 교양 교육목적 및 목표를 설정하고, 핵심역량을 제고할 수 있도록 교양교육과정을 개발한다. <개정 2020.3.1., 2026. 6. 8., 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">② 교양·전공설계센터는 핵심역량 제고를 위하여 일관성 있게 교양 교육과정을 운영하며, 이를 위해 다음 각 호의 사항을 시행한다. <개정 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">1. 교양 교과목별 핵심역량 연계성 정의(표준강의계획서 내 핵심역량 설정) <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">2. 교양 교과목에서 육성할 핵심역량에 따른 교과목 학습목표 정의 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">3. 교과목 학습목표 달성을 위한 수업 설계 및 운영 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">4. 교과목 학습목표 달성을 위한 평가 설계 및 시행 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">5. 교육과정 체계도, 핵심역량-교과목 연계표, 핵심역량별 학습로드맵 등의 제공 <신설 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">③ 교양 교육과정 개발 및 운영에 관한 사항은 교양교육운영위원회에서 심의한다. <개정 2026. 8. 26.> </span></div> <div class="none level1"><span style="color:#0000ff;">[제목개정 2026.8.26.] </span></div> <div class="none level1"><span style="0">[제목개정 2026. 8. 26.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000015" name="000015"></a>
+                    <a id="c009002000" name="c009002000"></a>
+                    <div class="JO" id="88152" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88152', 'joHistory88152', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88152);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조의 2 (교양 교과목 개편)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교양 교과목의 심의원칙은 다음과 같다. </span></div><div class="ho level2"><span style="0">1. 본교의 교육목표, 인재상 및 핵심역량과 부합하는지 여부 </span></div><div class="ho level2"><span style="0">2. 교양 교육의 목표 및 교양영역별 교육목표에 부합하는지 여부 </span></div><div class="ho level2"><span style="0">3. 교과목의 내용이 학문적 보편성 및 교육적 필요성에 근거하고 있는지 여부 </span></div><div class="ho level2"><span style="0">4. 교과목의 내용이 학생의 수요와 사회의 요구를 반영하고 있는지 여부 </span></div><div class="ho level2"><span style="0">5. 기존의 다른 교양 교과목과 내용상 중복 또는 유사성이 있는지 여부 </span></div><div class="ho level2"><span style="0">6. 강의계획서 내용의 충실성 및 강좌운영의 효과성 </span></div><div class="ho level2"><span style="0">7. 강좌의 효율적 운영을 위한 교원, 강의실 및 교육기자재, 예산 확보의 현실성 </span></div><div class="ho level2"><span style="0">8. 기타 교양 교과목을 운영하기 위하여 필요한 사항 </span></div><div class="hang level1"><span style="0">② 교양 교과목은 다음 각 호에 해당할 경우에 폐지한다. </span></div><div class="ho level2"><span style="0">1. 최근 2년간 연속 설강하지 않은 교과목 </span></div><div class="ho level2"><span style="0">2. 최근 2년간 2개 학기 이상 폐강된 교과목 </span></div><div class="ho level2"><span style="0">3. 해당교과목의 목적이 소멸했거나 목적달성이 불가능한 경우 </span></div><div class="ho level2"><span style="0">4. 그 밖에 해당 교과목을 폐지할 합리적 이유가 있다고 판단되는 경우 </span></div> <div class="none level2"><span style="color:#0000ff;">[본조신설 2026.8.26.] </span></div> <div class="none level2"><span style="0">[본조신설 2026. 8. 26.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000016" name="000016"></a>
+                    <a id="c010000000" name="c010000000"></a>
+                    <div class="JO" id="88153" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88153', 'joHistory88153', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88153);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 10 조 (교양 교육과정의 환류 및 개선)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교양 교과목 담당교수는 매학기 교과목 CQI 보고서를 작성한다. 단, 담당교수가 없는 교과목은 교과목 담당부서에 작성한다. <개정 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">② 교양·전공설계센터는 교과목 CQI 보고서를 분석하여 매년 교양 교육과정 CQI 보고서를 작성한다. <개정 2026.6.8., 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">③ 교양·전공설계센터는 교양 교육과정 개선을 위하여 다음과 같은 사항을 종합 분석한다. <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">1. 교육과정 수요조사 결과 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">2. 교육 수요자 만족도 조사 결과 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">3. 수업만족도 결과 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">4. 핵심역량 진단분석 결과 <신설 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">④ 제2항과 제3항의 분석 결과를 기반으로 매년 개선방향을 도출하고 이를 교양교육과정 개편에 반영한다. <신설 2026. 8. 26.> </span></div> <div class="none level1"><span style="color:#0000ff;">[제목개정 2026.8.26.] </span></div> <div class="none level1"><span style="0">[제목개정 2026. 8. 26.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000017" name="000017"></a>
+                    <a id="c011000000" name="c011000000"></a>
+                    <div class="JO" id="88154" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88154', 'joHistory88154', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88154);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조 (전공 교육과정 개발 및 운영)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 전공학과(부)는  본 대학교의 교육목적 및 교육목표에 부합하는 학과(부) 교육목적과 목표를 설정하고, 전공능력을 제고할 수 있도록 전공 교육과정을 개발한다. <개정 2020.3.1., 2026. 8. 26.> </span><span style="color:#0000ff;"> </span></div><div class="hang level1"><span style="0">② 전공학과(부)는 설정된 전공능력 제고를 위하여 일관성 있게 전공 교육과정을 운영하며, 이를 위해 다음 각 호의 사항을 시행한다. <개정 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">1. 전공 교과목별 전공능력 연계성 정의(표준강의계획서 내 전공능력 설정) <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">2. 전공 교과목에서 육성할 전공능력에 따른 교과목 학습목표 정의 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">3. 교과목 학습목표 달성을 위한 수업 설계 및 운영 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">4. 교과목 학습목표 달성을 위한 평가 설계 및 시행 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">5. 교육과정 체계도, 전공능력-교과목 연계표, 직무별 진로로드맵 등의 제공 <신설 2026. 8. 26.> </span></div> <div class="none level2"><span style="color:#0000ff;">[제목개정 2026.8.26.] </span></div> <div class="none level2"><span style="0">[제목개정 2026. 8. 26.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000018" name="000018"></a>
+                    <a id="c011002000" name="c011002000"></a>
+                    <div class="JO" id="88155" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88155', 'joHistory88155', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88155);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조의 2 (주문식 교육과정)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 주문식 교육과정은 대학의 인재상, 교육목표, 각 학과(부)의 인재유형 등을 고려하여 편성하며 산업체가 요구하는 교과목을 포함하여 편성할 수 있다. </span></div><div class="hang level1"><span style="0">② 주문식 교육과정의 주요 사항을 심의하기 위하여 주문식 교육과정 운영위원회를 둔다. </span></div><div class="hang level1"><span style="0">③ 주문식 교육과정의 편성 및 운영, 주문식 교육과정 운영위원회 운영 등에 관한 세부사항은 따로 정한다. </span></div> <div class="none level1"><span style="color:#0000ff;">[본조신설 2026.8.26.] </span></div> <div class="none level1"><span style="0">[본조신설 2026. 8. 26.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000019" name="000019"></a>
+                    <a id="c012000000" name="c012000000"></a>
+                    <div class="JO" id="88156" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88156', 'joHistory88156', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88156);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 12 조 (전공 교육과정의 환류 및 개선)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 전공 교과목 담당교수는 매학기 교과목 CQI 보고서를 작성한다. <개정 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">② 전공학과(부)는 교과목 CQI 보고서를 분석하여 매년 학부(과) CQI 보고서를 작성한다. <개정 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">③ 전공학과(부)는 전공 교육과정 개선을 위하여 다음과 같은 사항을 종합 분석한다.  <개정 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">1. 교육과정 수요조사 결과 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">2. 산업체 수요조사 결과 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">3. 교육 수요자 만족도 조사 결과 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">4. 수업만족도 결과 <신설 2026. 8. 26.> </span></div><div class="ho level2"><span style="0">5. 전공능력 진단분석 결과 <신설 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">④ 제2항과 제3항의 분석을 기반으로 매년 개선방향을 도출하고 이를 전공 교육과정 개편에 반영한다. <개정 2026. 8. 26.> </span></div> <div class="none level1"><span style="color:#0000ff;">[제목개정 2026.8.26.] </span></div> <div class="none level1"><span style="0">[제목개정 2026. 8. 26.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000020" name="000020"></a>
+                    <a id="c013000000" name="c013000000"></a>
+                    <div class="JO" id="88157" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88157', 'joHistory88157', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88157);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 13 조 (융합전공 및 전공트랙 교육과정)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 융합전공 교육과정은 2개 이상의 학부(과)·전공과정이 연계하여 별도의 융합교과 과정을 편성하며, 전공트랙은 해당분야의 전문성 심화를 목적으로 학과(부)가 단일로 제공하는 교육과정을 편성한다. <개정 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">② 본교의 융합전공 및 전공트랙 전략에 부합하는 교육목적 및 교육목표를 설정하며, 환류시스템은 제5조 제6항에 따른다. <신설 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">③ 융합전공 및 전공트랙의 교육과정은 기편성된 과목을 중심으로 운영하며, 교육과정의 필요에 따라 신규 개발하여 편성할 수 있다. 단 전공트랙은 2개 과목 이내에서 신설할 수 있다. <신설 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">④ 융합전공은 주문식 교육과정 또는 일반 교육과정으로 운영할 수 있으며, 전공트랙은 주문식교육과정으로만 운영할 수 있다. <신설 2026. 8. 26.> </span></div> <div class="none level1"><span style="color:#0000ff;">[제목개정 2026.8.26.] </span></div> <div class="none level1"><span style="0">[제목개정 2026. 8. 26.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000021" name="000021"></a>
+                    <a id="c013002000" name="c013002000"></a>
+                    <div class="JO" id="88158" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88158', 'joHistory88158', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88158);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 13 조의 2 (마이크로디그리과정)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">산업 수요에 부합하는 융복합 인재 양성을 위해 소단위 교육과정인 마이크로디그리과정을 운영할 수 있으며, 운영에 관한 구체적인 사항은 별도로 정한다. </span></div> <div class="none level1"><span style="color:#0000ff;">[본조신설 2026.8.26.] </span></div> <div class="none level1"><span style="0">[본조신설 2026. 8. 26.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000022" name="000022"></a>
+                    <a id="c014000000" name="c014000000"></a>
+                    <div class="JO" id="88159" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88159', 'joHistory88159', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88159);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 14 조 (자유선택 교과 운영기준 및 열린전공 등)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 자유선택 교과는 전공 및 교양교과 이외에 관심있는 분야 또는 전공탐색을 위해 자유롭게 선택, 수강할 수 있는 교과를 말한다. <개정 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">② 삭제 <2026. 8. 26.> </span></div><div class="hang level1"><span style="0">③ 소속전공 교육과정에 편성되지 않은 타전공 교과목을 이수할 수 있으며, 이 경우 취득한 학점의 이수구분은 자유선택으로 한다. 또한, 다전공, 부전공을 이수하다가 중도 포기한 자의 다전공, 부전공 교과목 취득학점도 자유선택으로 인정한다. <개정 2025.3.1., 2026. 8. 26.> </span></div><div class="hang level1"><span style="0">④ 전항에도 불구하고, 열린전공 계획서를 제출하고 타전공 교과목을 이수할 경우, 소속학부(과)에서 최대 9학점까지 전공학점으로 인정할 수 있다. 단, 다전공, 부전공 신청자는 열린전공을 신청할 수 없다. <개정 2025.3.1., 2026. 8. 26.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000023" name="000023"></a>
+                    <a id="c015000000" name="c015000000"></a>
+                    <div class="JO" id="88160" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88160', 'joHistory88160', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88160);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 15 조 (학부내 공통교과 운영기준)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 학부내 공통교과는 학부내 2개 이상의 전공이 있을 경우 전공별로 전공교육과정에 공통으로 편성되어 있는 교과를 말한다. </span></div><div class="hang level1"><span style="0">② 학생이 학부내 공통교과를 이수하였을 경우에는 소속 전공의 전공과목과 동일한 이수구분으로 인정하고, 학부내 공통교과가 아닌 경우에는 자유선택교과로 인정한다. </span></div><div class="hang level1"><span style="0">③ 학부개편 이전에 이수한 교과를 재수강하고자 할 경우 소속전공에 편제된 교과만 재수강 가능하다. </span></div><div class="hang level1"><span style="0">④ 학부개편 이전의 교과가 학부내 다른 전공에 개설되었더라도 재수강 할 수 없다.(학점포기 후 자유선택교과로 이수) </span></div><div class="hang level1"><span style="0">⑤ 학부내 공통교과는 학부내 모든 전공에서 해당 교과를 폐지하였을 경우에만 대체교과목 지정이 가능하다. </span></div><div class="hang level1"><span style="0">⑥ 학부내 공통교과는 학생 이수 수월성을 위하여 학기, 학점, 이수구분, 교육내용 등을 동일하게 편성ㆍ운영하는 것을 원칙으로 하고, 학점이 다른 경우 학부내 공통교과로 편성이 불가하다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000024" name="000024"></a>
+                    <a id="c016000000" name="c016000000"></a>
+                    <div class="JO" id="88161" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88161', 'joHistory88161', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88161);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 16 조 (교육과정 학수번호 부여 기준)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">학수번호는 총 8자리로 다음 각 호와 같다. </span></div><div class="ho level1"><span style="0">1. 1번째 자리 : 학부 및 대학원 구분, 정규학과(부) 및 계약학과 구분 </span></div><div class="ho level1"><span style="0">2. 2~3번째 자리 : 학과(부)전공 고유코드 </span></div><div class="ho level1"><span style="0">3. 4번째 자리 : 학년 및 레벨코드 </span></div><div class="ho level1"><span style="0">4. 5번째 자리 : 분야코드 </span></div><div class="ho level1"><span style="0">5. 6~8번째 자리 : 일련번호 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000025" name="000025"></a>
+                    <a id="c017000000" name="c017000000"></a>
+                    <div class="JO" id="88162" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=115&SEQ_HISTORY=1885&SEQ_CONTENTS=88162', 'joHistory88162', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88162);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 17 조 (지침 및 준용)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정에 명시되지 않은 사항은 지침으로 정하여 운영하고, 기타 사항은 학칙 및 제 규정을 준용한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="26"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88163"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2018년 2월 6일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(경과조치)</div><div class="none"><span style="0">이 규정 시행 이전은 교육과정개발위원회에서 정한 교육과정 편성 및 운영지침에 의거 시행한 것으로 본다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="29"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88164"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2018년 3월 20일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="31"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88165"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2018년 10월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="33"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88166"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="35"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88167"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 9월 1일부터 시행한다. 단, 제4조, 제5조, 제6조, 제13조는 2021년 3월 1일부터 시행하되, 제6조 제3항의 현장실무교과 이수기준과 제6조 제4항의 다전공 이수기준은 시행일부터 적용한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="37"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88168"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 12월 22일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="39"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88169"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 9월 29일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="41"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88170"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 10월 19일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="43"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88171"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="45"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88172"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 11월 16일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="47"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88173"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 12월 27일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="49"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88174"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2023년 12월 18일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="51"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88175"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2024년 6월 10일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="53"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88176"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="55"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88177"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 7월 23일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="57"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88178"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 11월 24일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="59"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88179"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 6월 8일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="61"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88180"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 8월 26일부터 시행한다. </span></div></div></div>
+                
+            
+        
+
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

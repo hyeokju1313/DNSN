@@ -1,0 +1,2335 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('1823', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"1823\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">계약학과 운영 규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+							<div class="history historyShow" style="display: block;">
+								<span onclick="thisHistoryShow();" style="cursor: pointer;">
+									연혁 보이기 <img src="/lmxsrv/images/btn/tabBtn_open.gif" alt="보기" title="보기"/>
+								</span>
+							</div>
+							<div class="history historyHide" style="display: none;">
+								<span onclick="thisHistoryHide();" style="cursor: pointer;">
+									연혁 숨기기 <img src="/lmxsrv/images/btn/tabBtn_close_o.gif" alt="감추기" title="감추기"/>
+								</span>
+							</div>
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제      정 2011. 12.  5.</div>
+						
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">시  행  일 2012.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제1차 개정 2013.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제2차 개정 2013.  7.  3.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제3차 개정 2014.  3. 12.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제4차 개정 2014.  6. 25.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제5차 개정 2014. 11. 19.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제6차 개정 2015.  4.  6.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제7차 개정 2016.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제8차 개정 2017.  1.  9.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제9차 개정 2017.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제10차 개정 2018.  3.  1</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제11차 개정 2019.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제12차 개정 2019.  4.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제13차 개정 2019.  9.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제14차 개정 2020.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제15차 개정 2020.  8. 10.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제16차 개정 2021.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제17차 개정 2021.  4. 21.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제18차 개정 2021. 10. 19.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제19차 개정 2022.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제20차 개정 2022.  9.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제21차 개정 2023.  1. 30.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제22차 개정 2024.  2. 26.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제23차 개정 2025.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제24차 개정 2025.  9. 22.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제25차 개정 2026.  1. 19.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제26차 개정 2026.  2. 23.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+						
+							<div class="history historyContentLast" style="display: block;font-size: 9pt;">제27차 개정 2026.  5. 11.</div>
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000002" name="000002"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="83236" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83236', 'joHistory83236', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83236);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="color:#282828;">이 규정은 한국공학대학교(이하 "본 대학교"라 한다)<a href="javascript:golink('1', '31', 'c003000000', '', '');">학칙 제3조</a>의 계약학과의 설치ㆍ운영에 관한 세부사항을 정함을 목적으로 한다. </span><span style="color:#0000ff;"><개정 2022.3.1.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="83237" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83237', 'joHistory83237', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83237);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (용어의 정의)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="color:#282828;">이 규정에서 사용하는 용어의 정의는 다음 각 호와 같다. </span></div><div class="ho level1"><span style="0">1. "계약학과"는 본 대학교가 국가, 지방자치단체, 공공기관, 산업체등(이하 "산업 체등"이라 한다)과의 계약에 의하여 설치ㆍ운영하는 학과 및 학부를 말하며, 이 경우 학사과정, 석사과정 및 박사과정을 둘 수 있다. </span><span style="color:#282828;"> </span><span style="color:#0000ff;"><개정 2025.9.22.> </span></div><div class="ho level1"><span style="0">2. "채용조건형"은 산업체등이 채용을 조건으로 학자금 지원계약을 체결하고, 특별한 교육과정의 운영을 요구하는 경우를 말한다. </span></div><div class="ho level1"><span style="0">3. "재교육형"은 산업체등이 소속 직원의 재교육, 직무능력 향상, 전직교육을 위하여 비용의 전부 또는 일부를 지원하면서 교육을 의뢰하는 경우 설치하는 경우를 말한다. </span></div><div class="ho level1"><span style="0">4. "혼합형"은 산업체 등과  학생선발기준, 근무여건, 채용시기 등을 협의하여 제2호에 따른 절차에  따라 학생을 선발하고 일정 교육과정 수료 후 산업체 등이 채용을 확정시, 제3호의 계약학과에 따른 직무교육과정으로 전환하여 운영하는 경우를 말한다. </span></div><div class="ho level1"><span style="0">5. "중소기업 계약학과"는 중소벤처기업부가 중소기업 인력유입 촉진과 중소기업 재직자의 능력향상을 목적으로 설치ㆍ운영하는 학과를 말한다. </span></div><div class="ho level1"><span style="0">6. "일학습병행제"는 고용노동부「<a href="javascript:showPopup('http://www.law.go.kr/법령/산업현장 일학습병행 지원에 관한 법률', '산업현장 일학습병행 지원에 관한 법률');" target="_self">산업현장 일학습병행 지원에 관한 법률</a>」에 따라 설치ㆍ운영하는 학과를 말한다. </span></div><div class="ho level1"><span style="0">7. "조기취업형 계약학과"는 교육부가 4차산업혁명에 따른 실무형 전문인재를 양성하기 위해 설치ㆍ운영하는 학과를 말한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="83238" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83238', 'joHistory83238', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83238);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (설치)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 계약학과는 계약학과운영소위원회, 기업인재대학 운영위원회를 거쳐 총장의 승인을 받아 산업체 등과 계약을 체결하여 설치하여야 하며, 그 계약서에는 다음 각 호의 사항을 기재하여야 한다. </span><span style="color:#0000ff;"><개정 2016.3.1., 2021.3.1> </span></div><div class="ho level2"><span style="color:#282828;">1. 계약학과의 명칭, 학위의 종류 및 모집단위별 모집정원 </span></div><div class="ho level2"><span style="color:#282828;">2. 학생선발에 관한 사항 </span></div><div class="ho level2"><span style="color:#282828;">3. 설치ㆍ운영기간에 관한 사항 </span></div><div class="ho level2"><span style="color:#282828;">4. 계약학과의 운영에 필요한 경비 및 학생ㆍ산업체 등의 부담금(등록금)에 관한 사항 </span></div><div class="ho level2"><span style="color:#282828;">5. 재학 중 퇴직ㆍ인사이동 또는 계약학과가 폐지되는 경우 학생의 신분 및 부담금 등에 관한 사항 </span></div><div class="ho level2"><span style="color:#282828;">6. 학교 밖의 장소에 계약학과를 설치하는 경우, 그 장소에 관한 사항 </span></div><div class="ho level2"><span style="0">7. 산업체 부담금 납부 확인에 관한 사항 </span></div><div class="ho level2"><span style="0">8. 산업체 부담금 납부기한 및 미납 시 조치사항 </span></div><div class="ho level2"><span style="0">9. 채용조건형 계약학과의 경우, 학생 졸업 후 채용 약정을 맺은 산업체 등으로의 취업률 관리에 관한 사항 <개정 2026. 5. 11.> </span></div><div class="ho level2"><span style="0">10. 도서관 등 교내시설 이용 및 행정서비스에 관한 사항 <개정 2026. 5. 11.> </span></div><div class="ho level2"><span style="color:#282828;">11. 기타 계약학과의 운영에 필요한 사항 </span><span style="0"><신설 2026. 5. 11.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="83239" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83239', 'joHistory83239', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83239);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (계약학과의 명칭, 학생정원 및 학위명)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="color:#282828;">① 계약학과의 명칭, 학생정원 및 학위명은 [별표 1]과 같다. </span></div><div class="hang level1"><span style="color:#282828;">② 채용조건형 계약학과 및 재교육형 계약학과의 학생정원은 각각 해당학년도 학부와 대학원의 입학정원을 통합하여 100분의 20이내로 하며, 혼합형 계약학과인 조기취업형 계약학과와 ⌜<a href="javascript:showPopup('http://www.law.go.kr/법령/산업교육진흥 및 산학연협력촉진에관한 법률 시행령', '산업교육진흥 및 산학연협력촉진에관한 법률 시행령');" target="_self">산업교육진흥 및 산학연협력촉진에관한 법률 시행령</a>⌟ 제8조의2의 계약정원은 채용조건형 계약학과의 학생정원에 포함한다. </span><span style="0"> </span><span style="color:#0000ff;"><개정 2019.3.1., 2021.10.19., 2025.9.22.> </span></div><div class="hang level1"><span style="0">③ 삭제 <2026. 5. 11.> </span></div><div class="hang level1"><span style="0">④ 제2항에도 불구하고 교육부장관이 정하여 고시하는 첨단산업 분야의 채용조건형 계약학과를 설치하는 경우와 재교육형 계약학과에 대한 산업체 등의 수요가 많을 경우 교육부장관의 승인을 거쳐 모집정원을 100분의 50으로 확대할 수 있다. </span><span style="color:#0000ff;"><신설 2025.9.22.> </span></div> <div class="none level1"><span style="color:#0000ff;">[본조 신설 2015.4.6.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="83240" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83240', 'joHistory83240', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83240);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (계약학과 개설인원)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="color:#282828;">계약학과 개설인원은 당해연도 학사 및 재정을 고려하여 학생정원 심의시 확정하며, 최종 개설여부는 총장이 승인한다. </span><span style="color:#0000ff;"><개정 2014.3.12., 2015.4.6., 2021.10.19> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000007" name="000007"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="83241" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83241', 'joHistory83241', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83241);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (학생의 선발)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="color:#282828;">①  </span><span style="0">계약학과 입학자격은 <a href="javascript:showPopup('http://www.law.go.kr/법령/고등교육법/제33조', '고등교육법');" target="_self">고등교육법 제33조</a>를 준용하며, 학생의 선발은 본 대학교 모집요강을 따르되, 전형방법은 계약체결에 의하여 총장이 따로 정한다. </span><span style="color:#0000ff;"><개정 2019.3.1., 2019.9.1.> </span></div><div class="hang level1"><span style="0">② 중소기업계약학과(재교육형)학생 우선선발의 경우 중소벤처기업부 "중소기업계약학과운영지침"관련 조항을 준용하여 선발한다. </span><span style="color:#282828;"> </span><span style="color:#0000ff;"><신설 2014.11.19., 개정 2019.9.1., 2020.8.10> </span></div><div class="hang level1"><span style="0">③ 일학습병행제 학생 선발의 경우 지원자의 고등학교 학교생활기록부, 예비훈련 결과, 직무성취도 평가 결과 등을 입학전형자료로 활용할 수 있다. </span><span style="color:#0000ff;"><신설 2017.1.9., 개정 2019.9.1.> </span></div><div class="hang level1"><span style="0">④ 조기취업형 계약학과와 계약정원 운영 학과(부)의 학생선발 및 전형방법은 매학년도 대학입학전형시행계획을 따르되, 계약학과의 특성을 감안하여 <a href="javascript:showPopup('http://www.law.go.kr/법령/산업교육진흥 및 산학연협력촉진에 관한 법률', '산업교육진흥 및 산학연협력촉진에 관한 법률');" target="_self">산업교육진흥 및 산학연협력촉진에 관한 법률</a> 및 그 하위규정을 준용하여 선발할 수 있다. </span><span style="color:#282828;"> </span><span style="color:#0000ff;"><개정 2025.9.22.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="83242" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83242', 'joHistory83242', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83242);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (학기 및 수업일수)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="color:#282828;">① 학기는 매학년도 2개 학기 이상으로 하며, 방학 중에 필요에 따라 계절학기를 실시할 수 있다. </span><span style="color:#0000ff;"><개정 2019.9.1., 2021.10.19.> </span></div><div class="hang level1"><span style="color:#282828;">② 수업일수는 매학년도 30주 이상으로 한다. </span><span style="color:#0000ff;"><개정 2021.10.19.> </span></div><div class="hang level1"><span style="color:#282828;">③ 조기취업형 계약학과는 1년 4학기제로 매학년도는 제1학기, 나노디그리학기(하계), 제2학기, 나노디그리학기(동계)로 구분한다. </span></div><div class="hang level1"><span style="color:#282828;">④ 일학습병행제 현장훈련(OJT, On the Job Training)교과는 하계 및 동계학기 개설이 가능하며, 수업기간은 3주 이상으로 할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000009" name="000009"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="83243" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83243', 'joHistory83243', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83243);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (교육과정의 편성ㆍ운영)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="color:#282828;">①  </span><span style="0">교육과정은 계약학과 운영위원회 또는 산업체가 참여하는 워크숍에서 산업체 등과 연 1회 이상 협의하고 산업체 등의 요구 또는 의뢰한 내용을 반영하여 편성하며, 계약학과운영소위원회 심의를 거쳐 확정한다. </span><span style="color:#0000ff;"><개정 2016.3.1., 2019.3.1.> </span></div><div class="hang level1"><span style="0">② 매 학년도 교육과정의 30% 이상 수업(학점기준)은 전임교원 및 산학협력중점교수가 담당하도록 편성하여야 한다. 단, 산학협력중점교수는 「<a href="javascript:showPopup('http://www.law.go.kr/법령/대학교원 자격기준 등에 관한 규정', '대학교원 자격기준 등에 관한 규정');" target="_self">대학교원 자격기준 등에 관한 규정</a>」 및 교육부의 인정기준 등을 충족하여야 한다. <개정 2026. 5. 11.> </span></div><div class="hang level1"><span style="color:#282828;">③ 재교육형 계약학과 학사과정에 입학하는 자가 교육과정과 관계되는 근무경력을 가진 경우에는 전공과의 연관성 및 학습의 등가성이 인정될 시 재교육형계약학과 운영위원회 심의를 거쳐 졸업이수학점의 25%범위 내에서 교육과정을 이수한 것으로 인정할 수 있으며, 이에 관한 세부사항은 따로 정한다. </span><span style="color:#0000ff;"><개정 2021.10.19., 2025.9.22.> </span></div><div class="hang level1"><span style="color:#282828;">④ 수업은 출석수업, 현장실습수업, 원격수업(원격중심수업 및 블렌디드수업) 그 밖에 계약학과의 특성을 반영하여 운영할 수 있으며, 출석수업의 비중을 50%이상(졸업학점기준)으로 한다. </span><span style="color:#0000ff;"><개정 2021.10.19., 2024.2.26.> </span></div><div class="hang level1"><span style="color:#282828;">⑤ 산업변화 대응 및 융복합 지식 습득에 필요하다고 인정하는 경우 타 계약학과의 전공교과를 졸업이수학점의 100분의 10범위 내에서 자유선택교과로 이수할 수 있다. </span></div><div class="hang level1"><span style="color:#282828;">⑥ 원격수업 운영에 관한 사항은 본 대학교 관련 규정 및 지침을 따른다. </span><span style="color:#0000ff;"><신설 2021.10.19.> </span><span style="color:#282828;"> </span></div><div class="hang level1"><span style="color:#282828;">⑦ 채용조건형 계약학과는 산업체등에 종사하는데 필요한 지식, 기술, 태도를 습득할 수 있도록 현장실습수업을 운영할 수 있다. </span><span style="0"> </span><span style="color:#0000ff;"><신설 2014.6.25., 개정 2019.3.1., 2020.8.10.> </span></div><div class="hang level1"><span style="color:#282828;">⑧ 재교육형 계약학과는 재직자 재교육, 직무능력 및 문제해결능력 향상을 위하여 현장훈련(OJT) 및 현장연구교과를 운영할 수 있으며, 산업체등에서의 재직경력, 근무시간 등을 기준으로 학점을 부여할 수 없다. </span><span style="color:#0000ff;"><신설 2020.8.10.> </span></div><div class="hang level1"><span style="color:#282828;">⑨ 제6항 내지 제8항은 "P"(합격), "NP"(불합격)로 평가하여, 평점 및 평점평균에 적용하지 않을 수 있다. </span><span style="color:#0000ff;"><개정 2021.10.19.> </span></div><div class="hang level1"><span style="0">⑩ 계약학과 학생의 현장실무지식 습득을 위한 목적으로 지방자치단체, 연구기관 및 산업체 등(이하 "협동기관"이라 한다)이 보유한 시설·장비·인력을 활용할 필요가 있는 경우에는 협동기관과의 협약에 따라 협동수업을 실시 할 수 있다.  <신설 2026. 5. 11.> </span></div><div class="hang level1"><span style="0">⑪ 협동수업 운영에 관한 사항은 「계약학과 설치 운영·규정」 및 「학교 밖 수업 운영기준」을 준용한다. <신설 2026. 5. 11.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000010" name="000010"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="83244" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83244', 'joHistory83244', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83244);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (졸업)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="color:#282828;">① 졸업에 필요한 학점은 [별표2]와 같으며, 조기취업형 계약학과는 R&D프로젝트 실무1, 2(6학점)를 이수하고, 졸업작품을 제출 및 전시하여 졸업요건을 충족하여야 한다. </span><span style="color:#0000ff;"><개정 2013.3.1., 2013.7.3., 2015.4.6., 2017.1.9.> </span></div><div class="hang level1"><span style="color:#282828;">② 조기취업형계약학과 재학생은 11학기 이상 등록하고 전항의 졸업요건을 충족한 경우 조기졸업을 신청할 수 있으며, 이 경우 <a href="javascript:golink('1', '31', 'c036000000', '', '');">학칙 제36조</a> 제4항의 조기졸업 신청요건은 적용하지 않는다. </span><span style="0"> </span><span style="color:#0000ff;"><신설 2019.4.1., 개정 2020.8.10., 2021.3.1> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000011" name="000011"></a>
+                    <a id="c010000000" name="c010000000"></a>
+                    <div class="JO" id="83245" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83245', 'joHistory83245', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83245);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 10 조 (설치운영 기간 및 재학생 보호)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="color:#282828;">① 계약학과의 설치ㆍ운영 기간은 계약에 의하되, 학위수여기간 이상으로 한다. </span></div><div class="hang level1"><span style="color:#282828;">② 계약학과가 그 설치ㆍ운영기간이 만료되기 전에 폐지되는 경우 당해 계약학과에 재학하는 학생에 대하여는 계약학과를 운영하는 학과에서 잔여기간의 교육을 맡으며 학생의 졸업 시 소속은 기존 계약학과로 한다. </span><span style="color:#0000ff;"><개정 2016.3.1.> </span></div><div class="hang level1"><span style="0">③ 재교육형 계약학과 학생이 산업체 등에서 본인의 원에 의하여 퇴직한 경우, 징계해고, 근로계약기간 만료로 퇴직한 경우에는 입학취소 또는 제적처리한다. </span><span style="color:#0000ff;"><개정 2016.3.1., 2024.2.26.> </span></div><div class="hang level1"><span style="0">④ 제3항에도 불구하고 다음 각 호의 어느 하나에 해당하여 자진퇴사가 불가피하다고 인정되는 경우에는 예외로 할 수 있다. <개정 2016.3.1., 2024.2.26., 2026. 5. 11.> </span></div><div class="ho level2"><span style="0">1. 임금체불 <신설 2026. 5. 11.> </span></div><div class="ho level2"><span style="0">2. 휴업 <신설 2026. 5. 11.> </span></div><div class="ho level2"><span style="0">3. 사업장 이전 <신설 2026. 5. 11.> </span></div><div class="ho level2"><span style="0">4. 통근이 불가능한 지역의로의 전근 <신설 2026. 5. 11.> </span></div><div class="ho level2"><span style="0">5. 성희롱, 성폭력, 그 밖의 성적인 괴롭힘을 당한 경우 <신설 2026. 5. 11.> </span></div><div class="ho level2"><span style="0">6. 「<a href="javascript:showPopup('http://www.law.go.kr/법령/근로기준법/제76조의2', '근로기준법');" target="_self">근로기준법」제76조의2</a>에 따른 직장 내 괴롭힘을 당한 경우 <신설 2026. 5. 11.> </span></div><div class="ho level2"><span style="0">7. 신체적, 정신적 장애, 질병, 부상 등으로 학생이 주어진 업무를 수행하는 것이 곤란하고, 기업의 사정 상 업무종류의 전환이 허용되지 않아 퇴직하는 것이 의사의 소견서 등에 근거하여 객관적으로 인정되는 경우 <신설 2026. 5. 11.> </span></div><div class="ho level2"><span style="0">8. 기타 위 각 호에 준하는 산업체 등의 불합리한 행위가 있는 것으로 기업인재대학 운영위원회의 심의를 거친 경우 <신설 2026. 5. 11.> </span></div><div class="hang level1"><span style="0">⑤ 제4항의 경우 학생신분을 유지하기 위한 자격은 다음 각 호와 같다. </span><span style="color:#0000ff;"><개정 2016.3.1., 2024.2.26.> </span></div><div class="ho level2"><span style="0">1. 2분의 1이상의 교육과정을 이수한 경우 </span></div><div class="ho level2"><span style="0">2. 2분의 1미만을 이수했을 때에는 퇴직일로부터 6개월 이내에 같은 종류 업계(표준산업분류의 중분류 기준) 또는 같은 직무(표준직업분류의 중분류 기준)에 취업하는 경우 <개정 2026. 5. 11.> </span></div> <div class="none level2"><span style="0">다만, 퇴직일로부터 6개월 이내의 기간 산정 시, 학생 휴학기간은 포함하지 않으며, 미포함되는 휴학 기간은 2학기 이내로 한다. </span></div><div class="hang level1"><span style="0">⑥ 채용조건형 계약학과 학생이 채용 약정을 맺은 산업체 등에 취업하기 전에 해당 채용 약정한 산업체 등이 도산, 인수합병 등으로 본인의 의사와 관계없이 계약을 유지할 수 없는 경우 필요경비를 학생이 부담하는 조건으로 다음 각 호의 어느 하나에 해당하는 경우에는 학생 신분을 유지 할 수 있다. </span><span style="color:#0000ff;"><신설 2024.2.26.> </span></div><div class="ho level2"><span style="0">1. 해당 계약학과 운영 기간 내 이수해야 할 학점의 100분의 50 이상을 취득한 경우 </span></div><div class="ho level2"><span style="0">2. 해당 계약학과 운영 기간 내 이수해야 할 학점의 100분의 50 미만을 이수했을 경우에는 계약이 해지된 날부터 6개월 이내에 필요경비에 대한 사항 등을 포함하여 같은 종류 업계(표준산업분류의 중분류 기준) 또는 같은 직무(표준직업분류의 중분류 기준)의 산업체와 협약을 체결한 경우 </span></div><div class="hang level1"><span style="0">⑦ 혼합형 계약학과 학생이 다음 각 호의 어느 하나에 해당 하는 경우에는 학생 신분을 유지 할 수 있다. </span><span style="color:#0000ff;"><신설 2024.2.26.> </span></div><div class="ho level2"><span style="0">1. 채용조건형 계약학과 교육과정을 이수하고 채용 약정한 산업체로 채용되지 못해 재교육형 계약학과 교육과정으로 전환하지 못한 경우 제6항에 따름 </span></div><div class="ho level2"><span style="0">2. 채용조건형 계약학과 교육과정을 이수하고 재교육형 계약학과 교육과정으로 전환한 경우 제3항 내지 제5항에 따름 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000012" name="000012"></a>
+                    <a id="c011000000" name="c011000000"></a>
+                    <div class="JO" id="83246" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83246', 'joHistory83246', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83246);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조 (운영경비 부담 및 수업료 등 납부)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="color:#282828;">① 계약학과의 운영에 필요한 경비에 대한 부담은 계약에 의하여 정하되 학생과 산업체 등에 학기 단위로 따로 청구한다. 다만, 국가, 지방자치단체가 계약학과 설치·운영에 필요한 비용의 전부 또는 일부를 지원하는 경우에는 협의에 따라 그 청구절차를 다르게 정할 수 있다. </span><span style="0"><개정 2016.3.1., 2026. 5. 11.> </span></div><div class="hang level1"><span style="color:#282828;">② 산업체 부담금은 산업체로부터 직접 납부 받아야하며, 학생은 본인 부담금 외의 금액을 대학에 대납할 수 없다. </span><span style="color:#0000f8;"><신설 2016.3.1.> </span></div><div class="hang level1"><span style="color:#282828;">③  </span><span style="0">산업체 등의 부담금은 계약학과의 운영에 필요한 경비의 100분의 50이상이어야 한다. </span><span style="color:#0000f8;"><개정 2019.3.1.> </span></div><div class="hang level1"><span style="color:#282828;">④  </span><span style="0">제10조 제2항 및 제4항에 따라 학생신분이 유지되는 경우 산업체 등에서 동의하지 않으면 등록금 등 필요경비는 전액 학생이 부담한다. </span><span style="color:#282828;"> </span><span style="color:#0000ff;"><개정 2016.3.1., 2019.3.1.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000013" name="000013"></a>
+                    <a id="c012000000" name="c012000000"></a>
+                    <div class="JO" id="83247" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83247', 'joHistory83247', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83247);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 12 조 (기업인재대학운영위원회 등)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 기업인재대학 운영에 관한 주요사항을 심의하기 위하여 기업인재대학운영위원회를 두며, 계약학과 설치유형에 따른 차별화된 운영사항을 다루기 위하여 계약학과운영소위원회를 둔다. </span><span style="color:#0000ff;"><개정 2016.3.1., 2017.1.9., 2019.3.1., 2019.4.1.> </span></div><div class="hang level1"><span style="0">② 제1항에도 불구하고 국가ㆍ지방자치단체ㆍ공공기관이 인력양성을 목적으로 설치한 계약학과의 경우 관련 규정에 따라 위원회를 운영할 수 있다. </span><span style="color:#0000ff;"><신설 2019.3.1.> </span></div><div class="hang level1"><span style="0">③ 위원회의 구성과 운영에 관한 세부사항은 총장이 따로 정한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000014" name="000014"></a>
+                    <a id="c013000000" name="c013000000"></a>
+                    <div class="JO" id="83248" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83248', 'joHistory83248', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83248);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 13 조 (학사제도 적용의 예외)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">계약학과는 본 대학교 <a href="javascript:golink('3', '31', '','', '');">학칙</a>에서 정한 일반휴학, 전과, 재입학, 다전공, 학석사연계과정 등의 적용을 받지 않는다. 단, 총장이 필요하다고 인정하는 경우에는 예외로 할 수 있다. </span><span style="color:#0000ff;"><개정 2020.8.10.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000015" name="000015"></a>
+                    <a id="c014000000" name="c014000000"></a>
+                    <div class="JO" id="83249" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=136&SEQ_HISTORY=1823&SEQ_CONTENTS=83249', 'joHistory83249', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(83249);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 14 조 (준용규정)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="color:#282828;">① 이 규정에 명시되지 아니한 사항은 본 대학교의 <a href="javascript:golink('3', '31', '','', '');">학칙</a> 및 관련규정을 준용한다. </span></div><div class="hang level1"><span style="0">② 국가ㆍ지방자치단체ㆍ공공기관이 인력양성을 목적으로 설치한 계약학과는 기관이 정한 규정과 지침을 본 규정보다 우선적으로 적용한다. </span><span style="color:#0000ff;"><신설 2019.4.1.> </span></div> <div class="none level1"><span style="color:#0000ff;">[본조 신설 2014.6.25.] </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="16"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83250"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2012년 3월 1일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(경과조치)</div><div class="none"><span style="0">이 규정 시행이전에 이루어진 사항은 이 규정에 의하여 행한 것으로 본다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="19"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83251"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2013년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="21"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83252"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2013년 7월 3일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="23"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83253"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2014년 3월 12일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(경과조치)</div><div class="none"><span style="0">이 규정 시행이전에 이루어진 사항은 이규정에 의하여 행한 것으로 본다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="26"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83254"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2014년 6월 25일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="28"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83255"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2014년 11월 19일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="30"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83256"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2014년 11월 19일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="32"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83257"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2015년 4월 6일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="34"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83258"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2016년 3월 1일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(학과명 변경에 따른 경과조치)</div><div class="hang"><span style="0">① 본 규정 시행 전의 환경경영학과 재적생은 환경안전경영학과 재적생으로, 그린조명공학과 재적생은 광융합시스템공학과 재적생으로 본다. </span></div><div class="hang"><span style="0">② 전항에도 불구하고 희망학생에 한하여 본 규정 시행 전의 학과명을 적용하여 졸업증서를 수여할 수 있다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="37"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83259"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2017년 1월 9일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(졸업기준에 대한 경과조치)</div><div class="none"><span style="0">제9조의 졸업학점은 2017학번 신·편입생부터 적용하고 이전 입학자는 변경 전의 <a href="javascript:golink('3', '31', '','', '');">학칙</a>을 적용한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="40"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83260"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2017년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="42"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83261"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2018년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="44"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83262"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="46"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83263"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 4월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="48"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83264"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 9월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="50"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83265"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="52"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83266"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 8월 10일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="54"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83267"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="56"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83268"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 4월 21일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="58"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83269"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 10월 19일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="60"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83270"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="62"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83271"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 9월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="64"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83272"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2023년 1월 30일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="66"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83273"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2024년 2월 26일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="68"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83274"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="70"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83275"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 9월 22일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="72"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83276"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 1월 19일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="74"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83277"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 2월 23일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="76"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부    칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="83278"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 5월 11일부터 시행한다. </span></div></div></div>
+                
+            
+        
+
+        
+            <div class="article attach_tit">[별표/서식 파일]</div>
+            <p class="txt-notice">
+			※ 미리보기 파일은 gif 파일입니다. 미리보기 시, 해당 별표/서식의 첫 번째 페이지만 보입니다.<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;전문은 다운로드를 통해 확인하실 수 있습니다.  
+			</p>
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">[별표 1] 계약학과 편성 및 정원.hwp</span>
+                                    
+                                        <a href="javascript:fileDown('7281', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">[별표 2] 계약학과 졸업이수학점.hwp</span>
+                                    
+                                        <a href="javascript:fileDown('7282', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

@@ -1,0 +1,1279 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('1898', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"1898\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=146&SEQ_HISTORY=1898&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">일반대학원 학위수여 규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+		                	<div class="history historyContentLast" style="display: block;font-size: 9pt;">개정 2025.11.18. 2026.03.31. 2026.09.15.</div>
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000002" name="000002"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="88504" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=146&SEQ_HISTORY=1898&SEQ_CONTENTS=88504', 'joHistory88504', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88504);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 <a href="javascript:golink('3', '35', '','', '');">대학원 통합학칙</a> 제3장에 의거 일반대학원(이하 "대  학원"이라 한다) 석·박사학위수여에 관한 사항을 규정함을 목적으로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="88505" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=146&SEQ_HISTORY=1898&SEQ_CONTENTS=88505', 'joHistory88505', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88505);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (학위수여 요건)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">다음의 요건을 갖춘 자에게는 석·박사학위를 수여할 수 있다. </span></div><div class="hang level1"><span style="0">① 석사학위 </span></div><div class="ho level2"><span style="0">1. 석사학위 과정 이수에 소요되는 학점 및 논문지도를 포함하여 25학점 이상을 취득하고 학점의 평점평균이 3.0 이상인 자 </span></div><div class="ho level2"><span style="0">2. 외국어 졸업자격을 갖춘 자 </span></div><div class="ho level2"><span style="0">3. 학위 청구논문의 심사에 합격한자 </span></div><div class="hang level1"><span style="0">② 박사학위 </span></div><div class="ho level2"><span style="0">1. 박사학위 과정 이수에 소요되는 학점 및 논문지도를 포함하여 36학점 이상(석·박사통합과정 57학점 이상)을 취득하고 학점의 평점평균이 3.0 이상인 자 </span></div><div class="ho level2"><span style="0">2. 외국어 졸업자격을 갖춘 자 </span></div><div class="ho level2"><span style="0">3. 종합시험에 합격한 자 </span></div><div class="ho level2"><span style="0">4. 학위 청구논문의 심사에 합격한 자 </span></div> <div class="none level2"><span style="0">단, 국내외 저명학술지에(SCI(E), SCOPUS, 또는 KCI 등재(후보)학술지) 1편 이상  게재한 자 </span></div><div class="none level2"><span style="0">( 2025학년도 이전 IT반도체융합공학과 입학자는 주저자로 SCI(E), SCOPUS 논문 1편 또는 KCI 논문 2편 이상 게재한 자)<개정 2025.10.01.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="88506" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=146&SEQ_HISTORY=1898&SEQ_CONTENTS=88506', 'joHistory88506', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88506);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (학위종별)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 대학원에서 수여하는 석·박사학위의 종별은 [별표 1]과 같다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="88507" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=146&SEQ_HISTORY=1898&SEQ_CONTENTS=88507', 'joHistory88507', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88507);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (학위수여 결정)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">대학원장은 학위수여일로부터 적어도 1주일 이전에 대학원위원회를 소집하여 학위수여자격을 심의하고 학위수여 여부를 결정한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="88508" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=146&SEQ_HISTORY=1898&SEQ_CONTENTS=88508', 'joHistory88508', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88508);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (학위수여시기)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 대학원의 학위수여는 년 2회로 하며 매년 2월과 8월 중에 행한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000007" name="000007"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="88509" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=146&SEQ_HISTORY=1898&SEQ_CONTENTS=88509', 'joHistory88509', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88509);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (학위기 수여)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 대학원의 석·박사학위수여는 대학원장 추천에 의하여 총장이 [서식 제1호]또는  [서식 제1호2]에 의하여 수여한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="88510" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=146&SEQ_HISTORY=1898&SEQ_CONTENTS=88510', 'joHistory88510', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88510);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (학위수여의 취소)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">본 대학원의 학위를 받은 자로서 그 명예를 손상하는 행위가 있을 때에는 대학원 위원회의 의결을 거쳐 그 수여를 취소할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000009" name="000009"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="88511" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=146&SEQ_HISTORY=1898&SEQ_CONTENTS=88511', 'joHistory88511', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(88511);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (명예박사학위수여)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교무처장, 기획처장, 산학협력단장, 대외협력실장,   공학최고경영교육원장(ITP)은 아래의 각호 1에 해당하는 자를 대학원장에게 추천할 수 있고, 명예박사학위수여 추천서[서식 제1호의 3] 이력서[서식 제1호의 4]를   제출하여야 한다. </span></div><div class="ho level2"><span style="0">1. 학술 발전에 특별한 공적(헌)이 있는 자 </span></div><div class="ho level2"><span style="0">2. 인류문화 발전에 지대한 공헌(적)을 한 자 </span></div><div class="ho level2"><span style="0">3. 국가와 지역사회 또는 대학 발전에 현저하게 공헌한 자 </span></div><div class="hang level1"><span style="0">② 대학원장은 전항에 따른 명예박사학위수여 추천대상자에 대한 심의 적정성      여부를 판단하여 대학원위원회에 안건으로 상정할 수 있고, 명예박사학위수여     공적조서[서식 제1호의 5]를 제출하여야 한다. </span></div><div class="hang level1"><span style="0">③ 전항에 따라 대학원장이 대학원위원회에 심의를 상정한 명예박사학위수여      추천대상자는 대학원위원회 의결 후 대학원장의 제청에 의하여 총장이 명예    박사학위를 수여할 수 있다. </span></div><div class="hang level1"><span style="0">④ 제7조(학위수여의 취소)에 관한 규정은 명예박사학위에도 준용한다. </span></div><div class="hang level1"><span style="0">⑤ 학위기의 양식은 [서식 제1호의 6]에 의한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="10"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부  칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88512"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 <a href="javascript:golink('3', '31', '','', '');">학칙</a>은 2012년 3월 1일부터 적용한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="12"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부  칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88513"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 10월 10일부터 시행한다. 단, 나노광공학과명칭 변경에 관한 사항은 2020년 3월 1일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(학과명칭변경에 따른 경과조치)</div><div class="hang"><span style="0">① 이 규정 시행 전의 나노광공학과재적생은 나노반도체공학과 재적생으로 본다. </span></div><div class="hang"><span style="0">② 전항에도 불구하고 희망학생에 한하여 본 <a href="javascript:golink('3', '31', '','', '');">학칙</a> 시행 전의 학과명 및 학위명을 적용하여 졸업증서를 수여할 수 있다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="15"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부  칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88514"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 10월 15일부터 시행한다. 단, 신기술융합학과 박사과정 신설 사항은 2020년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="17"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88515"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020년 2월 14일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="19"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88516"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021년 2월 8일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(학과명칭변경에 따른 경과조치)</div><div class="hang"><span style="0">① 이 규정 시행 전의 신기술융합학과 재적생은 IT반도체융합공학과 재적생으로 본다. </span></div><div class="hang"><span style="0">② 전항에도 불구하고 희망학생에 한하여 본 <a href="javascript:golink('3', '31', '','', '');">학칙</a> 시행 전의 학과명 및 학위명을 적용하여 졸업증서를 수여할 수 있다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="22"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88517"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 2월 9일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="24"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88518"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 3월 1일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(졸업기준 변경에 대한 경과조치)</div><div class="none"><span style="0">제2조는 2022학번을 부여받은 신ㆍ편입생부터 적용하고 신ㆍ편입 당시 2021이전의 학번을 부여받은 학생은 변경 전의 규정을  적용한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="27"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88519"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 8월 30일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="29"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88520"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2023년 3월 22일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="31"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88521"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2023년 12월 19일부터 시행한다. 단, 바이오헬스융합공학과 신설에 관한 사항은 2024년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="33"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88522"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2024년 10월 16일부터 시행한다. 단, 일반대학원 박사과정 신설, 인공지능학과 신설, 게임공학과 학과명 변경에 관한 사항은 2025년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="35"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88523"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 3월 14일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="37"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88524"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 4월 14일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="39"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88525"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 6월 23일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="41"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88526"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 8월 21일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="43"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88527"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 10월 1일부터 시행한다. 단, 디자인공학과 학과명 변경에 관한 사항은 2026년 3월 1일부터 시행한다.<제정 2025.10.01.> </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="45"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88528"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년 11월 18일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="47"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88529"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 3월 31일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="49"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;"><부칙></div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="88530"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년 9월 15일부터 시행한다. </span></div></div></div>
+                
+            
+        
+
+        
+            <div class="article attach_tit">[별표/서식 파일]</div>
+            <p class="txt-notice">
+			※ 미리보기 파일은 gif 파일입니다. 미리보기 시, 해당 별표/서식의 첫 번째 페이지만 보입니다.<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;전문은 다운로드를 통해 확인하실 수 있습니다.  
+			</p>
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">(별표 1).hwp</span>
+                                    
+                                        <a href="javascript:fileDown('7627', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">(서식 제1호) (학위논문제출과정).hwp</span>
+                                    
+                                        <a href="javascript:fileDown('7628', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">(서식 제1호의2) (프로젝트 학위).hwp</span>
+                                    
+                                        <a href="javascript:fileDown('7629', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">(서식 제1호의3) (명예박사).hwp</span>
+                                    
+                                        <a href="javascript:fileDown('7630', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

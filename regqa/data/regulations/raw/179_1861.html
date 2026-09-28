@@ -1,0 +1,1175 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('1861', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"1861\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">학생상담운영규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+							<div class="history historyShow" style="display: block;">
+								<span onclick="thisHistoryShow();" style="cursor: pointer;">
+									연혁 보이기 <img src="/lmxsrv/images/btn/tabBtn_open.gif" alt="보기" title="보기"/>
+								</span>
+							</div>
+							<div class="history historyHide" style="display: none;">
+								<span onclick="thisHistoryHide();" style="cursor: pointer;">
+									연혁 숨기기 <img src="/lmxsrv/images/btn/tabBtn_close_o.gif" alt="감추기" title="감추기"/>
+								</span>
+							</div>
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제정 2019.01.31.</div>
+						
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">개정 2025.02.24.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+						
+							<div class="history historyContentLast" style="display: block;font-size: 9pt;">개정 2026.07.01.</div>
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="2" name="2"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 1 장  총  칙</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="85074" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85074', 'joHistory85074', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85074);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 한국공학대학교(이하 "본교"라 한다)의 학생상담에 관련한 사항을 규정함을 목적으로 한다.<개정 2022.03.01.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="85075" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85075', 'joHistory85075', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85075);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (정의)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">학생상담의 종류는 지도교수상담, 전문부서상담으로 구분하고 다음과 같이 정의한다. </span></div><div class="hang level1"><span style="0">② 지도교수상담은 지도교수가 지도학생의 대학적응, 생활, 학습, 진로, 취업 등 대학생활 전반에 대해 상담하는 것을 말한다. </span></div><div class="hang level1"><span style="0">③ 전문부서상담은 교내 행정부서에서 학생을 대상으로 실시하는 상담을 말한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="85076" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85076', 'joHistory85076', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85076);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (운영기관)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 학생상담센터는 학생상담에 관한 업무를 총괄한다. </span></div><div class="hang level1"><span style="0">② 학부(과)는 매학기 초 지도교수에게 지도학생을 배정하고, 지도교수는 지도학생을 대상으로 상담을 수행한다. </span></div><div class="hang level1"><span style="0">③ 학사운영팀은 지도교수제 운영계획을 수립하고 이를 학부(과)에 안내한다. <개정 2026. 7. 1.> </span></div><div class="hang level1"><span style="0">④ 학생상담센터는 개인심리상담과 집단상담 프로그램을 운영하고 이에 필요한 심리검사등의 활동을 실시한다. </span></div><div class="hang level1"><span style="0">⑤ 교수학습개발센터는 학습 상담과 프로그램을 운영하고 이에 필요한 각종 검사 등의 활동을 실시한다. </span></div><div class="hang level1"><span style="0">⑥ 진로취업지원팀은 진로상담 및 취업 상담과 프로그램을 운영하고 이에 필요한 각종 검사 등의 활동을 실시한다. </span></div><div class="hang level1"><span style="0">⑦ 창업교육센터와 창업지원단은 창업 전반에 대한 상담을 수행한다. </span></div><div class="hang level1"><span style="0">⑧ 학생지원팀은 장학 전반에 대한 상담을 수행한다. </span></div><div class="hang level1"><span style="0">⑨ 국제교육센터는 외국인 학생의 대학생활 및 내국인 학생의 국제교류 전반에 대한 상담을 수행한다. </span></div><div class="hang level1"><span style="0">⑩ 장애학생지원센터는 장애학생의 대학생활 전반에 대한 상담을 수행한다.<개정 2023.11.30.> </span></div><div class="hang level1"><span style="0">⑪ <삭제 2024.08.01.> </span></div><div class="hang level1"><span style="0">⑫ 미래대학 융합인재양성센터는 융복합 교육제도 전반에 대한 상담을 수행한다.<개정 2023.11.30., 2026. 7. 1.> </span></div><div class="hang level1"><span style="0">⑬ 교양ㆍ전공설계센터는 자유ㆍ자율전공 입학생의 전공 및 진로선택에 대한 상담을 수행한다.<신설 2025.02.24., 개정 2026. 7. 1.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="85077" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85077', 'joHistory85077', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85077);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (위원회)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 학생상담에 관한 중요 사항을 심의ㆍ의결하기 위해 학생상담운영위원회(이하 "위원회"라 한다)를 둔다. </span></div><div class="hang level1"><span style="0">② 위원장은 학생처장이 되고 학생상담센터장, 학사운영팀장, 교수학습개발센터장, 진로취업지원팀장, 창업교육센터장, 학생지원팀장, 국제교육센터장, 장애학생지원센터장, 미래대학 융합인재양성센터장, 교양ㆍ전공설계센터장을 포함한 총장이 지정한 15인 이내의 위원으로 구성한다.<개정 2023.11.30., 개정 2024.08.01., 2026. 7. 1.> </span></div><div class="hang level1"><span style="0">③ 위원회의 사무를 처리하기 위하여 간사를 둘 수 있으며, 본 대학 교직원 중에서 총장이 임명한다. </span></div><div class="hang level1"><span style="0">④ 위원회는 다음 각 호의 사항을 심의ㆍ의결한다. </span></div><div class="ho level2"><span style="0">1. 학생상담의 기본 운영계획 수립에 관한 사항 </span></div><div class="ho level2"><span style="0">2. 학생상담 규정의 개정과 폐지에 관한 사항 </span></div><div class="ho level2"><span style="0">3. 학생상담 관련 연간 계획에 관한 사항 </span></div><div class="ho level2"><span style="0">4. 학생상담 관련 활동에 대한 성과분석과 개선과제에 관한 사항 </span></div><div class="ho level2"><span style="0">5. 기타 학생상담과 관련하여 위원장이 부의하는 사항 </span></div><div class="hang level1"><span style="0">⑤ 회의는 필요시 위원장이 소집하고, 재적위원 과반수 출석으로 개회하고 출석위원 과반수 찬성으로 의결한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000007" name="000007"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="85078" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85078', 'joHistory85078', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85078);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (비밀보장의 원칙)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 상담자는 학생의 사생활 등 개인정보 보호를 위해 상담내용에 대해 비밀을 유지한다. </span></div><div class="hang level1"><span style="0">② 상담자가 상담내용이 공유될 필요가 있다고 판단할 때에는 학생의 동의를 받아 상담 내용을 공개할 수 있다. </span></div><div class="hang level1"><span style="0">③ 시급한 위기상황(자살, 실종 등)에서는 학생의 동의가 없어도 상담내용이 가족, 전문상담사, 지도교수 등에게 공유될 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="8" name="8"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 2 장  지도교수 상담</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000009" name="000009"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="85080" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85080', 'joHistory85080', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85080);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (지도교수 배정)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 각 학부(과)에서는 모든 학생에게 지도교수를 배정하여 지도교수 상담이 이루어지도록 한다. </span></div><div class="hang level1"><span style="0">② 연구년 등으로 지도교수가 학생상담 및 지도를 실시할 수 없는 경우에는 지도교수를 별도로 배정한다. </span></div><div class="hang level1"><span style="0">③ 교양ㆍ전공설계센터에서는 생활관에 입주하는 신입생에게 생활관 지도교수를 배정하여 생활관 지도교수 상담이 이루어지도록 한다. <개정 2026. 7. 1.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000010" name="000010"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="85081" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85081', 'joHistory85081', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85081);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (지도교수 상담)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 지도교수는 다음 각 호에 해당하는 상담을 실시한다. </span></div><div class="ho level2"><span style="0">1.  매 학기 지도 학생을 대상으로 하는 대학적응ㆍ학습ㆍ생활 등에 대한 상담 </span></div><div class="ho level2"><span style="0">2.  기타 학부(과)에서 필요성을 인지한 각종 상담 </span></div><div class="hang level1"><span style="0">② 지도교수 상담 실시 후 그 내용은 학생경력개발시스템에 입력하여 추후 학생지원의 근거 자료로 활용한다. </span></div><div class="hang level1"><span style="0">③ 지도교수 상담 결과 전문적인 추가 상담이 필요할 때에는 교내 관련 전문부서에 연계한다. </span></div><div class="hang level1"><span style="0">④ 교원업적평가 담당부서는 본 대학 "교원업적평가"규정 제7조에 의거하여 교원의 상담실적을 교원업적평가에 반영한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000011" name="000011"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="85082" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85082', 'joHistory85082', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85082);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (지도교수상담 방법)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 지도교수상담은 대면상담을 원칙으로 한다. 단, 별도 프로그램(현장실습, 해외인턴 등)에 참여하는 학생 등 대면상담이 불가능한 경우 온라인, 전화 등 다른 방법으로 상담할 수 있다. </span></div><div class="hang level1"><span style="0">② 지도교수는 상담시간을 게시하여 공지하여야 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="12" name="12"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 3 장  전문부서상담</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000013" name="000013"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="85084" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85084', 'joHistory85084', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85084);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (상담영역)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">교내 전문부서상담은 다음 각 호와 같이 운영하며, 필요한 경우 각 운영기관은 내규 및 지침을 정할 수 있다.<개정 2020.06.29., 2023.11.30., 2024.08.01., 2025.02.24.> </span></div><div class="ho level1"><span style="0">1. 심리상담 </span></div><div class="ho level1"><span style="0">2. 학습상담 </span></div><div class="ho level1"><span style="0">3. 진로상담 </span></div><div class="ho level1"><span style="0">4. 취업상담 </span></div><div class="ho level1"><span style="0">5. 창업상담 </span></div><div class="ho level1"><span style="0">6. 장학상담 </span></div><div class="ho level1"><span style="0">7. 외국인학생 및 국제교류 상담 </span></div><div class="ho level1"><span style="0">8. 장애학생상담 </span></div><div class="ho level1"><span style="0">9. <삭제 2024.08.01.> </span></div><div class="ho level1"><span style="0">10. 융합교육과정상담 </span></div><div class="ho level1"><span style="0">11. 자유ㆍ자율전공 전공 및 진로선택상담 <개정 2026. 7. 1.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000014" name="000014"></a>
+                    <a id="c010000000" name="c010000000"></a>
+                    <div class="JO" id="85085" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85085', 'joHistory85085', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85085);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 10 조 (상담절차)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 전문부서에서는 학생의 요청이 있을 시 상담을 실시한다. </span></div><div class="hang level1"><span style="0">② 전문부서에서는 각종 검사결과나 학생의 상황에 따라 상담이 필요하다고 판단되는 경우 학생에게 상담을 권유 할 수 있다. </span></div><div class="hang level1"><span style="0">③ 상담 실시 후 그 내용은 시스템에 입력한다. 단 필요한 경우 상담 기록을 별도 관리할 수 있다. </span></div><div class="hang level1"><span style="0">④ 상담 실시 후 타 부서의 전문상담이 필요하다고 판단되는 학생의 경우 해당 학생에게 동의를 구한 후 타 부서에 상담을 의뢰할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="15" name="15"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 4 장  상담 통합 관리</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000016" name="000016"></a>
+                    <a id="c011000000" name="c011000000"></a>
+                    <div class="JO" id="85087" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85087', 'joHistory85087', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85087);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조 (상담 통합관리)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">학생상담 관련 업무를 수행하는 부서는 교내 상담의 통합관리를 위해 다음 각 호를 시행하여야 한다. </span></div><div class="ho level1"><span style="0">1.  상담 만족도 조사 및 학생 의견 수렴 </span></div><div class="ho level1"><span style="0">2.  성과분석을 포함한 결과보고서 작성 </span></div><div class="ho level1"><span style="0">3.  학생상담 결과보고 학생상담센터로 송부 </span></div><div class="hang level2"><span style="0">② <삭제 2020.06.29.> </span></div><div class="hang level2"><span style="0">③ <삭제 2020.06.29.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000017" name="000017"></a>
+                    <a id="c011002000" name="c011002000"></a>
+                    <div class="JO" id="85088" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85088', 'joHistory85088', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85088);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조의2 (상담품질관리)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① ‘학생상담품질관리' 즉 CQI(Continuous Quality Improvement)란 학생상담운영체계 전반에 대하여 지속적으로 평가, 개선, 환류 해나가는 모든 과정을 의미한다. </span></div><div class="hang level1"><span style="0">② 지속적인 학생상담품질관리를 위한 주관부서는 학생상담센터로 하며, 학생상담의 품질관리를 위해 노력한다. </span></div><div class="hang level1"><span style="0">③ 학생상담운영위원회는 비교과 교육과정 편성기준을 비롯한 각 부서 상담성과 분석 결과를 바탕으로 학생상담 및 프로그램 개편안과 차년도 운영계획에 대해 심의한다. <개정 2021.02.25.> </span></div><div class="hang level1"><span style="0">④  <삭제 2021.02.25.> </span></div><div class="hang level1"><span style="0">⑤ 학생상담운영위원회를 통해 심의된 내용을 상담 유관부서에 안내하여 환류 되도록 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000018" name="000018"></a>
+                    <a id="c012000000" name="c012000000"></a>
+                    <div class="JO" id="85089" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85089', 'joHistory85089', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85089);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 12 조 (상담 모니터링)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">학생상담센터는 교내 각 부서의 학생상담이 원활하게 이루어지고 결과 보고서가 완결되도록 점검하여야 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="19" name="19"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 5 장  운영세칙</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000020" name="000020"></a>
+                    <a id="c013000000" name="c013000000"></a>
+                    <div class="JO" id="85091" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=179&SEQ_HISTORY=1861&SEQ_CONTENTS=85091', 'joHistory85091', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(85091);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 13 조 (운영세칙)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정에 명시하지 아니한 세부 사항은 내규로 정하거나 총장이 따로 정한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="21"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="85092"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019 년  1월  31일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="23"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="85093"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019 년  7월  12일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="25"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="85094"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2020 년  6월  29일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="27"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="85095"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2021 년  2월  25일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="29"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="85096"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2023년  11월  30일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="31"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="85097"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2024년  8월  1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="33"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="85098"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2025년  2월  24일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="35"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="85099"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2026년  7월  1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

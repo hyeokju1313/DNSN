@@ -1,0 +1,964 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('376', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"376\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">「 한국공학대학교 대학원생 권리장전 」</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+		                	<div class="history historyContentLast" style="display: block;font-size: 9pt;">제정 : 2017년 7월 21일</div>
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000001" name="000001"></a>
+                    <a id="c000000000" name="c000000000"></a>
+                    <div class="JO" id="23505" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        
+                        	 <div class="none level1"><span style="0">「 </span><span style="font-weight:bold;text-decoration:underline;">한국공학대학교 </span><span style="0"><a href="javascript:golink('3', '152', '','', '');">대학원생 권리장전</a>」은 대학원생이 <a href="javascript:showPopup('http://www.law.go.kr/법령/대한민국헌법', '대한민국헌법');" target="_self">대한민국헌법</a>, 법률에서 보장하는 인간으로서 지닌 존엄과 가치, 자유와 권리 중 대학원생에게 적용될 수 있는 모든 보편적 자유와 권리를 보호하며, 본인의 의사에 반하여 불리하고 불합리한 처분을 받지 아니하며, 대학원 모든 구성원들이 지적(知的)공동체로 발전하기 위한 초석을 쌓으며, 석ㆍ박사 학위 과정에서 학생, 연구자 및 조교로 갖는 대학원생의 권리가 보편적으로 인식되고 더 나아가 효과적으로 준수되기 위해 마련되었다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="2" name="2"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 1 장  총칙</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="23507" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23507', 'joHistory23507', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23507);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 권리장전은 지적(知的)공동체인 대학원 구성원들이 가지는 불가침의 기본적 인권을 보호하고, 그 수준을 향상시킴으로써 인간으로서의 존엄과 가치 실현에 이바지함을 목적으로 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="23508" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23508', 'joHistory23508', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23508);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (기본원칙)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 대학원생은 지적(知的)공동체의 구성원으로 존중받을 권리가 있다. </span></div><div class="hang level1"><span style="0">② 대학원생은 어떠한 신체적, 언어적, 성적 폭력으로부터 자유롭고 안전한 환경에서 학업하고, 연구할 권리가 있다. </span></div><div class="hang level1"><span style="0">③ 대학원생은 성별, 학력, 국적, 나이, 장애, 종교, 정치적 성향 등을 비롯한 모든 사회적 신분으로 인해 차별받아서는 아니 된다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="23509" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23509', 'joHistory23509', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23509);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (대학 구성원의 책무)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 대학원의 모든 구성원은 이 권리장전에서 명시된 내용을 알고 이를 존중하며 실현해야 할 책임을 가진다. </span></div><div class="hang level1"><span style="0">② 대학원은 지적(知的)공동체의 구성원으로서 본 권리장전을 포함한 인권교육을 주기적으로 실시하여야 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="6" name="6"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 2 장  대학원생의 권리와 보호</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000007" name="000007"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="23511" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23511', 'joHistory23511', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23511);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (자기 결정권)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">대학원생은 사생활의 자유를 가지며, 연구와 학업은 건강, 안전, 혼인과 모성의 보호, 가족생활 등을 영위할 권리에 우선되지 않는다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="23512" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23512', 'joHistory23512', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23512);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (학업ㆍ연구권)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 대학원생에게 보장된 학업과 연구의 기회가 부당하게 박탈되어서는 안 되며, 학위과정을 마칠 때까지 정당하지 않은 이유로 학업이 중단되지 않을 권리가 있다. </span></div><div class="hang level1"><span style="0">② 대학원생은 자신의 전공과 연구주제에 관해 전문적인 학업, 연구, 훈련 및 지도를 받을 권리가 있다. </span></div><div class="hang level1"><span style="0">③ 대학원생은 학업과 연구에 필요한 연구 공간 및 학내 지원시설을 학교의 상황에 따라 정당하게 이용할 권리가 있다. </span></div><div class="hang level1"><span style="0">④ 대학원생은 석ㆍ박사 학위 취득을 위한 학업 및 연구진척 수준을 객관적 기준에 따라 평가 받을 권리가 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000009" name="000009"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="23513" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23513', 'joHistory23513', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23513);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (저작권)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 대학원생은 연구 아이디어 제시, 연구 과정 참여 등 자신이 상당 부분 기여한 연구 출판물에 공저자로 등록될 권리가 있다. </span></div><div class="hang level1"><span style="0">② 대학원생은 자신의 주도적이고, 독창적인 아이디어와 연구방법을 기반으로 한 연구 결과에 대해 제1저자로서의 저작권을 가진다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000010" name="000010"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="23514" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23514', 'joHistory23514', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23514);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (공정한 심사를 받을 권리)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 대학원생은 자신의 연구 결과에 대해 공정한 심사를 받을 권리가 있다. </span></div><div class="hang level1"><span style="0">② 평가항목은 구체적이고 객관적이어야 하며, 과정은 투명하고 공정하게 이루어져야 한다. </span></div><div class="hang level1"><span style="0">③ 대학원생은 자신의 학업ㆍ연구결과 평가에 대해 평가자에게 이의를 제기할 수 있으며 충분한 설명을 받을 권리가 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000011" name="000011"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="23515" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23515', 'joHistory23515', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23515);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (의사결정에 참여할 권리)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 대학원생은 이 권리장전에서 명시된 권리들이 제도화되고 시행되는 과정에 참여할 수 있는 권리가 있다. </span></div><div class="hang level1"><span style="0">② 대학원생은 대학원 자치조직을 구성ㆍ운영하고 그 활동에 참여할 권리를 가진다. </span></div><div class="hang level1"><span style="0">③ 학업 및 연구와 관련된 대학원의 결정과 그 세부사항에 대해 알권리가 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000012" name="000012"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="23516" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23516', 'joHistory23516', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23516);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (조교의 권리)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">대학원생을 조교 및 연구원 등으로 채용하는 경우 근로시간, 근로내용, 임금 기준의 정보를 제공하여야 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000013" name="000013"></a>
+                    <a id="c010000000" name="c010000000"></a>
+                    <div class="JO" id="23517" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23517', 'joHistory23517', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23517);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 10 조 (부당한 일에 대한 거부권)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">대학원생은 자신의 교육 및 연구와 관계가 없는 부당한 일을 거부할 권리가 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000014" name="000014"></a>
+                    <a id="c011000000" name="c011000000"></a>
+                    <div class="JO" id="23518" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23518', 'joHistory23518', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23518);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조 (지도교수 변경의 권리)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 지도교수는 학위논문 및 연구지도에 주된 역할을 담당하여, 학생을 성실히 지도하여야 한다. </span></div><div class="hang level1"><span style="0">② 지도교수의 휴직, 파견 및 그 밖의 사유로 학생을 지도할 수 없는 경우에는 학생이 지도교수를 변경할 수 있다. </span></div><div class="hang level1"><span style="0">③ 제2항 또는 기타 불가피한 사유로 학생이 지도교수를 변경하고자 희망하고, 학과장이 사유가 타당하다고 인정되는 때에는 변경 전 지도교수의 확인절차를 생략하고 학생 본인이 지도교수변경원을 학과에 제출하여 학부ㆍ과장(학사과정에 연계가 없는 학과의 경우에는 대학원장)의 허가를 득한 후 지도교수를 변경할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000015" name="000015"></a>
+                    <a id="c012000000" name="c012000000"></a>
+                    <div class="JO" id="23519" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23519', 'joHistory23519', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23519);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 12 조 (그 밖의 권리)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">대학원생의 권리는 이 권리장전에 열거되지 아니하였다는 이유로 경시되지 아니한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="16" name="16"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 3 장  대학원생의 책무</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000017" name="000017"></a>
+                    <a id="c013000000" name="c013000000"></a>
+                    <div class="JO" id="23521" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23521', 'joHistory23521', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23521);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 13 조 (연구 및 학습에 대한 책임)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 대학원생은 학위 취득과 연구 성과를 위하여 충분한 노력과 시간을 기울일 책임이 있다. </span></div><div class="hang level1"><span style="0">② 대학원생은 학위취득요건에 대하여 사전에 충분히 인지하고 학위취득 및 연구수행 과정에서 연구윤리를 준수할 책임이 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000018" name="000018"></a>
+                    <a id="c014000000" name="c014000000"></a>
+                    <div class="JO" id="23522" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=152&SEQ_HISTORY=376&SEQ_CONTENTS=23522', 'joHistory23522', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(23522);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 14 조 (구성원으로서의 역할)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 대학원생은 학위취득 및 연구수행 과정에서 교수의 정당한 지시에 따르지 않아 손해가 발생한 경우 그에 합당한 책임을 진다. </span></div><div class="hang level1"><span style=""> </span><span style="0">② 대학원생은 권리장전에 제시된 사항에 대하여 대학원생 간에 권리가 침해되지 않도록 해야 할 책임이 있다. </span></div><div class="hang level1"><span style="0">③ 대학원생은 연구와 결과물에 대하여 교수와 동료들의 기여를 인정할 책임이 있으며 이를 위해 연구과정에서 충분한 협의 과정을 거쳐야 한다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="19"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부 칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="23523"><div class="none"><span style="0">위 권리장전은 2017년 7월 21일부터 시행한다. </span></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="20"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부 칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="23524"><div class="none"><span style="font-weight:bold;text-decoration:underline;">위 권리장전은 2022년 3월 1일부터 시행한다. </span></div></div>
+                
+            
+        
+
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>

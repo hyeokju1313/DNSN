@@ -1,0 +1,140 @@
+{'train': 9312, 'val': 2770, 'eval': 2040, 'dev': 400}
+[dense only] L1: R@1 0.89 R@5 1.00 MRR 0.93 | L2: R@1 0.80 R@5 0.92 MRR 0.83 | L3: R@1 0.80 R@5 1.00 MRR 0.89 | L4: R@1 0.93 R@5 1.00 MRR 0.95 전부@5 0.73 | L5a: R@1 0.80 R@5 1.00 MRR 0.90 | ALL: R@1 0.85 R@5 0.98 MRR 0.90
+  14/146 chunks, 33s elapsed, ETA 307s
+  28/146 chunks, 52s elapsed, ETA 218s
+  42/146 chunks, 78s elapsed, ETA 193s
+  56/146 chunks, 113s elapsed, ETA 181s
+  70/146 chunks, 142s elapsed, ETA 154s
+  84/146 chunks, 164s elapsed, ETA 121s
+  98/146 chunks, 206s elapsed, ETA 101s
+  112/146 chunks, 228s elapsed, ETA 69s
+  126/146 chunks, 254s elapsed, ETA 40s
+  140/146 chunks, 276s elapsed, ETA 12s
+  [connectome] train: 9312 pairs in 283s
+  4/44 chunks, 33s elapsed, ETA 330s
+  8/44 chunks, 33s elapsed, ETA 150s
+  12/44 chunks, 33s elapsed, ETA 89s
+  16/44 chunks, 54s elapsed, ETA 94s
+  20/44 chunks, 55s elapsed, ETA 66s
+  24/44 chunks, 55s elapsed, ETA 46s
+  28/44 chunks, 74s elapsed, ETA 42s
+  32/44 chunks, 76s elapsed, ETA 29s
+  36/44 chunks, 76s elapsed, ETA 17s
+  40/44 chunks, 92s elapsed, ETA 9s
+  44/44 chunks, 93s elapsed, ETA 0s
+  [connectome] val: 2770 pairs in 95s
+  3/32 chunks, 29s elapsed, ETA 276s
+  6/32 chunks, 29s elapsed, ETA 124s
+  9/32 chunks, 29s elapsed, ETA 73s
+  12/32 chunks, 29s elapsed, ETA 48s
+  15/32 chunks, 66s elapsed, ETA 75s
+  18/32 chunks, 70s elapsed, ETA 55s
+  21/32 chunks, 71s elapsed, ETA 37s
+  24/32 chunks, 71s elapsed, ETA 24s
+  27/32 chunks, 107s elapsed, ETA 20s
+  30/32 chunks, 111s elapsed, ETA 7s
+  [connectome] eval: 2040 pairs in 115s
+  1/7 chunks, 33s elapsed, ETA 196s
+  2/7 chunks, 34s elapsed, ETA 85s
+  3/7 chunks, 34s elapsed, ETA 46s
+  4/7 chunks, 34s elapsed, ETA 26s
+  5/7 chunks, 34s elapsed, ETA 14s
+  6/7 chunks, 34s elapsed, ETA 6s
+  7/7 chunks, 34s elapsed, ETA 0s
+  [connectome] dev: 400 pairs in 36s
+[res_connectome_ix_rho1.2_leak0.5_T8] C=0.1 λ=0.02 val MRR only 0.824 comb 0.855 (552s)
+   only: L1: R@1 0.81 R@5 1.00 MRR 0.90 | L2: R@1 0.36 R@5 0.72 MRR 0.50 | L3: R@1 0.47 R@5 0.87 MRR 0.65 | L4: R@1 0.60 R@5 1.00 MRR 0.76 전부@5 0.47 | L5a: R@1 0.70 R@5 0.90 MRR 0.81 | ALL: R@1 0.59 R@5 0.89 MRR 0.72
+   comb: L1: R@1 0.89 R@5 1.00 MRR 0.93 | L2: R@1 0.72 R@5 0.88 MRR 0.78 | L3: R@1 0.87 R@5 1.00 MRR 0.91 | L4: R@1 0.87 R@5 1.00 MRR 0.92 전부@5 0.73 | L5a: R@1 0.80 R@5 1.00 MRR 0.90 | ALL: R@1 0.83 R@5 0.97 MRR 0.88
+   abstain(comb): out-of-scope reject 1.00, in-scope false reject 0.05
+  14/146 chunks, 108s elapsed, ETA 1014s
+  28/146 chunks, 132s elapsed, ETA 557s
+  42/146 chunks, 155s elapsed, ETA 385s
+  56/146 chunks, 179s elapsed, ETA 288s
+  70/146 chunks, 218s elapsed, ETA 236s
+  84/146 chunks, 244s elapsed, ETA 180s
+  98/146 chunks, 280s elapsed, ETA 137s
+  112/146 chunks, 297s elapsed, ETA 90s
+  126/146 chunks, 312s elapsed, ETA 49s
+  140/146 chunks, 326s elapsed, ETA 14s
+  [random] train: 9312 pairs in 336s
+  4/44 chunks, 20s elapsed, ETA 200s
+  8/44 chunks, 20s elapsed, ETA 90s
+  12/44 chunks, 21s elapsed, ETA 55s
+  16/44 chunks, 44s elapsed, ETA 77s
+  20/44 chunks, 44s elapsed, ETA 53s
+  24/44 chunks, 45s elapsed, ETA 37s
+  28/44 chunks, 67s elapsed, ETA 39s
+  32/44 chunks, 68s elapsed, ETA 25s
+  36/44 chunks, 68s elapsed, ETA 15s
+  40/44 chunks, 86s elapsed, ETA 9s
+  44/44 chunks, 86s elapsed, ETA 0s
+  [random] val: 2770 pairs in 87s
+  3/32 chunks, 27s elapsed, ETA 263s
+  6/32 chunks, 27s elapsed, ETA 118s
+  9/32 chunks, 27s elapsed, ETA 70s
+  12/32 chunks, 27s elapsed, ETA 46s
+  15/32 chunks, 49s elapsed, ETA 55s
+  18/32 chunks, 49s elapsed, ETA 38s
+  21/32 chunks, 49s elapsed, ETA 26s
+  24/32 chunks, 49s elapsed, ETA 16s
+  27/32 chunks, 66s elapsed, ETA 12s
+  30/32 chunks, 66s elapsed, ETA 4s
+  [random] eval: 2040 pairs in 68s
+  1/7 chunks, 15s elapsed, ETA 92s
+  2/7 chunks, 15s elapsed, ETA 38s
+  3/7 chunks, 15s elapsed, ETA 20s
+  4/7 chunks, 15s elapsed, ETA 12s
+  5/7 chunks, 15s elapsed, ETA 6s
+  6/7 chunks, 15s elapsed, ETA 3s
+  7/7 chunks, 15s elapsed, ETA 0s
+  [random] dev: 400 pairs in 16s
+[res_random_ix_rho1.2_leak0.5_T8] C=0.01 λ=0.02 val MRR only 0.802 comb 0.855 (511s)
+   only: L1: R@1 0.67 R@5 0.96 MRR 0.80 | L2: R@1 0.24 R@5 0.72 MRR 0.43 | L3: R@1 0.67 R@5 0.87 MRR 0.76 | L4: R@1 0.47 R@5 0.87 MRR 0.65 전부@5 0.33 | L5a: R@1 0.70 R@5 1.00 MRR 0.80 | ALL: R@1 0.52 R@5 0.87 MRR 0.67
+   comb: L1: R@1 0.89 R@5 1.00 MRR 0.93 | L2: R@1 0.76 R@5 0.88 MRR 0.80 | L3: R@1 0.87 R@5 1.00 MRR 0.91 | L4: R@1 0.87 R@5 1.00 MRR 0.93 전부@5 0.73 | L5a: R@1 0.80 R@5 1.00 MRR 0.90 | ALL: R@1 0.84 R@5 0.97 MRR 0.89
+   abstain(comb): out-of-scope reject 1.00, in-scope false reject 0.05
+  14/146 chunks, 27s elapsed, ETA 252s
+  28/146 chunks, 39s elapsed, ETA 164s
+  42/146 chunks, 51s elapsed, ETA 127s
+  56/146 chunks, 64s elapsed, ETA 103s
+  70/146 chunks, 77s elapsed, ETA 84s
+  84/146 chunks, 90s elapsed, ETA 67s
+  98/146 chunks, 115s elapsed, ETA 56s
+  112/146 chunks, 128s elapsed, ETA 39s
+  126/146 chunks, 141s elapsed, ETA 22s
+  140/146 chunks, 154s elapsed, ETA 7s
+  [degree_shuffle] train: 9312 pairs in 161s
+  4/44 chunks, 16s elapsed, ETA 156s
+  8/44 chunks, 16s elapsed, ETA 70s
+  12/44 chunks, 16s elapsed, ETA 42s
+  16/44 chunks, 28s elapsed, ETA 49s
+  20/44 chunks, 28s elapsed, ETA 34s
+  24/44 chunks, 28s elapsed, ETA 24s
+  28/44 chunks, 41s elapsed, ETA 23s
+  32/44 chunks, 41s elapsed, ETA 15s
+  36/44 chunks, 41s elapsed, ETA 9s
+  40/44 chunks, 58s elapsed, ETA 6s
+  44/44 chunks, 58s elapsed, ETA 0s
+  [degree_shuffle] val: 2770 pairs in 58s
+  3/32 chunks, 24s elapsed, ETA 233s
+  6/32 chunks, 24s elapsed, ETA 105s
+  9/32 chunks, 24s elapsed, ETA 62s
+  12/32 chunks, 24s elapsed, ETA 40s
+  15/32 chunks, 44s elapsed, ETA 50s
+  18/32 chunks, 44s elapsed, ETA 34s
+  21/32 chunks, 44s elapsed, ETA 23s
+  24/32 chunks, 44s elapsed, ETA 15s
+  27/32 chunks, 60s elapsed, ETA 11s
+  30/32 chunks, 60s elapsed, ETA 4s
+  [degree_shuffle] eval: 2040 pairs in 62s
+  1/7 chunks, 17s elapsed, ETA 103s
+  2/7 chunks, 17s elapsed, ETA 43s
+  3/7 chunks, 17s elapsed, ETA 23s
+  4/7 chunks, 17s elapsed, ETA 13s
+  5/7 chunks, 17s elapsed, ETA 7s
+  6/7 chunks, 17s elapsed, ETA 3s
+  7/7 chunks, 17s elapsed, ETA 0s
+  [degree_shuffle] dev: 400 pairs in 17s
+[res_degree_shuffle_ix_rho1.2_leak0.5_T8] C=0.01 λ=0.02 val MRR only 0.812 comb 0.850 (314s)
+   only: L1: R@1 0.67 R@5 0.96 MRR 0.79 | L2: R@1 0.16 R@5 0.72 MRR 0.39 | L3: R@1 0.67 R@5 0.87 MRR 0.78 | L4: R@1 0.60 R@5 0.93 MRR 0.74 전부@5 0.53 | L5a: R@1 0.90 R@5 0.90 MRR 0.91 | ALL: R@1 0.54 R@5 0.87 MRR 0.68
+   comb: L1: R@1 0.89 R@5 1.00 MRR 0.93 | L2: R@1 0.72 R@5 0.88 MRR 0.78 | L3: R@1 0.87 R@5 1.00 MRR 0.91 | L4: R@1 0.87 R@5 1.00 MRR 0.92 전부@5 0.73 | L5a: R@1 0.80 R@5 1.00 MRR 0.90 | ALL: R@1 0.83 R@5 0.97 MRR 0.88
+   abstain(comb): out-of-scope reject 1.00, in-scope false reject 0.05

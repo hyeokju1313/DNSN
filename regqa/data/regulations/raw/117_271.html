@@ -1,0 +1,1217 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-TYPE" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/lawdetailcontent.css" />
+<link type="text/css" rel="stylesheet" href="/lmxsrv/css/common.css" />
+<script type="text/javascript" src="/javascript/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/searchKeyword.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/link.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/bookMark.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/lmxUtil.js"></script>
+<script type="text/javascript" src="/lmxsrv/javascript/common.js"></script>
+<script type="text/javascript">
+    window.onload = function(){ 
+    }
+    
+    $(document).ready(function() {
+    	
+		$('#minusBtn').hide();
+		
+		
+		if(document.querySelector('.none.level0>table') != null) {
+			$('.none.level0>table').parent().css( 'text-align', 'center' );
+		}
+		
+		//2단보기
+		if($('ul.twoView-btn', parent.document).hasClass("twoView-ul") === true) {
+			if('' != ''){ //개정공포문 여부확인
+				if($('ul.twoView-btn a', parent.document).hasClass("btn_a") === true) {
+					//2단보기의개정공포문이있을경우 href변경
+					$('ul.twoView-btn a', parent.document).attr("href","javascript:fileDown('271', 'prom');");
+				}else {
+					//a태그 자체를 추가
+					$('ul.twoView-btn li', parent.document).append("<a class='btn_a' href='javascript:fileDown(\"271\", \"prom\");'>개정공포문</a>");
+				}
+				
+			}else {//없음
+				$('ul.twoView-btn a', parent.document).remove();
+			}
+				
+			
+		}
+			
+		
+		/* 190808 hjpark87 - 호,목, 아래에 내용이 있는 경우 정렬이 안되는 문제 처리해줌. */
+		var length = $("div").length;
+		for(var i=0; i<length; i++){
+			var divClassNm = $('body').find('div').eq(i).attr('class');
+			
+			if(divClassNm == 'none level0'){
+				var parentClassNm = $('body').find('div').eq(i-1).attr('class');
+				
+				if(parentClassNm != 'JO' && parentClassNm != 'article'){	// 부모 클래스명 변경 => 부모처럼 스타일 주기위함.
+					$('body').find('div').eq(i).attr('class', parentClassNm);
+				}
+			}else if(divClassNm == 'addenda'){	//부칙의 띄어쓰기 바꿔줌. => 기존에 '부   칙'을 '부      칙'로 변경 
+				
+				if($('body').find('div').eq(i).text().indexOf('부   칙') != -1){
+					var tmpVar = $('body').find('div').eq(i).text();
+					tmpVar = tmpVar.replace('부   칙', '부      칙');
+					
+					$('body').find('div').eq(i).text(tmpVar);
+				}
+			}else if(divClassNm == 'article'){	//부칙- 조 옆에 내용 표시해주기위해 사용
+				var nextClassNm = $('body').find('div').eq(i+1).attr('class');
+				
+				if(nextClassNm=='none' || nextClassNm=='hang'){
+					var tmpText = $('body').find('div').eq(i).text();
+					var nextText = $('body').find('div').eq(i+1).html();
+					
+					tmpText = tmpText + nextText;
+					$('body').find('div').eq(i).html(tmpText);
+					$('body').find('div').eq(i+1).html('');
+//					$('body').find('div').eq(i+1).css('display', 'none');
+				}
+			}	
+		}
+		
+		// 빨간 글씨였던 내용은  => <span style="">내용 </span> 으로 변경됨. =>> 내용 뒤 공백 제거해 줌.
+		// 내용 중 color:#ff0000(빨간 글씨)인 것은 => ie-<span style>, chrome-<span style=""> 로 나옴.
+		var agent = navigator.userAgent.toLowerCase();
+		var spanLength = $("span").length;
+		
+		for(var i=0; i<spanLength; i++){
+			var currentSpan = $('body').find('span');
+			
+			if(currentSpan != undefined){
+				var spanStyle = $('body').find('span').eq(i).attr('style');	
+			
+				if(agent.indexOf("chrome")!=-1){	//브라우져별 style 값이 다르게 나옴...
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html())
+					}
+				}else if(agent.indexOf("safari")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("firefox")!=-1){
+					if(spanStyle == ""){
+						$('body').find('span').eq(i).html().replace(' </span>', '</span>');
+					}
+				}else if(agent.indexOf("msie")!=-1 || agent.indexOf('trident')!=-1){
+					if(spanStyle == undefined && $('body').find('span').eq(i).attr('class') == undefined){
+						$('body').find('span').eq(i).text($.trim($('body').find('span').eq(i).text()));
+						//console.log($('body').find('span').eq(i).html());
+					}
+				}
+			}
+		}
+		
+	});
+    
+	function thisJoPrint(cseq){
+		showPopup('/lmxsrv/print/lawDetailPrintView.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS='+cseq, 'joPrintPreview', 700, 304);
+	}
+	
+	function showImg(img , check){
+		if(check == 'on'){
+			$("#"+img+check).hide(); 
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"off").show();
+			$("#"+img+"_off").show();
+			$("tr#"+img).show();
+		}else{
+			$("#"+img+check).hide();
+			$("#"+img+"_"+check).hide();
+			$("#"+img+"on").show();
+			$("#"+img+"_on").show();
+			$("tr#"+img).hide();			
+		}
+	}
+	
+//     $("#btn").click(function() {
+//         if(history == "off") {
+//             $(".history").attr("display","none");
+//             history = "on";
+//         }
+//         else {
+//             $(".history").attr("display","");
+//             history = "off";
+//         }
+// 	});
+    
+	//개정연혁을 보여준다
+	function thisHistoryShow(){
+		$(".historyContent").show();
+		$(".historyShow").hide();
+		$(".historyHide").show();
+	}
+
+	//개정연혁을 감춘다
+	function thisHistoryHide(){
+		$(".historyContent").hide();
+		$(".historyShow").show();
+		$(".historyHide").hide();
+	}
+</script>
+<style type="text/css">
+	.JO .article span{
+		font-size:13px;
+		font-weight:100;
+		margin-left:10px;	
+	}
+
+</style>
+</head>
+<body>
+    <div id="lawcontent">
+    	<div style="text-align:right">
+        
+        </div>
+		
+        
+            
+                
+                    <!-- 법령명 -->
+                    <div class="lawname2" align="center">교육편제단위 개편 및 정원 조정에 관한 규정</div>
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+							<div class="history historyShow" style="display: block;">
+								<span onclick="thisHistoryShow();" style="cursor: pointer;">
+									연혁 보이기 <img src="/lmxsrv/images/btn/tabBtn_open.gif" alt="보기" title="보기"/>
+								</span>
+							</div>
+							<div class="history historyHide" style="display: none;">
+								<span onclick="thisHistoryHide();" style="cursor: pointer;">
+									연혁 숨기기 <img src="/lmxsrv/images/btn/tabBtn_close_o.gif" alt="감추기" title="감추기"/>
+								</span>
+							</div>
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제      정   2019.  1. 28.</div>
+						
+		                
+					
+					
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">시  행  일2019.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+							<div class="history historyContent" style="display: none;font-size: 9pt;">제1차 개정 2022.  3.  1.</div>
+						
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                	<!-- 연혁 -->
+	                
+	                
+		                
+		                
+					
+					
+						
+						
+							<div class="history historyContentLast" style="display: block;font-size: 9pt;">제2차 개정 2023. 10. 30.</div>
+						
+					
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="2" name="2"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 1 장   총  칙</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000003" name="000003"></a>
+                    <a id="c001000000" name="c001000000"></a>
+                    <div class="JO" id="19911" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19911', 'joHistory19911', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19911);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 1 조 (목적)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 한국공학대학교 학부 과정의 교육편제단위 개편 및 정원 조정에 관한 기본 원칙 등을 정함을 목적으로 한다. </span><span style="color:#0000ff;"><개정 2021.12.13., 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000004" name="000004"></a>
+                    <a id="c002000000" name="c002000000"></a>
+                    <div class="JO" id="19912" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19912', 'joHistory19912', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19912);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 2 조 (정의)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① ‘교육편제단위'라 함은 <a href="javascript:golink('1', '31', 'c002000000', '', '');">학칙 제2조</a> 및 [별표 1]에 의해 학생 모집 단위로 확정된 ‘단과대학, 학과(부), 전공'을 말한다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="hang level1"><span style="0">② ‘교육편제단위 개편'이라 함은 다음 각 호의 사항과 같이 교육편제단위의 개편이 필요한 경우를 말한다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="ho level2"><span style="0">1. 신설 : 기존에 없던 교육편제단위가 신규로 설치되는 경우 </span></div><div class="ho level2"><span style="0">2. 통합 : 기존 2개 이상의 교육편제단위가 합쳐지는 경우 </span></div><div class="ho level2"><span style="0">3. 분리 : 기존 1개 교육편제단위가 2개 이상으로 나누어지는 경우 </span></div><div class="ho level2"><span style="0">4. 변경 : 기존 교육편제단위 명칭을 변경하는 경우 </span></div><div class="ho level2"><span style="0">5. 폐지 : 기존 교육편제단위가 폐지되어 입학정원을 더 이상 모집하지 않는 경우 </span></div><div class="hang level1"><span style="0">③ ‘정원 조정'이라 함은 교육편제단위의 입학정원을 증감 </span><span style="text-decoration:line-through;">변경 </span><span style="0">또는 조정하는 것을 말한다. </span></div><div class="hang level1"><span style="0">④ ‘학습반 단위'라 함은 [별표 1]에 따른 학습반의 적정 규모를 말한다. </span><span style="color:#0000ff;"><신설 2023.10.30.> </span></div><div class="hang level1"><span style="0">⑤ ‘주요 경쟁력 지표'라 함은 취업률 등 교육편제단위의 역량이나 성과를 측정하기 위하여 정한 지표를 말하며, 지표의 종류와 세부 기준은 따로 정한다. </span><span style="color:#0000ff;"><신설 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000005" name="000005"></a>
+                    <a id="c003000000" name="c003000000"></a>
+                    <div class="JO" id="19913" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19913', 'joHistory19913', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19913);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 3 조 (적용 범위)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">이 규정은 정원 내 입학정원이 1명 이상인 교육편제단위에 적용한다. </span><span style="color:#0000ff;"><신설 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000006" name="000006"></a>
+                    <a id="c004000000" name="c004000000"></a>
+                    <div class="JO" id="19914" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19914', 'joHistory19914', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19914);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 4 조 (개편 및 조정)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">차기 학년도 교육편제단위 개편 및 정원 조정은 관련 법령(<a href="javascript:showPopup('http://www.law.go.kr/법령/고등교육법', '고등교육법');" target="_self">고등교육법</a> 및 동법 시행령 등)이 정한 기한 내에 완료하여야 한다. 단, 대내외 정책 변화에 따른 경우에는 심의를 거쳐 유예할 수 있다. </span><span style="color:#0000ff;"><신설 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="7" name="7"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 2 장   교육편제단위 개편 및 정원 조정 위원회</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000008" name="000008"></a>
+                    <a id="c005000000" name="c005000000"></a>
+                    <div class="JO" id="19916" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19916', 'joHistory19916', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19916);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 5 조 (교육편제단위 개편 및 정원 조정위원회)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 학부 과정의 교육편제단위 및 정원 조정을 위하여 교육편제단위 개편 및 정원 조정위원회(이하"위원회"라 한다)를 둔다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="hang level1"><span style="0">② 위원회는 교무처장을 위원장으로 하며, 처ㆍ단장을 포함한 총장이 지정한 15인 이내의 위원으로 구성한다. </span></div><div class="hang level1"><span style="0">③ 위원회는 다음 각 호의 사항을 심의한다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="ho level2"><span style="0">1. 교육편제단위 개편에 관한 사항 </span></div><div class="ho level2"><span style="0">2. 정원 조정에 관한 사항 </span></div><div class="ho level2"><span style="0">3. 기타 교육편제단위 개편, 정원 조정에 필요한 사항 </span></div><div class="hang level1"><span style="0">④ 위원회의 회의는 위원장이 소집하며, 재적위원 3분의 2의 출석으로 개회하고 출석위원 3분의 2의 찬성으로 의결한다. </span></div><div class="hang level1"><span style="0">⑤ 위원회는 회의록을 작성하여 총장에게 보고하며, 회의록은 출석 위원이 서명 날인하여야 한다. </span></div><div class="hang level1"><span style="0">⑥ 위원회는 심의사항과 관련하여 필요에 따라 소위원회를 둘 수 있다. </span></div><div class="hang level1"><span style="0">⑦ 위원장은 필요하다고 인정할 때에 관계 교직원에게 위원회에 출석하거나 서면으로 자료 제출을 요청할 수 있다. </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="9" name="9"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 3 장  교육편제단위 개편</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000010" name="000010"></a>
+                    <a id="c006000000" name="c006000000"></a>
+                    <div class="JO" id="19918" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19918', 'joHistory19918', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19918);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 6 조 (개편 절차)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">교육편제단위 개편 시에는 다음과 같은 절차를 거쳐야 한다. 단, 제7조제2항에 따른 신청의 경우 제1호를 생략할 수 있다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="ho level1"><span style="0">1. 개편 신청 </span></div><div class="ho level1"><span style="0">2. 개편 발의 </span></div><div class="ho level1"><span style="0">3. 위원회 심의 </span></div><div class="ho level1"><span style="0">4. 교무위원회 심의 </span></div><div class="ho level1"><span style="0">5. 대학평의원회 심의 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000011" name="000011"></a>
+                    <a id="c007000000" name="c007000000"></a>
+                    <div class="JO" id="19919" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19919', 'joHistory19919', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19919);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 7 조 (개편 신청)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교육편제단위 개편은 대내외환경, 교육수요, 특성화계획, 기존 교육과정 연계 등의 분석을 거쳐 단과대학 및 학과(부)가 신청하며 제출 서류는 다음과 같다. 단, 교육편제단위 신설의 경우 제3호를 생략할 수 있다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="ho level2"><span style="0">1. 제1항의 분석 결과를 포함한 개편계획서 </span></div><div class="ho level2"><span style="0">2. 소속 교원 의견서 </span></div><div class="ho level2"><span style="0">3. 소속 학생 설문 결과 </span></div><div class="hang level1"><span style="0">② 제1항에도 불구하고 대학 본부는 대학발전계획, 대학 경쟁력 강화, 기타 대학의 경영상 필요 등에 따라 외부환경 및 내부여건 등을 분석하여 유관학과(부) 사전 의견수렴을 거쳐 개편 계획을 수립·신청할 수 있다, </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000012" name="000012"></a>
+                    <a id="c008000000" name="c008000000"></a>
+                    <div class="JO" id="19920" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19920', 'joHistory19920', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19920);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 8 조 (개편 발의)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교무처는 제7조의 신청 내용을 검토하여 위원회에 개편을 발의한다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="hang level1"><span style="0">② 발의를 위하여 필요할 경우 관련 부서, 학과(부) 등에게 의견서를 추가로 요청할 수 있다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000013" name="000013"></a>
+                    <a id="c009000000" name="c009000000"></a>
+                    <div class="JO" id="19921" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19921', 'joHistory19921', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19921);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 9 조 (개편 심의 및 확정)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 개편 심의를 위하여 개편사항, <a href="javascript:golink('3', '31', '','', '');">학칙</a> 개정사항에 대한 사전 공고 등의 절차를 관련 규정에 따라 준수하여야 한다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="hang level1"><span style="0">② 개편이 확정된 교육편제단위에 대한 내용(전공 소개, 교육 목표, 전공능력, 진로 및 취업, 개편 적용 시기 등)을 개편 후 1개월 내에 홈페이지 등을 통하여 충분히 알려야 한다. </span><span style="color:#0000ff;"><신설 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="14" name="14"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 4 장  정원 조정</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000015" name="000015"></a>
+                    <a id="c010000000" name="c010000000"></a>
+                    <div class="JO" id="19923" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19923', 'joHistory19923', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19923);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 10 조 (조정 절차)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">정원 조정 시에는 다음과 같은 절차를 거쳐야 한다. 단, 제11조제3항에 따른 신청의 경우 제1호를 생략할 수 있다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="ho level1"><span style="0">1. 조정 신청 </span></div><div class="ho level1"><span style="0">2. 조정 발의 </span></div><div class="ho level1"><span style="0">3. 위원회 심의 </span></div><div class="ho level1"><span style="0">4. 교무위원회 심의 </span></div><div class="ho level1"><span style="0">5. 대학평의원회 심의 </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000016" name="000016"></a>
+                    <a id="c011000000" name="c011000000"></a>
+                    <div class="JO" id="19924" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19924', 'joHistory19924', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19924);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 11 조 (조정 원칙 및 신청)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 정원 조정은 단과대학 및 학과(부) 자체 조정을 우선으로 하며, 학습반 단위, 주요 경쟁력 지표 등을 고려하여 단과대학 및 학과(부)가 신청한다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="hang level1"><span style="0">② 입학 정원을 충원하지 못하는 교육편제단위는 필요 시 우선 조정한다. 단, 신입학의 추가합격 대상 인원이 있음에도 불구하고 충원 마감일 이후에 등록을 포기하여 충원하지 못한 인원은 감축하지 아니한다. </span></div><div class="hang level1"><span style="0">③ 대학 본부는 필요 시 대학발전계획, 대학 경쟁력 강화, 기타 대학의 경영상 필요 등에 따라 학습반 단위, 주요 경쟁력 지표 등을 고려하여 유관학과(부) 사전 의견수렴을 거쳐 조정 계획을 수립·신청할 수 있다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000017" name="000017"></a>
+                    <a id="c012000000" name="c012000000"></a>
+                    <div class="JO" id="19925" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19925', 'joHistory19925', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19925);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 12 조 (조정 발의)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교무처는 제11조의 신청 내용을 검토하여 위원회에 조정을 발의한다. </span></div><div class="hang level1"><span style="0">② 발의를 위하여 필요할 경우 관련 부서, 학과(부) 등에게 의견서를 추가로 요청할 수 있다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000018" name="000018"></a>
+                    <a id="c013000000" name="c013000000"></a>
+                    <div class="JO" id="19926" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19926', 'joHistory19926', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19926);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 13 조 (조정 심의 및 확정)&nbsp;
+                        </span>
+                        
+                        
+                        	 <div class="none level1"><span style="0">조정 심의를 위하여 조정사항, <a href="javascript:golink('3', '31', '','', '');">학칙</a> 개정사항에 대한 사전 공고 등의 절차를 관련 규정에 따라 준수하여야 한다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                    <!-- 장 -->
+                    <a id="19" name="19"></a>
+                    <div class="JO" style="clear:right;">
+                        <div class="chapter" align="center">제 5 장  학생 학습권 보장 및 교원 신분 보장</div>
+                    </div>
+                    
+                        <div class="JO"></div>
+                    
+                
+                
+                
+                
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000020" name="000020"></a>
+                    <a id="c014000000" name="c014000000"></a>
+                    <div class="JO" id="19928" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19928', 'joHistory19928', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19928);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 14 조 (학생 학습권 보장)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교육편제단위 분리, 폐지 시 학생의 신분 및 학습권 보장을 위한 계획을 수립하여야 한다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="hang level1"><span style="0">② 폐지가 결정된 교육편제단위의 재적생은 본인 희망에 따른 전과 및 전공변경을 허용하며, 세부사항은 관련 규정에 따른다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="hang level1"><span style="0">③ 통합, 변경이 시행된 교육편제단위의 재적생은 시행 후 교육편제단위의 재적생으로 보며, 희망학생에 한하여 시행 전의 교육편제단위를 적용하여 졸업증서 등을 수여할 수 있다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 조 -->
+                    <a id="000021" name="000021"></a>
+                    <a id="c015000000" name="c015000000"></a>
+                    <div class="JO" id="19929" style="margin-bottom:20px;clear:right;">
+                        
+                        
+                        <span class="article2" >
+                            <span class="doc_btn" style="margin-left:5px;">
+                            	<a href="javascript:showPopup('/lmxsrv/law/joHistory.do?SEQ=117&SEQ_HISTORY=271&SEQ_CONTENTS=19929', 'joHistory19929', 1024, 768);"> 
+                            		<img src="/lmxsrv/images/sub/ico_doc2.png" alt="조항 연혁" title="조항 연혁"/>
+                                </a>
+                                <a href="javascript:thisJoPrint(19929);"> 
+                                	<img src="/lmxsrv/images/sub/ico_doc4.png" alt="조항 인쇄" title="조항 인쇄"/>
+                               	</a>
+                               	
+                            </span>
+                            제 15 조 (교원 신분 보장 및 소속 전환)&nbsp;
+                        </span>
+                        
+                        
+                        	<div class="hang level1"><span style="0">① 교육편제단위 폐지 및 정원 감원 시 교원 신분 보장을 위한 계획을 수립하여야 한다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div><div class="hang level1"><span style="0">② 교원 소속 전환이 필요한 경우 대상 교원과 소속 단과대학 및 학과(부)의 의견을 반영하여 시행하며, 기타 교원 인사에 관한 사항은 관련 규정에 따른다. </span><span style="color:#0000ff;"><개정 2023.10.30.> </span></div>
+                        
+                        
+                        
+                        
+                   	</div>
+                
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="22"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="19930"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2019년 3월 1일부터 시행한다. </span></div></div><div class="JO"><div class="article">제2조(경과조치)</div><div class="none"><span style="0">이 규정 시행 이전은 교무처 정원 조정 지침에 의거하여 시행한 것으로 본다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="25"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="19931"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2022년 3월 1일부터 시행한다. </span></div></div></div>
+                
+            
+        
+            
+                
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
+                
+                    <!-- 부칙 -->
+                    <a name="27"></a>
+                    <a name=""></a>
+                    <div class="addenda2" style="display:block;white-space:pre;clear:right;">부     칙</div><!-- 부칙 띄어쓰기 적용 -->
+                    <div id="19932"><div class="JO"><div class="article">제1조(시행일)</div><div class="none"><span style="0">이 규정은 2023년 10월 30일부터 시행한다. </span></div></div></div>
+                
+            
+        
+
+        
+            <div class="article attach_tit">[별표/서식 파일]</div>
+            <p class="txt-notice">
+			※ 미리보기 파일은 gif 파일입니다. 미리보기 시, 해당 별표/서식의 첫 번째 페이지만 보입니다.<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;전문은 다운로드를 통해 확인하실 수 있습니다.  
+			</p>
+            
+                
+                
+                
+                
+                
+                
+                
+            
+                
+                
+                
+                
+                
+                
+                
+
+                    <div class="article attach_cont" style="padding-left: 10px;">
+                        <table border="0" cellspacing="0" cellpadding="0" summary="별지서식다운로드를 위한 테이블입니다.">
+                            <caption>별지서식다운로드</caption>
+
+                            <tr>
+                                <td>
+                                    <span class="attach_file">[별표 1] 계열별 학습반 단위.hwp</span>
+                                    
+                                        <a href="javascript:fileDown('1429', 'attach');" style="margin: 5px;" title="다운받기"><img src="/lmxsrv/images/sub/ico_down.png" alt="다운받기" /></a>
+                                    
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <a href="javascript:showImg('X1','on')" id="X1_on" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                            <a href="javascript:showImg('X1','off')" id="X1_off" style="display: none;" title="미리보기"><img src="/lmxsrv/images/sub/ico_preview.png" alt="미리보기" /></a>
+                                        
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        <tr id="X1" style="display: none;">
+                                            <td>
+                                                <img src="/lmxdata/attach/2026/1/upload_18101447029421159528_0.gif" style="width: 100%;" />
+                                            </td>
+                                        </tr>
+                                    
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                
+                            </tr>
+
+                        </table>
+                    </div>
+                
+            
+        
+    </div>
+    <form id="linkFrom" name="linkFrom">
+        <input type="hidden" id="OC" name="OC" value='kdhcliss' /> <input type="hidden" id="ID" name="ID" /> <input type="hidden" id="JO" name="JO" />
+    </form>
+</body>
+</html>
